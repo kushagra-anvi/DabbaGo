@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shipping Policy | DabbaGo</title>
+    <link rel="icon" type="image/png" href="../assets/images/logo.webp">
+    <link rel="stylesheet" href="../assets/css/index.css">
+    <script src="../assets/js/main.js" defer></script>
+    <script src="../assets/js/components.js" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { 'dabba-maroon': '#6f1e3b', 'dabba-beige': '#FFF9E5', 'dabba-dark': '#1A1A1A' } } } }
+    </script>
+</head>
+
+<body class="bg-white text-dabba-dark selection:bg-dabba-maroon selection:text-white">
+
+    <div id="header-placeholder"></div>
+
+    <!-- Policy Content -->
+    <section class="pt-40 pb-24 bg-white">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="mb-16 reveal">
+                <p class="text-dabba-maroon font-bold uppercase tracking-[0.3em] text-[10px] mb-4">Logistics</p>
+                <h1 class="text-4xl md:text-5xl font-serif font-bold leading-tight mb-8">Shipping Policy</h1>
+                <p class="text-gray-500 font-medium leading-relaxed">Last updated: May 6, 2026</p>
+            </div>
+
+            <div class="space-y-12 reveal text-gray-600 leading-relaxed font-medium">
+                <div>
+                    <h2 class="text-2xl font-serif font-bold text-dabba-dark mb-4">1. Delivery Areas</h2>
+                    <p>DabbaGo currently operates across major metropolitan areas in India including Delhi NCR, Mumbai, Bangalore, Pune, and Hyderabad. We are rapidly expanding our reach. Please use our location checker on the home page to see if we deliver to your specific pincode.</p>
+                </div>
+
+                <div>
+                    <h2 class="text-2xl font-serif font-bold text-dabba-dark mb-4">2. Delivery Timings</h2>
+                    <p>To ensure you receive your meal fresh and hot, we have strictly defined delivery slots:</p>
+                    <ul class="list-disc pl-6 mt-4 space-y-2">
+                        <li><strong>Lunch:</strong> Delivered between 12:00 PM and 1:30 PM.</li>
+                        <li><strong>Dinner:</strong> Delivered between 7:30 PM and 9:00 PM.</li>
+                    </ul>
+                    <p class="mt-4">We strive for 100% on-time delivery. However, timings may vary slightly due to weather conditions or extreme traffic.</p>
+                </div>
+
+                <div>
+                    <h2 class="text-2xl font-serif font-bold text-dabba-dark mb-4">3. Delivery Fees</h2>
+                    <p>At DabbaGo, we believe in transparent pricing. **All our subscription plans include free daily delivery.** There are no hidden charges or per-meal delivery fees.</p>
+                </div>
+
+                <div>
+                    <h2 class="text-2xl font-serif font-bold text-dabba-dark mb-4">4. Non-Delivery</h2>
+                    <p>In case of unforeseen circumstances (natural disasters, strikes, etc.) where delivery is not possible, your subscription will be automatically extended by one day, or a credit will be added to your account.</p>
+                </div>
+
+                <div>
+                    <h2 class="text-2xl font-serif font-bold text-dabba-dark mb-4">5. Delivery Tracking</h2>
+                    <p>Once your dabba is out for delivery, you will receive an SMS with a tracking link. You can also track the real-time status of your rider through our "Order Status" page.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer-placeholder"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('active'); observer.unobserve(entry.target); } }); }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>

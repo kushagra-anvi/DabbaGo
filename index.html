@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DabbaGo | Gourmet Indian Meals Delivered Fresh</title>
+    <meta name="description"
+        content="Experience the best of traditional Indian flavors with a modern twist. DabbaGo delivers chef-crafted, nutritionist-approved meals in eco-friendly dabbas.">
+    <meta name="keywords"
+        content="tiffin service, gourmet dabba, healthy meals, office lunch delivery, healthy indian food">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="DabbaGo | Gourmet Indian Meals">
+    <meta property="og:description"
+        content="Freshly-cooked, gourmet Indian meals curated for your lifestyle. No planning, no shopping, just pure joy in every dabba.">
+    <meta property="og:image" content="logo.webp">
+
+    <link rel="icon" type="image/png" href="assets/images/logo.webp">
+    <link rel="stylesheet" href="assets/css/index.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="assets/js/main.js" defer></script>
+    <script src="assets/js/components.js" defer></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'dabba-maroon': '#6f1e3b',
+                        'dabba-beige': '#FFF9E5',
+                        'dabba-dark': '#1A1A1A',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-white text-dabba-dark selection:bg-dabba-maroon selection:text-white">
+
+    <div id="header-placeholder"></div>
+
+    <!-- Hero Section -->
+    <section
+        class="relative min-h-[90vh] flex items-center pt-24 pb-12 lg:pt-32 lg:pb-16 overflow-hidden bg-dabba-beige/30 selection:bg-dabba-maroon selection:text-white">
+        <!-- Subtle Pattern Overlay -->
+        <div
+            class="absolute inset-0 opacity-[0.02] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 items-center gap-12 lg:gap-20 relative z-10">
+            <!-- Text Content -->
+            <div class="reveal order-1 lg:order-1 text-center lg:text-left">
+                <div
+                    class="inline-flex items-center gap-2 px-4 py-1.5 bg-dabba-maroon text-white rounded-full text-[10px] font-bold uppercase tracking-[0.2em] mb-8">
+                    <span class="w-1 h-1 bg-white rounded-full animate-pulse"></span>
+                    Now Serving Nationwide
+                </div>
+                <h1 class="text-5xl md:text-6xl lg:text-7xl font-serif font-bold leading-[1.1] mb-8 text-dabba-dark">
+                    Your daily <span class="italic text-dabba-maroon">tiffin</span>, <br>made better.
+                </h1>
+                <p class="text-lg lg:text-xl text-gray-600 mb-10 max-w-lg mx-auto lg:mx-0 leading-relaxed font-medium">
+                    Delicious, home-style meals prepared in modern kitchens and delivered fresh to your
+                    doorstep.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
+                    <a href="pages/order.html"
+                        class="bg-dabba-maroon text-white py-4 px-10 rounded-full font-bold text-sm uppercase tracking-widest hover:scale-105 transition-all duration-300 shadow-xl shadow-dabba-maroon/20">Start
+                        Dabba</a>
+                    <a href="#weekly-menu"
+                        class="border border-dabba-maroon/20 text-dabba-maroon py-4 px-10 rounded-full font-bold text-sm uppercase tracking-widest hover:bg-dabba-maroon hover:text-white transition-all duration-300">Weekly
+                        Tiffins</a>
+                </div>
+
+                <div
+                    class="mt-12 lg:mt-16 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-6">
+                    <div class="flex -space-x-4">
+                        <div class="w-12 h-12 rounded-full border-4 border-white bg-gray-200 overflow-hidden shadow-sm">
+                            <img src="https://i.pravatar.cc/100?u=1" alt="User" class="w-full h-full object-cover">
+                        </div>
+                        <div class="w-12 h-12 rounded-full border-4 border-white bg-gray-300 overflow-hidden shadow-sm">
+                            <img src="https://i.pravatar.cc/100?u=2" alt="User" class="w-full h-full object-cover">
+                        </div>
+                        <div class="w-12 h-12 rounded-full border-4 border-white bg-gray-400 overflow-hidden shadow-sm">
+                            <img src="https://i.pravatar.cc/100?u=3" alt="User" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                    <p class="text-xs font-bold text-gray-500 uppercase tracking-widest">
+                        Joined by <span class="text-dabba-maroon">15k+</span> food lovers
+                    </p>
+                </div>
+            </div>
+
+            <!-- Image Content -->
+            <div class="relative reveal order-2 lg:order-2 px-4 lg:px-0">
+                <div class="relative rounded-[3rem] overflow-hidden shadow-3xl shadow-dabba-maroon/30 group">
+                    <img src="assets/images/hero-image.png" alt="Gourmet Dabba"
+                        class="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dabba-maroon/20 to-transparent pointer-events-none"></div>
+                </div>
+
+                <!-- Floating Badge -->
+                <div
+                    class="absolute -bottom-4 -right-2 lg:-bottom-6 lg:-right-6 bg-white p-5 lg:p-6 rounded-[1.5rem] lg:rounded-[2rem] shadow-2xl w-[150px] sm:w-[170px] lg:w-[200px] reveal-slow z-10 text-left border border-dabba-maroon/5">
+                    <p class="text-[8px] lg:text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-1.5 lg:mb-2">The DabbaGo Way</p>
+                    <p class="text-base lg:text-xl font-serif font-bold text-dabba-dark leading-tight">Fresh & <br>Flexible.</p>
+                    <div class="mt-3 lg:mt-4 pt-3 lg:pt-4 border-t border-black/5 flex flex-col gap-1.5 lg:gap-2">
+                        <div class="flex items-center gap-2">
+                            <div class="w-3.5 h-3.5 rounded-full bg-dabba-maroon/10 flex items-center justify-center shrink-0">
+                                <svg class="w-2 h-2 text-dabba-maroon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                            </div>
+                            <span class="text-[8px] lg:text-[9px] font-bold text-gray-600 uppercase tracking-widest">Pause Anytime</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-3.5 h-3.5 rounded-full bg-dabba-maroon/10 flex items-center justify-center shrink-0">
+                                <svg class="w-2 h-2 text-dabba-maroon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                            </div>
+                            <span class="text-[8px] lg:text-[9px] font-bold text-gray-600 uppercase tracking-widest">Free Delivery</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- High-Density USP Bento Grid -->
+    <section id="why-dabbago" class="py-24 bg-dabba-beige/30 border-y border-black/5">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 reveal">
+                <p class="text-dabba-maroon font-bold uppercase tracking-[0.3em] text-[11px] mb-4">Our Promise</p>
+                <h2 class="text-4xl md:text-5xl font-serif font-bold">More than a dabba service.</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                <!-- Main Feature Card: Gourmet & Hygiene -->
+                <div
+                    class="md:col-span-2 group relative overflow-hidden rounded-[2.5rem] shadow-md transition-all duration-500 hover:shadow-2xl hover:shadow-dabba-maroon/20 hover:-translate-y-1 reveal min-h-[340px] flex items-end isolate transform-gpu">
+                    <div class="absolute inset-0 z-0 overflow-hidden rounded-[2.5rem]">
+                        <img src="assets/images/process-clean.png" alt="Modern Kitchen" class="w-full h-full object-cover object-bottom scale-[1.02] origin-bottom transition-transform duration-700 group-hover:scale-110 will-change-transform">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#1a0a10] via-dabba-maroon/80 to-transparent opacity-90"></div>
+                    </div>
+                    <div class="relative z-10 p-10 lg:p-12 w-full flex flex-col lg:flex-row gap-8 lg:items-center">
+                        <div class="w-16 h-16 text-white shrink-0 bg-white/10 backdrop-blur-sm p-4 rounded-2xl border border-white/20">
+                            <svg viewBox="0 0 79.32 70.67" class="w-full h-full fill-current">
+                                <path
+                                    d="M4.05,30.42l64.62-5.12c2.05-.16,3.56-1.79,3.38-3.64s-1.99-3.21-4.04-3.05l-1.4.11c-3.46-7.95-12.28-12.91-21.82-12.16l-7.26.58c.87-.85,1.36-2.01,1.24-3.25-.23-2.34-2.53-4.08-5.14-3.88-2.6.21-4.54,2.28-4.31,4.62.12,1.24.83,2.3,1.85,3l-7.26.58c-9.54.76-17.26,7.03-19.13,15.4l-1.4.11c-2.05.16-3.56,1.79-3.38,3.64s1.99,3.21,4.04,3.05ZM33.84,2.01c1.38-.11,2.61.81,2.73,2.06s-.9,2.35-2.29,2.46c-1.38.11-2.61-.81-2.73-2.06s.9-2.35,2.29-2.46ZM3.64,26.19l3.52-.28.16-.96c1.29-7.72,8.21-13.59,16.85-14.28l20.87-1.65c8.63-.68,16.59,4.01,19.36,11.41l.34.92,3.52-.28c.54-.04,1.02.32,1.07.81s-.36.92-.9.97L3.81,27.96c-.54.04-1.02-.32-1.07-.81s.36-.92.9-.97Z">
+                                </path>
+                                <path
+                                    d="M70.39,44.16h-.73v-12.58H5.81v12.58h-.73c-1.55,0-2.81,1.13-2.81,2.53v1.97c0,1.39,1.26,2.53,2.81,2.53h.73v13.15c0,3.5,3.16,6.34,7.04,6.34h49.77c3.88,0,7.04-2.84,7.04-6.34v-13.15h.73c1.55,0,2.81-1.13,2.81-2.53v-1.97c0-1.39-1.26-2.53-2.81-2.53ZM70.39,48.72h-3.46v15.62c0,2.14-1.93,3.88-4.31,3.88H12.85c-2.38,0-4.31-1.74-4.31-3.88v-15.62l-3.54-.07.07-2.03h3.46v-12.58h58.38v12.58h3.46l.07.06-.07,2.03Z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl md:text-3xl font-serif font-bold text-white mb-4 leading-tight">
+                                Modern Kitchens.</h3>
+                            <p class="text-base text-white/80 leading-relaxed max-w-lg">Every meal is prepared in our
+                                modern, FSSAI-approved facilities. We combine strict hygiene with
+                                Zero Preservatives for the safest tiffin experience in India.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card: Fresh & Wholesome -->
+                <div
+                    class="group relative overflow-hidden bg-dabba-maroon rounded-[2.5rem] p-10 shadow-sm transition-all duration-500 hover:shadow-2xl hover:shadow-dabba-maroon/20 hover:-translate-y-1 reveal">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10 transition-transform duration-500 group-hover:scale-150"></div>
+                    <div class="w-12 h-12 bg-white/10 border border-white/20 rounded-2xl flex items-center justify-center mb-8 relative z-10">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                        </svg>
+                    </div>
+                    <h4 class="text-xl font-serif font-bold text-white mb-4 relative z-10">Freshly Sourced</h4>
+                    <p class="text-sm text-white/80 leading-relaxed relative z-10">Pesticide-free, nutrient-dense greens and premium
+                        ingredients sourced fresh from local markets every single morning.</p>
+                </div>
+
+                <!-- Daily Delivery -->
+                <div
+                    class="bg-white rounded-[2.5rem] p-10 border border-dabba-maroon/10 shadow-sm transition-all duration-500 hover:shadow-xl hover:-translate-y-1 hover:border-dabba-maroon/30 reveal">
+                    <div class="w-12 h-12 text-dabba-maroon mb-8 bg-dabba-maroon/5 p-3 rounded-2xl transition-colors duration-300 hover:bg-dabba-maroon hover:text-white">
+                        <svg viewBox="0 0 96.75 70.64" class="w-full h-full fill-current">
+                            <path
+                                d="M7.25,49.23v-24.14l1.61.2c.52.07,1.07.1,1.61.1,7.11,0,12.89-5.78,12.89-12.89,0-.78-.07-1.55-.2-2.3l-.3-1.67,30.71-.38v40.7l-46.32.37ZM10.12,28.26v18.09l40.59-.33V11.06l-24.52.32c.03.38.04.76.04,1.14,0,8.68-7.07,15.75-15.75,15.75-.12,0-.24,0-.36,0Z">
+                            </path>
+                            <path
+                                d="M36.04,66.4l-.07-1.66c-.14-3.35-2.88-5.98-6.24-5.98s-6.1,2.63-6.24,5.98l-.07,1.64h-9.3c-3.52,0-6.38-2.95-6.38-6.59v-5.91c0-1.6,1.3-2.91,2.91-2.91l45.28-.36v-24.56c0-3.63,2.86-6.59,6.39-6.59h16.78c2.39,0,4.56,1.36,5.67,3.55l11.27,22.34c.47.94.72,1.99.72,3.04v11.03c0,3.63-2.86,6.59-6.39,6.59h-7.92l-.07-1.64c-.14-3.35-2.88-5.98-6.24-5.98s-6.1,2.63-6.24,5.98l-.07,1.62-33.79.4Z">
+                            </path>
+                        </svg>
+                    </div>
+                    <h4 class="text-xl font-serif font-bold text-dabba-dark mb-4">On-Time, Every Time</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed">Reliable, fast delivery directly to your
+                        doorstep, ensuring your hot, delicious meal arrives exactly when you need it.</p>
+                </div>
+
+                <!-- Flexibility -->
+                <div
+                    class="bg-white rounded-[2.5rem] p-10 border border-dabba-maroon/10 shadow-sm transition-all duration-500 hover:shadow-xl hover:-translate-y-1 hover:border-dabba-maroon/30 reveal">
+                    <div class="w-12 h-12 text-dabba-maroon mb-8 bg-dabba-maroon/5 p-3 rounded-2xl transition-colors duration-300 hover:bg-dabba-maroon hover:text-white">
+                        <svg viewBox="0 0 73.45 71.11" class="w-full h-full fill-current">
+                            <path
+                                d="M73.45,45.39l-1.86-8.79-5,7.47,2.44-.52c-3.63,14.74-16.94,25.27-32.28,25.27S6.99,57.4,4.06,41.69l-2.26.42c3.13,16.8,17.83,28.99,34.95,28.99s30.73-11.33,34.56-27.16l2.15,1.45Z">
+                            </path>
+                            <path
+                                d="M6.86,27.05l-2.44.52C8.05,12.83,21.36,2.3,36.7,2.3s29.76,11.4,32.69,27.11l2.26-.42C68.52,12.19,53.82,0,36.7,0S5.97,11.33,2.15,27.16l-2.15-1.45,1.86,8.79,5-7.47Z">
+                            </path>
+                        </svg>
+                    </div>
+                    <h4 class="text-xl font-serif font-bold text-dabba-dark mb-4">Total Control</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed">Pause, cancel, or reschedule your meals with zero
+                        hassle via our seamless, intuitive mobile-first dashboard.</p>
+                </div>
+
+                <!-- Variety -->
+                <div
+                    class="bg-white rounded-[2.5rem] p-10 border border-dabba-maroon/10 shadow-sm transition-all duration-500 hover:shadow-xl hover:-translate-y-1 hover:border-dabba-maroon/30 reveal">
+                    <div class="w-12 h-12 text-dabba-maroon mb-8 bg-dabba-maroon/5 p-3 rounded-2xl transition-colors duration-300 hover:bg-dabba-maroon hover:text-white">
+                        <svg viewBox="0 0 95.13 60.44" class="w-full h-full fill-current">
+                            <path
+                                d="M92.65,54.85h-.67c-.46-11.89-4.63-23.07-11.67-31.79.99-1.73,1.59-3.78,1.59-5.99,0-6.19-4.46-11.25-9.91-11.25-3.22,0-6.05,1.81-7.85,4.54-4.28-1.97-8.81-3.21-13.48-3.58.46-.72.71-1.57.71-2.49,0-2.37-1.7-4.3-3.82-4.3s-3.79,1.93-3.79,4.3c0,.92.25,1.77.67,2.49-10.54.84-20.48,5.91-28.05,14.35C8.35,30.14,3.64,42.07,3.11,54.85h-.67c-1.34,0-2.44,1.25-2.44,2.81s1.1,2.77,2.44,2.77h90.21c1.38,0,2.48-1.25,2.48-2.77s-1.1-2.81-2.48-2.81ZM5.91,54.69C7.04,29.9,25.68,9.8,47.55,9.8c5.34,0,10.47,1.21,15.21,3.38-.39,1.21-.64,2.53-.64,3.9,0,6.15,4.42,11.21,9.87,11.21,2.44,0,4.67-1.04,6.37-2.73,6.3,7.84,10.33,18,10.86,29.13H5.91Z">
+                            </path>
+                        </svg>
+                    </div>
+                    <h4 class="text-xl font-serif font-bold text-dabba-dark mb-4">Daily Variety</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed">No more boring lunches. Enjoy a rotating menu of
+                        tasty dabba flavors that change every single day to keep your workday exciting.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section (Compact Premium Grid) -->
+    <section id="how-it-works" class="py-24 bg-white scroll-mt-20 relative overflow-hidden border-b border-black/5">
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="flex flex-col md:flex-row items-end justify-between mb-16 reveal">
+                <div class="max-w-xl">
+                    <p class="text-dabba-maroon font-bold uppercase tracking-[0.3em] text-[10px] mb-4">The Process</p>
+                    <h2 class="text-4xl font-serif font-bold">Five steps to freshness.</h2>
+                </div>
+                <p class="text-gray-500 max-w-md mt-4 md:mt-0 font-medium leading-relaxed">A simple journey from picking
+                    a plan to stress-free dining.</p>
+            </div>
+
+            <div class="relative">
+                <!-- Premium Satin Ribbon Connector (Desktop Only) -->
+                <div class="absolute top-16 left-0 w-full h-64 pointer-events-none hidden lg:block -z-10">
+                    <svg width="100%" height="100%" viewBox="0 0 1200 100" preserveAspectRatio="none" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <!-- Main Ribbon Body -->
+                        <path
+                            d="M120 50C240 50 240 85 360 85C480 85 480 15 600 15C720 15 720 85 840 85C960 85 960 50 1080 50"
+                            stroke="#6f1e3b" stroke-width="12" stroke-linecap="round" class="opacity-[0.12]" />
+                        <!-- Ribbon Accent Line -->
+                        <path
+                            d="M120 50C240 50 240 85 360 85C480 85 480 15 600 15C720 15 720 85 840 85C960 85 960 50 1080 50"
+                            stroke="#6f1e3b" stroke-width="2" stroke-dasharray="10 15" stroke-linecap="round"
+                            class="opacity-20" />
+                    </svg>
+                </div>
+
+                <div id="process-container" class="flex overflow-x-auto lg:grid lg:grid-cols-5 gap-0 lg:gap-6 pb-8 lg:pb-0 snap-x snap-mandatory hide-scrollbar -mx-6 px-6 lg:mx-0 lg:px-0 cursor-grab active:cursor-grabbing items-start">
+
+                    <!-- Step 01 -->
+                    <div class="group relative reveal shrink-0 w-[75vw] sm:w-[40vw] lg:w-auto snap-center">
+                        <div class="relative h-64 lg:h-72 mb-6 rounded-[2rem] overflow-hidden shadow-lg">
+                            <img src="https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&q=80&w=600"
+                                alt="Select Plan"
+                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                            <div
+                                class="absolute inset-0 bg-gradient-to-t from-dabba-maroon/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            </div>
+                            <div
+                                class="absolute top-4 left-4 w-10 h-10 bg-white text-dabba-maroon rounded-xl flex items-center justify-center font-bold shadow-lg">
+                                01</div>
+                        </div>
+                        <h3 class="text-lg font-serif font-bold mb-2 group-hover:text-dabba-maroon transition-colors">
+                            Pick a Plan</h3>
+                        <p class="text-[11px] text-gray-500 leading-relaxed">Choose a subscription that fits your
+                            schedule and taste.</p>
+                    </div>
+
+                    <!-- Flow Arrow -->
+                    <div class="shrink-0 flex items-center justify-center self-center w-8 lg:hidden" style="margin-top: -2rem;">
+                        <svg class="w-5 h-5 text-dabba-maroon/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                    </div>
+
+                    <!-- Step 02 -->
+                    <div class="group relative reveal shrink-0 w-[75vw] sm:w-[40vw] lg:w-auto snap-center" style="transition-delay: 100ms;">
+                        <div class="relative h-64 lg:h-72 mb-6 rounded-[2rem] overflow-hidden shadow-lg">
+                            <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=600"
+                                alt="Talk to Team"
+                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                            <div
+                                class="absolute inset-0 bg-gradient-to-t from-dabba-maroon/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            </div>
+                            <div
+                                class="absolute top-4 left-4 w-10 h-10 bg-white text-dabba-maroon rounded-xl flex items-center justify-center font-bold shadow-lg">
+                                02</div>
+                        </div>
+                        <h3 class="text-lg font-serif font-bold mb-2 group-hover:text-dabba-maroon transition-colors">
+                            Team Connect</h3>
+                        <p class="text-[11px] text-gray-500 leading-relaxed">Our support team helps you set your flavor
+                            profile and schedule.</p>
+                    </div>
+
+                    <!-- Flow Arrow -->
+                    <div class="shrink-0 flex items-center justify-center self-center w-8 lg:hidden" style="margin-top: -2rem;">
+                        <svg class="w-5 h-5 text-dabba-maroon/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                    </div>
+
+                    <!-- Step 03 -->
+                    <div class="group relative reveal shrink-0 w-[75vw] sm:w-[40vw] lg:w-auto snap-center" style="transition-delay: 200ms;">
+                        <div class="relative h-64 lg:h-72 mb-6 rounded-[2rem] overflow-hidden shadow-lg">
+                            <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=600"
+                                alt="Daily Meals"
+                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                            <div
+                                class="absolute inset-0 bg-gradient-to-t from-dabba-maroon/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            </div>
+                            <div
+                                class="absolute top-4 left-4 w-10 h-10 bg-white text-dabba-maroon rounded-xl flex items-center justify-center font-bold shadow-lg">
+                                03</div>
+                        </div>
+                        <h3 class="text-lg font-serif font-bold mb-2 group-hover:text-dabba-maroon transition-colors">
+                            Daily Freshness</h3>
+                        <p class="text-[11px] text-gray-500 leading-relaxed">Delicious meals arrive hot at your doorstep
+                            every single day.</p>
+                    </div>
+
+                    <!-- Flow Arrow -->
+                    <div class="shrink-0 flex items-center justify-center self-center w-8 lg:hidden" style="margin-top: -2rem;">
+                        <svg class="w-5 h-5 text-dabba-maroon/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                    </div>
+
+                    <!-- Step 04 -->
+                    <div class="group relative reveal shrink-0 w-[75vw] sm:w-[40vw] lg:w-auto snap-center" style="transition-delay: 300ms;">
+                        <div class="relative h-64 lg:h-72 mb-6 rounded-[2rem] overflow-hidden shadow-lg">
+                            <img src="https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&q=80&w=600"
+                                alt="Flexibility"
+                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                            <div
+                                class="absolute inset-0 bg-gradient-to-t from-dabba-maroon/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            </div>
+                            <div
+                                class="absolute top-4 left-4 w-10 h-10 bg-white text-dabba-maroon rounded-xl flex items-center justify-center font-bold shadow-lg">
+                                04</div>
+                        </div>
+                        <h3 class="text-lg font-serif font-bold mb-2 group-hover:text-dabba-maroon transition-colors">
+                            Total Control</h3>
+                        <p class="text-[11px] text-gray-500 leading-relaxed">Effortlessly pause, redirect, or update
+                            your dabba anytime.</p>
+                    </div>
+
+                    <!-- Flow Arrow -->
+                    <div class="shrink-0 flex items-center justify-center self-center w-8 lg:hidden" style="margin-top: -2rem;">
+                        <svg class="w-5 h-5 text-dabba-maroon/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                    </div>
+
+                    <!-- Step 05 -->
+                    <div class="group relative reveal shrink-0 w-[75vw] sm:w-[40vw] lg:w-auto snap-center" style="transition-delay: 400ms;">
+                        <div class="relative h-64 lg:h-72 mb-6 rounded-[2rem] overflow-hidden shadow-lg">
+                            <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=600"
+                                alt="Outsource Stress"
+                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                            <div
+                                class="absolute inset-0 bg-gradient-to-t from-dabba-maroon/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            </div>
+                            <div
+                                class="absolute top-4 left-4 w-10 h-10 bg-white text-dabba-maroon rounded-xl flex items-center justify-center font-bold shadow-lg">
+                                05</div>
+                        </div>
+                        <h3 class="text-lg font-serif font-bold mb-2 group-hover:text-dabba-maroon transition-colors">
+                            Reclaim Time</h3>
+                        <p class="text-[11px] text-gray-500 leading-relaxed">No kitchen cleanup. No groceries. Just pure
+                            daily joy.</p>
+                    </div>
+
+                </div>
+            </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-16 bg-dabba-beige/30 border-y border-black/5 scroll-mt-20">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
+            <div class="reveal">
+                <p class="text-4xl md:text-5xl font-serif font-bold text-dabba-maroon mb-3">Zero</p>
+                <p class="text-[10px] uppercase tracking-[0.3em] text-gray-500 font-bold">Preservatives</p>
+            </div>
+            <div class="reveal">
+                <p class="text-4xl md:text-5xl font-serif font-bold text-dabba-maroon mb-3">100%</p>
+                <p class="text-[10px] uppercase tracking-[0.3em] text-gray-500 font-bold">Eco-Friendly</p>
+            </div>
+            <div class="reveal">
+                <p class="text-4xl md:text-5xl font-serif font-bold text-dabba-maroon mb-3">Daily</p>
+                <p class="text-[10px] uppercase tracking-[0.3em] text-gray-500 font-bold">Tasty Rotation</p>
+            </div>
+            <div class="reveal">
+                <p class="text-4xl md:text-5xl font-serif font-bold text-dabba-maroon mb-3">1M+</p>
+                <p class="text-[10px] uppercase tracking-[0.3em] text-gray-500 font-bold">Dabbas Delivered</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Weekly Menu Section -->
+    <section id="weekly-menu" class="py-20 bg-white border-t border-black/5 scroll-mt-20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-8 md:mb-16 reveal">
+                <div class="max-w-xl">
+                    <p class="text-dabba-maroon font-bold uppercase tracking-[0.2em] text-[10px] mb-4">Weekly Tiffin
+                        Rotation</p>
+                    <h2 class="text-4xl font-serif font-bold leading-tight">Fresh tiffins, <br>delivered to your
+                        schedule.</h2>
+                </div>
+                <!-- Controls -->
+                <div class="flex flex-col sm:flex-row items-center gap-4 lg:gap-8 mt-8 lg:mt-0 w-full sm:w-auto">
+                    <!-- Veg/Non-Veg Toggle -->
+                    <div class="flex p-1.5 bg-dabba-beige/20 rounded-full border border-dabba-maroon/10 w-full sm:w-auto">
+                        <button id="veg-toggle" class="flex-1 sm:flex-none px-8 py-2.5 rounded-full text-[10px] uppercase tracking-widest font-bold transition-all duration-300 bg-dabba-maroon text-white shadow-lg">Veg Only</button>
+                        <button id="nonveg-toggle" class="flex-1 sm:flex-none px-8 py-2.5 rounded-full text-[10px] uppercase tracking-widest font-bold transition-all duration-300 text-gray-400">Non-Veg</button>
+                    </div>
+
+                    <!-- Desktop Scroll Arrows -->
+                    <div class="hidden lg:flex items-center gap-3">
+                        <button id="scroll-left" class="w-11 h-11 rounded-full border border-dabba-maroon/20 flex items-center justify-center text-dabba-maroon hover:bg-dabba-maroon hover:text-white transition-all duration-300 shadow-sm hover:shadow-md" aria-label="Scroll Left">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        </button>
+                        <button id="scroll-right" class="w-11 h-11 rounded-full border border-dabba-maroon/20 flex items-center justify-center text-dabba-maroon hover:bg-dabba-maroon hover:text-white transition-all duration-300 shadow-sm hover:shadow-md" aria-label="Scroll Right">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Menu Content -->
+            <div class="flex overflow-x-auto snap-x snap-mandatory gap-4 lg:gap-6 pt-4 pb-8 -mx-6 px-6 lg:mx-0 lg:px-0 hide-scrollbar cursor-grab active:cursor-grabbing" id="menu-container">
+                <!-- Monday -->
+                <div class="menu-day shrink-0 w-[85vw] sm:w-[45vw] lg:w-[calc(33.333%-1rem)] snap-center p-6 rounded-3xl bg-dabba-beige/10 border border-dabba-maroon/5 transition-all duration-500 hover:bg-white hover:shadow-xl hover:border-dabba-maroon/20 reveal"
+                    data-day="1">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-6">Monday</p>
+                    <div class="space-y-6">
+                        <div>
+                            <p class="text-[9px] font-bold text-dabba-maroon uppercase tracking-widest mb-2 opacity-60">
+                                Lunch</p>
+                            <img src="assets/images/dabbago_images/DABBAGO_25.jpg" class="meal-image w-full h-32 object-cover rounded-xl mb-3 transition-opacity duration-300" data-veg="assets/images/dabbago_images/DABBAGO_25.jpg" data-nonveg="assets/images/dabbago_images/DABBAGO_23.jpg" alt="Dish">
+                            <p class="font-serif font-bold text-sm text-gray-800 meal-text leading-snug"
+                                data-veg="Bhindi Do Piaza & Dal" data-nonveg="Murg Do Piaza & Dal">Bhindi Do Piaza & Dal
+                            </p>
+                        </div>
+                        <div class="pt-6 border-t border-dabba-maroon/5">
+                            <p class="text-[9px] font-bold text-dabba-maroon uppercase tracking-widest mb-2 opacity-60">
+                                Dinner</p>
+                            <img src="assets/images/dabbago_images/DABBAGO_22.jpg" class="meal-image w-full h-32 object-cover rounded-xl mb-3 transition-opacity duration-300" data-veg="assets/images/dabbago_images/DABBAGO_22.jpg" data-nonveg="assets/images/dabbago_images/DABBAGO_21.jpg" alt="Dish">
+                            <p class="font-serif font-bold text-sm text-gray-800 meal-text leading-snug"
+                                data-veg="Pav Bhaji Special" data-nonveg="Keema Pav Classic">Pav Bhaji Special</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tuesday -->
+                <div class="menu-day shrink-0 w-[85vw] sm:w-[45vw] lg:w-[calc(33.333%-1rem)] snap-center p-6 rounded-3xl bg-dabba-beige/10 border border-dabba-maroon/5 transition-all duration-500 hover:bg-white hover:shadow-xl hover:border-dabba-maroon/20 reveal"
+                    data-day="2">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-6">Tuesday</p>
+                    <div class="space-y-6">
+                        <div>
+                            <p class="text-[9px] font-bold text-dabba-maroon uppercase tracking-widest mb-2 opacity-60">
+                                Lunch</p>
+                            <img src="assets/images/dabbago_images/DABBAGO_19.jpg" class="meal-image w-full h-32 object-cover rounded-xl mb-3 transition-opacity duration-300" data-veg="assets/images/dabbago_images/DABBAGO_19.jpg" data-nonveg="assets/images/dabbago_images/DABBAGO_18.jpg" alt="Dish">
+                            <p class="font-serif font-bold text-sm text-gray-800 meal-text leading-snug"
+                                data-veg="Mughlai Gobhi & Kabuli" data-nonveg="Chicken Mughlai & Kabuli">Mughlai Gobhi &
+                                Kabuli</p>
+                        </div>
+                        <div class="pt-6 border-t border-dabba-maroon/5">
+                            <p class="text-[9px] font-bold text-dabba-maroon uppercase tracking-widest mb-2 opacity-60">
+                                Dinner</p>
+                            <img src="assets/images/dabbago_images/DABBAGO_17.jpg" class="meal-image w-full h-32 object-cover rounded-xl mb-3 transition-opacity duration-300" data-veg="assets/images/dabbago_images/DABBAGO_17.jpg" data-nonveg="assets/images/dabbago_images/DABBAGO_16.jpg" alt="Dish">
+                            <p class="font-serif font-bold text-sm text-gray-800 meal-text leading-snug"
+                                data-veg="Subz Khurchan & Roti" data-nonveg="Murg Khurchan & Roti">Subz Khurchan & Roti
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Wednesday -->
+                <div class="menu-day shrink-0 w-[85vw] sm:w-[45vw] lg:w-[calc(33.333%-1rem)] snap-center p-6 rounded-3xl bg-dabba-beige/10 border border-dabba-maroon/5 transition-all duration-500 hover:bg-white hover:shadow-xl hover:border-dabba-maroon/20 reveal"
+                    data-day="3">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-6">Wednesday</p>
+                    <div class="space-y-6">
+                        <div>
+                            <p class="text-[9px] font-bold text-dabba-maroon uppercase tracking-widest mb-2 opacity-60">
+                                Lunch</p>
+                            <img src="assets/images/dabbago_images/DABBAGO_15.jpg" class="meal-image w-full h-32 object-cover rounded-xl mb-3 transition-opacity duration-300" data-veg="assets/images/dabbago_images/DABBAGO_15.jpg" data-nonveg="assets/images/dabbago_images/DABBAGO_13.jpg" alt="Dish">
+                            <p class="font-serif font-bold text-sm text-gray-800 meal-text leading-snug"
+                                data-veg="Chilli Mushroom Feast" data-nonveg="Chilli Chicken Feast">Chilli Mushroom
+                                Feast</p>
+                        </div>
+                        <div class="pt-6 border-t border-dabba-maroon/5">
+                            <p class="text-[9px] font-bold text-dabba-maroon uppercase tracking-widest mb-2 opacity-60">
+                                Dinner</p>
+                            <img src="assets/images/dabbago_images/DABBAGO_12.jpg" class="meal-image w-full h-32 object-cover rounded-xl mb-3 transition-opacity duration-300" data-veg="assets/images/dabbago_images/DABBAGO_12.jpg" data-nonveg="assets/images/dabbago_images/DABBAGO_11.jpg" alt="Dish">
+                            <p class="font-serif font-bold text-sm text-gray-800 meal-text leading-snug"
+                                data-veg="Baigan Bharta Smoked" data-nonveg="Murgi Bharta Smoked">Baigan Bharta Smoked
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Thursday -->
+                <div class="menu-day shrink-0 w-[85vw] sm:w-[45vw] lg:w-[calc(33.333%-1rem)] snap-center p-6 rounded-3xl bg-dabba-beige/10 border border-dabba-maroon/5 transition-all duration-500 hover:bg-white hover:shadow-xl hover:border-dabba-maroon/20 reveal"
+                    data-day="4">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-6">Thursday</p>
+                    <div class="space-y-6">
+                        <div>
+                            <p class="text-[9px] font-bold text-dabba-maroon uppercase tracking-widest mb-2 opacity-60">
+                                Lunch</p>
+                            <img src="assets/images/dabbago_images/DABBAGO_10.jpg" class="meal-image w-full h-32 object-cover rounded-xl mb-3 transition-opacity duration-300" data-veg="assets/images/dabbago_images/DABBAGO_10.jpg" data-nonveg="assets/images/dabbago_images/DABBAGO_9.jpg" alt="Dish">
+                            <p class="font-serif font-bold text-sm text-gray-800 meal-text leading-snug"
+                                data-veg="Paneer Mutter & Dal" data-nonveg="Murg Mutter & Dal">Paneer Mutter & Dal</p>
+                        </div>
+                        <div class="pt-6 border-t border-dabba-maroon/5">
+                            <p class="text-[9px] font-bold text-dabba-maroon uppercase tracking-widest mb-2 opacity-60">
+                                Dinner</p>
+                            <img src="assets/images/dabbago_images/DABBAGO_8.jpg" class="meal-image w-full h-32 object-cover rounded-xl mb-3 transition-opacity duration-300" data-veg="assets/images/dabbago_images/DABBAGO_8.jpg" data-nonveg="assets/images/dabbago_images/DABBAGO_5.jpg" alt="Dish">
+                            <p class="font-serif font-bold text-sm text-gray-800 meal-text leading-snug"
+                                data-veg="Tex Mex Sweet Potato" data-nonveg="Tex Mex Chicken Bowl">Tex Mex Sweet Potato
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Friday -->
+                <div class="menu-day shrink-0 w-[85vw] sm:w-[45vw] lg:w-[calc(33.333%-1rem)] snap-center p-6 rounded-3xl bg-dabba-beige/10 border border-dabba-maroon/5 transition-all duration-500 hover:bg-white hover:shadow-xl hover:border-dabba-maroon/20 reveal"
+                    data-day="5">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-6">Friday</p>
+                    <div class="space-y-6">
+                        <div>
+                            <p class="text-[9px] font-bold text-dabba-maroon uppercase tracking-widest mb-2 opacity-60">
+                                Lunch</p>
+                            <img src="assets/images/dabbago_images/DABBAGO_3.jpg" class="meal-image w-full h-32 object-cover rounded-xl mb-3 transition-opacity duration-300" data-veg="assets/images/dabbago_images/DABBAGO_3.jpg" data-nonveg="assets/images/dabbago_images/DABBAGO_2.jpg" alt="Dish">
+                            <p class="font-serif font-bold text-sm text-gray-800 meal-text leading-snug"
+                                data-veg="Thai Green Curry Veg" data-nonveg="Thai Green Curry Chicken">Thai Green Curry
+                                Veg</p>
+                        </div>
+                        <div class="pt-6 border-t border-dabba-maroon/5">
+                            <p class="text-[9px] font-bold text-dabba-maroon uppercase tracking-widest mb-2 opacity-60">
+                                Dinner</p>
+                            <img src="assets/images/dabbago_images/DABBAGO_1.jpg" class="meal-image w-full h-32 object-cover rounded-xl mb-3 transition-opacity duration-300" data-veg="assets/images/dabbago_images/DABBAGO_1.jpg" data-nonveg="assets/images/dabbago_images/DABBAGO_27.jpg" alt="Dish">
+                            <p class="font-serif font-bold text-sm text-gray-800 meal-text leading-snug"
+                                data-veg="Methi Paneer Classic" data-nonveg="Methi Chicken Classic">Methi Paneer Classic
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Saturday -->
+                <div class="menu-day shrink-0 w-[85vw] sm:w-[45vw] lg:w-[calc(33.333%-1rem)] snap-center p-6 rounded-3xl bg-dabba-beige/10 border border-dabba-maroon/5 transition-all duration-500 hover:bg-white hover:shadow-xl hover:border-dabba-maroon/20 reveal"
+                    data-day="6">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-6">Saturday</p>
+                    <div class="space-y-6">
+                        <div>
+                            <p class="text-[9px] font-bold text-dabba-maroon uppercase tracking-widest mb-2 opacity-60">
+                                Lunch</p>
+                            <img src="assets/images/dabbago_images/DABBAGO_25.jpg" class="meal-image w-full h-32 object-cover rounded-xl mb-3 transition-opacity duration-300" data-veg="assets/images/dabbago_images/DABBAGO_25.jpg" data-nonveg="assets/images/dabbago_images/DABBAGO_23.jpg" alt="Dish">
+                            <p class="font-serif font-bold text-sm text-gray-800 meal-text leading-snug"
+                                data-veg="Veg Biryani & Salan" data-nonveg="Chicken Biryani & Salan">Veg Biryani & Salan
+                            </p>
+                        </div>
+                        <div class="pt-6 border-t border-dabba-maroon/5">
+                            <p class="text-[9px] font-bold text-dabba-maroon uppercase tracking-widest mb-2 opacity-60">
+                                Dinner</p>
+                            <img src="assets/images/dabbago_images/DABBAGO_22.jpg" class="meal-image w-full h-32 object-cover rounded-xl mb-3 transition-opacity duration-300" data-veg="assets/images/dabbago_images/DABBAGO_22.jpg" data-nonveg="assets/images/dabbago_images/DABBAGO_21.jpg" alt="Dish">
+                            <p class="font-serif font-bold text-sm text-gray-800 meal-text leading-snug"
+                                data-veg="Paneer Bhurji Mix" data-nonveg="Egg Bhurji Mix">Paneer Bhurji Mix</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Sunday -->
+                <div class="menu-day shrink-0 w-[85vw] sm:w-[45vw] lg:w-[calc(33.333%-1rem)] snap-center p-6 rounded-3xl bg-dabba-maroon/5 border border-dabba-maroon/10 reveal flex flex-col"
+                    data-day="0">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-6">Sunday</p>
+                    <div class="flex-1 flex flex-col items-center justify-center pb-8">
+                        <div class="w-16 h-16 mb-6 bg-dabba-maroon/10 rounded-full flex items-center justify-center">
+                            <svg class="w-8 h-8 text-dabba-maroon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                            </svg>
+                        </div>
+                        <p class="font-serif font-bold text-2xl text-dabba-maroon italic mb-3">Holiday</p>
+                        <p class="text-xs text-gray-500 uppercase tracking-widest text-center">Rest & Recharge</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Scroll Dots -->
+            <div id="menu-dots" class="flex lg:hidden items-center justify-center gap-2 mt-6">
+                <span class="menu-dot w-2 h-2 rounded-full bg-dabba-maroon transition-all duration-300"></span>
+                <span class="menu-dot w-2 h-2 rounded-full bg-dabba-maroon/20 transition-all duration-300"></span>
+                <span class="menu-dot w-2 h-2 rounded-full bg-dabba-maroon/20 transition-all duration-300"></span>
+                <span class="menu-dot w-2 h-2 rounded-full bg-dabba-maroon/20 transition-all duration-300"></span>
+                <span class="menu-dot w-2 h-2 rounded-full bg-dabba-maroon/20 transition-all duration-300"></span>
+                <span class="menu-dot w-2 h-2 rounded-full bg-dabba-maroon/20 transition-all duration-300"></span>
+                <span class="menu-dot w-2 h-2 rounded-full bg-dabba-maroon/20 transition-all duration-300"></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ultimate Conversion Section (Compact) -->
+    <section id="subscribe" class="py-16 bg-dabba-maroon text-white overflow-hidden relative reveal">
+        <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
+            <p class="text-[10px] uppercase tracking-[0.4em] font-bold text-[#f9dd8a] mb-6">The DabbaGo Lifestyle</p>
+            <h2 class="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-8 leading-tight">Start your gourmet
+                <br><span class="italic text-[#f9dd8a]">dabba journey.</span>
+            </h2>
+            <p class="text-base md:text-lg text-white/70 mb-10 max-w-2xl mx-auto leading-relaxed">Join thousands of
+                professionals enjoying fresh, home-style dabba delivery. No commitment. Pause anytime.</p>
+
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-12">
+                <a href="pages/order.html"
+                    class="w-full md:w-auto bg-[#f9dd8a] text-dabba-maroon px-10 py-3.5 rounded-full font-bold text-lg transition-all hover:scale-105 hover:shadow-xl hover:shadow-[#f9dd8a]/20">Start
+                    Subscription</a>
+                <a href="#weekly-menu"
+                    class="w-full md:w-auto border border-white/20 text-white px-10 py-3.5 rounded-full font-bold text-lg transition-all hover:bg-white/10">Explore
+                    Menus</a>
+            </div>
+
+
+        </div>
+        <!-- Background Accents -->
+        <div class="absolute top-0 right-0 w-80 h-80 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl">
+        </div>
+        <div
+            class="absolute bottom-0 left-0 w-80 h-80 bg-black/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl">
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-24 bg-white scroll-mt-20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid lg:grid-cols-3 gap-16">
+                <div class="reveal">
+                    <p class="text-dabba-maroon font-bold uppercase tracking-[0.3em] text-[11px] mb-4">Support</p>
+                    <h2 class="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-6 leading-tight text-balance">
+                        Common <br>Questions.</h2>
+                    <p class="text-base text-gray-500 leading-relaxed">Everything you need to know about DabbaGo. Can't
+                        find what you're looking for? Reach out to our support team.</p>
+                </div>
+                <div class="lg:col-span-2 space-y-8">
+                    <!-- FAQ Items -->
+                    <div class="border-b border-black/5 pb-8 reveal">
+                        <button class="w-full flex justify-between items-center text-left group faq-button">
+                            <span
+                                class="text-lg font-bold text-gray-800 transition-colors group-hover:text-dabba-maroon">How
+                                does the dabba subscription work?</span>
+                            <span class="text-2xl text-dabba-maroon">+</span>
+                        </button>
+                        <div class="faq-content text-gray-600 leading-relaxed">
+                            <div class="pb-4">
+                                Simply pick a plan (Monthly or Weekly) and set your food preferences. We’ll deliver a
+                                fresh, hot tiffin to your doorstep every day. You can pause or manage your schedule
+                                easily through our app anytime.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="border-b border-black/5 pb-8 reveal">
+                        <button class="w-full flex justify-between items-center text-left group faq-button">
+                            <span
+                                class="text-lg font-bold text-gray-800 transition-colors group-hover:text-dabba-maroon">Can
+                                I customize my dabba?</span>
+                            <span class="text-2xl text-dabba-maroon">+</span>
+                        </button>
+                        <div class="faq-content text-gray-600 leading-relaxed">
+                            <div class="pb-4">
+                                Absolutely! You can choose between Veg and Non-Veg plans. You can also specify spice
+                                levels or skip certain ingredients when you first set up your taste profile with our
+                                support team.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="border-b border-black/5 pb-8 reveal">
+                        <button class="w-full flex justify-between items-center text-left group faq-button">
+                            <span
+                                class="text-lg font-bold text-gray-800 transition-colors group-hover:text-dabba-maroon">Is
+                                there a delivery fee?</span>
+                            <span class="text-2xl text-dabba-maroon">+</span>
+                        </button>
+                        <div class="faq-content text-gray-600 leading-relaxed">
+                            <div class="pb-4">
+                                No! We believe in transparent pricing. All our subscription plans come with free daily
+                                delivery to your home or office, with no hidden costs.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="border-b border-black/5 pb-8 reveal">
+                        <button class="w-full flex justify-between items-center text-left group faq-button">
+                            <span
+                                class="text-lg font-bold text-gray-800 transition-colors group-hover:text-dabba-maroon">What
+                                if I need to skip a day?</span>
+                            <span class="text-2xl text-dabba-maroon">+</span>
+                        </button>
+                        <div class="faq-content text-gray-600 leading-relaxed">
+                            <div class="pb-4">
+                                No problem! Just log into your dashboard and hit 'Pause' for the days you’re away. We’ll
+                                automatically extend your subscription period so you never lose a meal you've paid for.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="border-b border-black/5 pb-8 reveal">
+                        <button class="w-full flex justify-between items-center text-left group faq-button">
+                            <span
+                                class="text-lg font-bold text-gray-800 transition-colors group-hover:text-dabba-maroon">How
+                                do I pay?</span>
+                            <span class="text-2xl text-dabba-maroon">+</span>
+                        </button>
+                        <div class="faq-content text-gray-600 leading-relaxed">
+                            <div class="pb-4">
+                                We support all major credit cards, UPI, and net banking. You can choose to pay weekly or
+                                monthly, with special discounts available for longer-term plans.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer-placeholder"></div>
+
+    <!-- Scroll to Top -->
+    <button id="scroll-top"
+        class="fixed bottom-24 right-10 w-14 h-14 bg-dabba-maroon text-white rounded-full shadow-2xl flex items-center justify-center translate-y-32 opacity-0 pointer-events-none transition-all duration-700 hover:scale-110 z-50">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+        </svg>
+    </button>
+
+</body>
+
+</html>
