@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Scroll Reveal Animation
+    
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.refreshReveal();
 
-    // Sticky Nav Blur Effect
+    
     const nav = document.querySelector('nav');
     if (nav) {
         window.addEventListener('scroll', () => {
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Weekly Menu Toggle Logic
+    
     const vegBtn = document.getElementById('veg-toggle');
     const nonvegBtn = document.getElementById('nonveg-toggle');
     const mealTexts = document.querySelectorAll('.meal-text');
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (vegBtn) vegBtn.addEventListener('click', () => updateMenu('veg'));
     if (nonvegBtn) nonvegBtn.addEventListener('click', () => updateMenu('nonveg'));
 
-    // Reusable drag-to-scroll for any horizontal carousel
+    
     function initDragScroll(el) {
         if (!el) return;
         let isDown = false, startX, scrollLeft;
@@ -117,11 +117,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Apply drag-to-scroll on carousels
+    
     initDragScroll(document.getElementById('menu-container'));
     initDragScroll(document.getElementById('process-container'));
 
-    // Arrow Navigation for menu carousel
+    
     const menuSlider = document.getElementById('menu-container');
     if (menuSlider) {
         const scrollLeftBtn = document.getElementById('scroll-left');
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Mobile scroll dot indicators
+        
         const dots = document.querySelectorAll('#menu-dots .menu-dot');
         if (dots.length) {
             menuSlider.addEventListener('scroll', () => {
@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Highlight Current Day
+    
     const today = new Date().getDay(); 
     const dayCards = document.querySelectorAll('.menu-day');
     dayCards.forEach(card => {
@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // FAQ Accordion Logic
+    
     document.querySelectorAll('.faq-button').forEach(button => {
         button.addEventListener('click', () => {
             const content = button.nextElementSibling;
@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Dynamic "Today's Pick" in Hero
+    
     const heroPickTitle = document.querySelector('.hero-pick-title');
     if (heroPickTitle) {
         const currentDayCard = document.querySelector(`.menu-day[data-day="${today}"]`);
@@ -215,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Scroll to Top Logic
+    
     const scrollTopBtn = document.getElementById('scroll-top');
     if (scrollTopBtn) {
         window.addEventListener('scroll', () => {
@@ -233,7 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Scroll-Spy Logic
+    
     const sections = document.querySelectorAll('section[id]');
     const navLinks = document.querySelectorAll('.nav-link');
 
@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Mobile Menu Toggle Logic
+    
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
     let isMenuOpen = false;
@@ -302,17 +302,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', toggleMenu);
 
-    // Robust Smooth Scroll for Internal Links
+    
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             const href = this.getAttribute('href');
             
-            // Only handle internal home-page anchors
+            
             if (href.startsWith('#') || href.includes('index.html#')) {
                 const targetId = href.split('#')[1];
                 
                 if (!targetId || targetId === '') {
-                    // Just '#' - scroll to top
+                    
                     e.preventDefault();
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                     return;

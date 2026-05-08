@@ -1,7 +1,4 @@
-/**
- * DabbaGo Component Loader
- * Centrally manages the Header and Footer across all pages.
- */
+
 
 const components = {
     getHeader(isRoot = false) {
@@ -136,7 +133,7 @@ const components = {
         const headerPlaceholder = document.getElementById('header-placeholder');
         const footerPlaceholder = document.getElementById('footer-placeholder');
         
-        // Detect if we are in the root or a subfolder
+        
         const isRoot = !window.location.pathname.includes('/pages/');
 
         if (headerPlaceholder) {
@@ -146,15 +143,15 @@ const components = {
             footerPlaceholder.innerHTML = this.getFooter(isRoot);
         }
 
-        // Initialize Mobile Menu Logic
+        
         this.setupMobileMenu();
 
-        // Refresh Reveal animations for newly injected components
+        
         if (window.refreshReveal) {
             window.refreshReveal();
         }
 
-        // Re-initialize Lucide icons if available
+        
         if (window.lucide) {
             window.lucide.createIcons();
         }
@@ -170,7 +167,7 @@ const components = {
                 menu.classList.toggle('-translate-y-4');
                 menu.classList.toggle('pointer-events-none');
                 
-                // Animate hamburger lines
+                
                 const lines = btn.querySelectorAll('span');
                 lines[0].classList.toggle('rotate-45');
                 lines[0].classList.toggle('translate-y-2');
@@ -179,7 +176,7 @@ const components = {
                 lines[2].classList.toggle('-translate-y-2');
             });
 
-            // Close menu on link click
+            
             menu.querySelectorAll('a').forEach(link => {
                 link.addEventListener('click', () => {
                     menu.classList.add('opacity-0', '-translate-y-4', 'pointer-events-none');

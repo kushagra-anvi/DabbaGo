@@ -43,13 +43,13 @@
 
     <main class="min-h-screen flex flex-col lg:flex-row pt-20">
         
-        <!-- Left: Lush Imagery (Hidden on mobile) -->
+        
         <div class="hidden lg:flex lg:w-[40%] relative overflow-hidden group">
             <img src="../assets/images/login-bg.png" 
                  alt="Gourmet Dabba" 
                  class="absolute inset-0 w-full h-full object-cover transition-transform duration-10000 group-hover:scale-105">
             
-            <!-- Overlay Content -->
+            
             <div class="absolute inset-0 bg-gradient-to-t from-dabba-dark/80 via-dabba-dark/20 to-transparent p-16 flex flex-col justify-end">
                 <div>
                     <p class="text-dabba-beige font-bold uppercase tracking-[0.4em] text-[10px] mb-4">Gourmet Experience</p>
@@ -66,11 +66,11 @@
             </div>
         </div>
 
-        <!-- Right: Login Form -->
+        
         <div class="flex-1 flex items-center justify-center p-8 lg:p-16 login-gradient">
             <div class="w-full max-w-lg">
                 
-                <!-- Brand Mobile Branding -->
+                
                 <div class="lg:hidden flex flex-col items-center mb-10">
                     <div class="h-16 w-16 mb-4">
                         <img src="../assets/images/logo.webp" alt="DabbaGo" class="w-full h-full object-contain">
@@ -79,13 +79,13 @@
                     <p class="text-gray-400 text-sm mt-2 font-medium italic">"Your gourmet meal is just a click away."</p>
                 </div>
 
-                <!-- Desktop Heading -->
+                
                 <div class="hidden lg:block mb-10">
                     <h1 class="text-4xl font-serif font-bold text-dabba-dark mb-3 tracking-tight">Sign in</h1>
                     <p class="text-gray-400 font-medium italic">"Access your gourmet dashboard & preferences."</p>
                 </div>
 
-                <!-- Login Form Card -->
+                
                 <div class="bg-white/40 border border-white/60 p-8 lg:p-10 rounded-[3rem] shadow-2xl shadow-dabba-maroon/5 backdrop-blur-sm">
                     <form class="space-y-6" onsubmit="event.preventDefault();">
                         <div class="space-y-1.5">
@@ -156,7 +156,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Scroll Reveal
+            
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => { 
                     if (entry.isIntersecting) { 
