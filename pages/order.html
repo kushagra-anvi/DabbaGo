@@ -26,18 +26,18 @@
             }
         }
     </script>
-    
+
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         .step-active {
             background-color: #4caf50;
-            
+
             color: white;
         }
 
         .step-completed {
             background-color: #6f1e3b;
-            
+
             color: white;
         }
 
@@ -69,6 +69,520 @@
             background: rgba(0, 0, 0, 0.1);
             border-radius: 10px;
         }
+
+        /* ==========================================================================
+           3D CYLINDRICAL DABBA STACKING STYLES (PORTED FROM DEMO)
+           ========================================================================== */
+        .tiffin-stage {
+            position: relative;
+            width: 280px;
+            height: 440px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .dabba-stack {
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            position: relative;
+            z-index: 5;
+        }
+
+        /* === DABBA — Cylindrical Tiffin Container === */
+        .dabba {
+            position: relative;
+            width: 180px;
+            height: 62px;
+            margin-top: -3px;
+            opacity: 0;
+            transform: translateY(-90px) scale(.85);
+            filter: drop-shadow(0 3px 5px rgba(0, 0, 0, .45));
+        }
+
+        .dabba.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Top ellipse — 3D cylinder cap */
+        .dabba-top {
+            position: absolute;
+            top: 0;
+            left: 6px;
+            right: 6px;
+            height: 22px;
+            border-radius: 50%;
+            z-index: 3;
+        }
+
+        .dabba-steel .dabba-top {
+            background: radial-gradient(ellipse at 40% 40%, #f5f5f5 0%, #e0e0e0 20%, #c8c8c8 45%, #b0b0b0 70%, #999 100%);
+            box-shadow: inset 0 2px 6px rgba(255, 255, 255, .25), inset 0 -2px 4px rgba(0, 0, 0, .1), 0 -1px 0 rgba(255, 255, 255, .35);
+        }
+
+        /* Concentric ring */
+        .dabba-top::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 55%;
+            height: 50%;
+            border-radius: 50%;
+            border: 1.5px solid rgba(255, 255, 255, .15);
+            box-shadow: inset 0 0 4px rgba(0, 0, 0, .06);
+        }
+
+        /* Body cylinder */
+        .dabba-body {
+            position: absolute;
+            top: 10px;
+            bottom: 6px;
+            left: 0;
+            right: 0;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .dabba-steel .dabba-body {
+            background: linear-gradient(90deg, #888 0%, #b8b8b8 8%, #e8e8e8 18%, #f2f2f2 28%, #ddd 42%, #c0c0c0 58%, #e5e5e5 72%, #f0f0f0 82%, #b8b8b8 92%, #888 100%);
+        }
+
+        /* Brushed texture */
+        .dabba-body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0, 0, 0, .02) 1px, rgba(0, 0, 0, .02) 2px);
+            pointer-events: none;
+        }
+
+        /* Center reflection band */
+        .dabba-body::after {
+            content: '';
+            position: absolute;
+            top: 25%;
+            left: 0;
+            right: 0;
+            height: 12px;
+            background: linear-gradient(180deg, transparent, rgba(255, 255, 255, .2), transparent);
+            pointer-events: none;
+        }
+
+        /* Rim bands — top and bottom thick raised rings */
+        .rim-band {
+            position: absolute;
+            left: -1px;
+            right: -1px;
+            height: 7px;
+            z-index: 2;
+        }
+
+        .rim-band-top {
+            top: 8px;
+        }
+
+        .rim-band-bottom {
+            bottom: 4px;
+        }
+
+        .dabba-steel .rim-band {
+            background: linear-gradient(90deg, #777 0%, #aaa 10%, #ddd 22%, #f5f5f5 32%, #ccc 50%, #ddd 68%, #f2f2f2 78%, #aaa 90%, #777 100%);
+            box-shadow: 0 1px 0 rgba(0, 0, 0, .15), inset 0 1px 0 rgba(255, 255, 255, .3);
+            border-radius: 2px;
+        }
+
+        /* Bottom ellipse */
+        .dabba-bottom {
+            position: absolute;
+            bottom: -3px;
+            left: 6px;
+            right: 6px;
+            height: 16px;
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .dabba-steel .dabba-bottom {
+            background: linear-gradient(180deg, #888, #666);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, .45);
+        }
+
+        /* Veg color overrides */
+        .dabba-veg .dabba-top {
+            background: radial-gradient(ellipse at 40% 40%, #81c784 0%, #66bb6a 20%, #4caf50 45%, #388e3c 70%, #2e7d32 100%);
+            box-shadow: inset 0 2px 6px rgba(255, 255, 255, .2), inset 0 -2px 4px rgba(0, 0, 0, .12), 0 -1px 0 rgba(255, 255, 255, .25);
+        }
+
+        .dabba-veg .dabba-body {
+            background: linear-gradient(90deg, #2e7d32 0%, #388e3c 8%, #4caf50 18%, #66bb6a 28%, #43a047 42%, #388e3c 58%, #4caf50 72%, #5cb860 82%, #388e3c 92%, #2e7d32 100%);
+        }
+
+        .dabba-veg .rim-band {
+            background: linear-gradient(90deg, #256d27 0%, #2e7d32 10%, #4caf50 22%, #66bb6a 32%, #388e3c 50%, #4caf50 68%, #5cb860 78%, #2e7d32 90%, #256d27 100%);
+            box-shadow: 0 1px 0 rgba(0, 0, 0, .2), inset 0 1px 0 rgba(255, 255, 255, .2);
+        }
+
+        .dabba-veg .dabba-bottom {
+            background: linear-gradient(180deg, #256d27, #1b5e20);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, .45);
+        }
+
+        .dabba-veg .dabba-label {
+            color: rgba(255, 255, 255, .9);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, .35);
+        }
+
+        /* Nonveg color overrides */
+        .dabba-nonveg .dabba-top {
+            background: radial-gradient(ellipse at 40% 40%, #ef9a9a 0%, #ef5350 20%, #e53935 45%, #c62828 70%, #b71c1c 100%);
+            box-shadow: inset 0 2px 6px rgba(255, 255, 255, .2), inset 0 -2px 4px rgba(0, 0, 0, .12), 0 -1px 0 rgba(255, 255, 255, .2);
+        }
+
+        .dabba-nonveg .dabba-body {
+            background: linear-gradient(90deg, #b71c1c 0%, #c62828 8%, #e53935 18%, #ef5350 28%, #d32f2f 42%, #c62828 58%, #e53935 72%, #ef5350 82%, #c62828 92%, #b71c1c 100%);
+        }
+
+        .dabba-nonveg .rim-band {
+            background: linear-gradient(90deg, #8e1a1a 0%, #b71c1c 10%, #e53935 22%, #ef5350 32%, #c62828 50%, #e53935 68%, #ef5350 78%, #b71c1c 90%, #8e1a1a 100%);
+            box-shadow: 0 1px 0 rgba(0, 0, 0, .2), inset 0 1px 0 rgba(255, 255, 255, .15);
+        }
+
+        .dabba-nonveg .dabba-bottom {
+            background: linear-gradient(180deg, #8e1a1a, #7f1616);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, .45);
+        }
+
+        .dabba-nonveg .dabba-label {
+            color: rgba(255, 255, 255, .9);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, .35);
+        }
+
+        /* Label */
+        .dabba-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 4;
+            font-size: .58rem;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            pointer-events: none;
+        }
+
+        .dabba-steel .dabba-label {
+            color: rgba(50, 55, 60, .6);
+            text-shadow: 0 1px 0 rgba(255, 255, 255, .45);
+        }
+
+        /* === LID === */
+        .dabba-lid {
+            position: relative;
+            width: 188px;
+            margin-bottom: -8px;
+            z-index: 6;
+            opacity: 0;
+            transform: translateY(-70px) scale(.9);
+            filter: drop-shadow(0 5px 8px rgba(0, 0, 0, .45));
+        }
+
+        .dabba-lid.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .lid-top {
+            width: calc(100% - 12px);
+            height: 18px;
+            margin: 0 auto;
+            border-radius: 50%;
+            position: relative;
+            z-index: 3;
+            background: radial-gradient(ellipse at 40% 40%, #f8f8f8 0%, #e8e8e8 25%, #d0d0d0 50%, #b8b8b8 80%, #a0a0a0 100%);
+            box-shadow: inset 0 2px 8px rgba(255, 255, 255, .3), inset 0 -1px 3px rgba(0, 0, 0, .06), 0 -1px 0 rgba(255, 255, 255, .4);
+        }
+
+        .lid-top::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50%;
+            height: 45%;
+            border-radius: 50%;
+            border: 1.5px solid rgba(255, 255, 255, .15);
+        }
+
+        .lid-knob {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 14px;
+            border-radius: 7px 7px 4px 4px;
+            z-index: 4;
+            background: linear-gradient(180deg, #e0e0e0, #c0c0c0 40%, #a0a0a0);
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, .15), inset 0 1px 0 rgba(255, 255, 255, .35);
+        }
+
+        .lid-rim {
+            width: 100%;
+            height: 7px;
+            margin: -5px auto 0;
+            position: relative;
+            z-index: 2;
+            border-radius: 2px;
+            background: linear-gradient(90deg, #777 0%, #aaa 10%, #ddd 22%, #f5f5f5 32%, #ccc 50%, #ddd 68%, #f2f2f2 78%, #aaa 90%, #777 100%);
+            box-shadow: 0 1px 0 rgba(0, 0, 0, .15), inset 0 1px 0 rgba(255, 255, 255, .3);
+        }
+
+        .lid-body {
+            width: calc(100% - 8px);
+            height: 8px;
+            margin: -2px auto 0;
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(90deg, #888 0%, #bbb 10%, #e0e0e0 25%, #f0f0f0 35%, #d0d0d0 50%, #e0e0e0 65%, #f0f0f0 75%, #bbb 90%, #888 100%);
+        }
+
+        .lid-bottom-face {
+            width: calc(100% - 12px);
+            height: 12px;
+            margin: -4px auto 0;
+            border-radius: 50%;
+            position: relative;
+            z-index: 0;
+            background: linear-gradient(180deg, #888, #666);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, .35);
+        }
+
+        /* === STANDALONE C-CLAMP CARRIER FRAME === */
+        .carrier-frame {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100%);
+            width: 196px;
+            height: 340px;
+            z-index: 10;
+            opacity: 0;
+            transition: transform .8s cubic-bezier(.34, 1.56, .64, 1), opacity .4s ease;
+            pointer-events: none;
+        }
+
+        .carrier-frame.active {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Top Arch Handle */
+        .carrier-arch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 76px;
+            height: 56px;
+            border: 4.5px solid transparent;
+            border-bottom: none;
+            border-radius: 38px 38px 0 0;
+        }
+
+        .carrier-arch::before {
+            content: '';
+            position: absolute;
+            inset: -4.5px;
+            border: 4.5px solid #dcdcdc;
+            border-bottom: none;
+            border-radius: 38px 38px 0 0;
+            background: transparent;
+            box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .5), -1px 0 0 rgba(0, 0, 0, .15);
+        }
+
+        /* Latch bracket on top handle */
+        .carrier-arch-latch {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 22px;
+            height: 10px;
+            background: linear-gradient(180deg, #e0e0e0, #b0b0b0);
+            border-radius: 2px 2px 0 0;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, .4), 0 1px 2px rgba(0, 0, 0, .15);
+        }
+
+        /* Left and Right shoulder grills/connectors */
+        .carrier-connector {
+            position: absolute;
+            top: 52px;
+            width: 63px;
+            height: 4.5px;
+            background: linear-gradient(180deg, #dcdcdc, #aaaaaa);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, .4), 0 1px 2px rgba(0, 0, 0, .2);
+            border-radius: 2px;
+            z-index: 9;
+        }
+
+        .carrier-connector.left {
+            left: 0;
+        }
+
+        .carrier-connector.right {
+            right: 0;
+        }
+
+        /* Vertical Side Rails running all the way down to wrap the stack */
+        .carrier-rail {
+            position: absolute;
+            top: 52px;
+            bottom: 4px;
+            width: 7px;
+            background: linear-gradient(90deg, #999 0%, #e0e0e0 30%, #fff 50%, #c0c0c0 75%, #888 100%);
+            box-shadow: 1px 0 3px rgba(0, 0, 0, .25), inset 1px 0 0 rgba(255, 255, 255, .3);
+            border-radius: 3px;
+        }
+
+        .carrier-rail.left {
+            left: 0;
+        }
+
+        .carrier-rail.right {
+            right: 0;
+        }
+
+        /* Side Clamping lock tabs on rails */
+        .carrier-side-tab {
+            position: absolute;
+            width: 12px;
+            height: 18px;
+            background: linear-gradient(90deg, #b0b0b0, #e0e0e0, #999);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, .3), inset 0 1px 0 rgba(255, 255, 255, .4);
+            border-radius: 3px;
+        }
+
+        .carrier-rail.left .carrier-side-tab {
+            left: -2.5px;
+            top: 40px;
+            border-radius: 3px 0 0 3px;
+        }
+
+        .carrier-rail.right .carrier-side-tab {
+            right: -2.5px;
+            top: 40px;
+            border-radius: 0 3px 3px 0;
+        }
+
+        /* Support Base bars at bottom */
+        .carrier-base {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 188px;
+            height: 6px;
+            background: linear-gradient(90deg, #888, #e0e0e0, #888);
+            border-radius: 3px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, .45);
+        }
+
+        /* === Shadow === */
+        .stack-shadow {
+            width: 100px;
+            height: 14px;
+            background: radial-gradient(ellipse, rgba(0, 0, 0, .35) 0%, transparent 70%);
+            border-radius: 50%;
+            margin-top: 8px;
+            transition: all .5s ease;
+        }
+
+        /* Dark mode variant for shadow on dark desktop sidebar */
+        #desktop-stack-shadow {
+            background: radial-gradient(ellipse, rgba(255, 255, 255, .05) 0%, transparent 70%);
+        }
+
+        /* === Animations === */
+        @keyframes dropBounce {
+            0% {
+                transform: translateY(-90px) scale(.85);
+                opacity: 0;
+            }
+
+            40% {
+                transform: translateY(6px) scale(1.02);
+                opacity: 1;
+            }
+
+            60% {
+                transform: translateY(-4px) scale(.99);
+            }
+
+            75% {
+                transform: translateY(2px) scale(1.005);
+            }
+
+            90% {
+                transform: translateY(-1px) scale(1);
+            }
+
+            100% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes lidDrop {
+            0% {
+                transform: translateY(-70px) scale(.9);
+                opacity: 0;
+            }
+
+            35% {
+                transform: translateY(5px) scale(1.01);
+                opacity: 1;
+            }
+
+            55% {
+                transform: translateY(-3px) scale(.995);
+            }
+
+            75% {
+                transform: translateY(1px) scale(1.002);
+            }
+
+            100% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .dabba.animate-in {
+            animation: dropBounce .75s cubic-bezier(.22, 1, .36, 1) forwards;
+        }
+
+        .dabba-lid.animate-in {
+            animation: lidDrop .65s cubic-bezier(.22, 1, .36, 1) forwards;
+        }
+
+        .tiffin-stage.assembled .dabba-stack {
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, .03));
+        }
+
+        #desktop-dabba-panel {
+            transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #desktop-tiffin-stage {
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), margin-top 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
     </style>
 </head>
 
@@ -79,36 +593,104 @@
 
     <main class="flex-1 pt-20 flex flex-col-reverse lg:flex-row bg-[#fafafa]">
 
-        
+
         <aside class="w-full lg:w-96 bg-dabba-dark text-white flex flex-col lg:sticky lg:top-20 z-30">
 
-            
+
             <div class="lg:hidden bg-dabba-dark border-t border-white/5 p-4 sticky bottom-0 z-40">
-                <div class="flex items-center justify-between mb-4">
-                    <p class="text-[10px] font-bold text-white/40 uppercase tracking-[0.3em]">Step <span
-                            id="mobile-step-num">1</span> / 5</p>
-                    <button id="mobile-pricing-trigger" onclick="toggleMobilePricing()"
-                        class="hidden text-[10px] font-bold bg-white/10 px-3 py-1 rounded-full uppercase tracking-widest flex items-center gap-2">
-                        Summary <span id="price-total-mobile" class="text-white">₹0</span>
-                        <svg id="pricing-chevron" class="w-3 h-3 transition-transform" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            </path>
-                        </svg>
-                    </button>
+                <div class="flex items-center gap-4 mb-3">
+                    <!-- Compact inline mobile tiffin -->
+                    <div class="shrink-0 w-20 h-20 relative flex items-end justify-center pb-1 overflow-hidden rounded-2xl bg-white/[0.05] border border-white/10 shadow-lg"
+                        id="mobile-dabba-panel">
+                        <div class="tiffin-stage transform scale-[0.16] origin-bottom"
+                            id="mobile-tiffin-stage" style="width: 280px; height: 342px;">
+                            <div class="carrier-frame" id="mobile-carrier-frame">
+                                <div class="carrier-arch">
+                                    <div class="carrier-arch-latch"></div>
+                                </div>
+                                <div class="carrier-connector left"></div>
+                                <div class="carrier-connector right"></div>
+                                <div class="carrier-rail left">
+                                    <div class="carrier-side-tab"></div>
+                                </div>
+                                <div class="carrier-rail right">
+                                    <div class="carrier-side-tab"></div>
+                                </div>
+                                <div class="carrier-base"></div>
+                            </div>
+                            <div class="dabba-lid" id="mobile-dabba-lid">
+                                <div class="lid-knob"></div>
+                                <div class="lid-top"></div>
+                                <div class="lid-rim"></div>
+                                <div class="lid-body"></div>
+                                <div class="lid-bottom-face"></div>
+                            </div>
+                            <div class="dabba-stack" id="mobile-dabba-stack">
+                                <div class="dabba dabba-steel" id="mobile-dabba-1">
+                                    <div class="dabba-top"></div>
+                                    <div class="rim-band rim-band-top"></div>
+                                    <div class="dabba-body"><span class="dabba-label" id="mobile-label-1">📍</span>
+                                    </div>
+                                    <div class="rim-band rim-band-bottom"></div>
+                                    <div class="dabba-bottom"></div>
+                                </div>
+                                <div class="dabba dabba-steel" id="mobile-dabba-2">
+                                    <div class="dabba-top"></div>
+                                    <div class="rim-band rim-band-top"></div>
+                                    <div class="dabba-body"><span class="dabba-label" id="mobile-label-2">🥗</span>
+                                    </div>
+                                    <div class="rim-band rim-band-bottom"></div>
+                                    <div class="dabba-bottom"></div>
+                                </div>
+                                <div class="dabba dabba-steel" id="mobile-dabba-3">
+                                    <div class="dabba-top"></div>
+                                    <div class="rim-band rim-band-top"></div>
+                                    <div class="dabba-body"><span class="dabba-label" id="mobile-label-3">📅</span>
+                                    </div>
+                                    <div class="rim-band rim-band-bottom"></div>
+                                    <div class="dabba-bottom"></div>
+                                </div>
+                                <div class="dabba dabba-steel" id="mobile-dabba-4">
+                                    <div class="dabba-top"></div>
+                                    <div class="rim-band rim-band-top"></div>
+                                    <div class="dabba-body"><span class="dabba-label" id="mobile-label-4">👤</span>
+                                    </div>
+                                    <div class="rim-band rim-band-bottom"></div>
+                                    <div class="dabba-bottom"></div>
+                                </div>
+                            </div>
+                            <div class="stack-shadow" id="mobile-stack-shadow"></div>
+                        </div>
+                    </div>
+
+                    <!-- Step info + pricing on the right -->
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between mb-2">
+                            <p class="text-[10px] font-bold text-white/40 uppercase tracking-[0.3em]">Step <span
+                                    id="mobile-step-num">1</span> / 5</p>
+                            <button id="mobile-pricing-trigger" onclick="toggleMobilePricing()"
+                                class="hidden text-[10px] font-bold bg-white/10 px-3 py-1 rounded-full uppercase tracking-widest flex items-center gap-2">
+                                Summary <span id="price-total-mobile" class="text-white">₹0</span>
+                                <svg id="pricing-chevron" class="w-3 h-3 transition-transform" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                    </path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <div id="m-step-1" class="flex-1 h-1 rounded-full bg-dabba-maroon transition-all"></div>
+                            <div id="m-step-2" class="flex-1 h-1 rounded-full bg-white/10 transition-all"></div>
+                            <div id="m-step-3" class="flex-1 h-1 rounded-full bg-white/10 transition-all"></div>
+                            <div id="m-step-4" class="flex-1 h-1 rounded-full bg-white/10 transition-all"></div>
+                            <div id="m-step-5" class="flex-1 h-1 rounded-full bg-white/10 transition-all"></div>
+                        </div>
+                    </div>
                 </div>
 
-                
-                <div class="flex items-center gap-2">
-                    <div id="m-step-1" class="flex-1 h-1 rounded-full bg-dabba-maroon transition-all"></div>
-                    <div id="m-step-2" class="flex-1 h-1 rounded-full bg-white/10 transition-all"></div>
-                    <div id="m-step-3" class="flex-1 h-1 rounded-full bg-white/10 transition-all"></div>
-                    <div id="m-step-4" class="flex-1 h-1 rounded-full bg-white/10 transition-all"></div>
-                    <div id="m-step-5" class="flex-1 h-1 rounded-full bg-white/10 transition-all"></div>
-                </div>
 
-                
-                <div id="mobile-pricing-details" class="hidden pt-4 space-y-3 animate-in fade-in slide-in-from-top-2">
+                <div id="mobile-pricing-details" class="hidden pt-3 space-y-3 animate-in fade-in slide-in-from-top-2">
                     <div class="flex justify-between text-[11px] opacity-60">
                         <span>Diet</span>
                         <span id="m-summary-diet">Not selected</span>
@@ -124,85 +706,150 @@
                 </div>
             </div>
 
-            
-            <div class="hidden lg:flex flex-col p-8 overflow-y-auto custom-scrollbar">
-                
-                <div class="space-y-8 mb-12">
-                    <p class="text-[10px] font-bold text-white/40 uppercase tracking-[0.3em] mb-8">Step <span
-                            id="current-step-num">1</span> / 5</p>
 
-                    <div class="flex flex-col gap-6">
-                        
-                        <div class="flex items-center gap-4 group cursor-pointer" onclick="goToStep(1)">
-                            <div id="step-icon-1"
-                                class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm step-active transition-all duration-300">
-                                1
+            <div class="hidden lg:flex flex-col p-6 pt-5 pb-5" style="height: calc(100vh - 5rem);">
+
+                <p class="text-[10px] font-bold text-white/40 uppercase tracking-[0.3em] mb-3">Step <span
+                        id="current-step-num">1</span> / 5</p>
+
+                <!-- Desktop Dabba progress visual — HERO position -->
+                <div id="desktop-dabba-panel"
+                    class="bg-white/[0.03] rounded-2xl border border-white/5 flex flex-col items-center justify-end pb-4 relative overflow-hidden shrink-0 mb-5"
+                    style="height: 160px;">
+                    <div class="tiffin-stage transform scale-[0.35] origin-bottom"
+                        id="desktop-tiffin-stage" style="height: 342px;">
+
+                        <!-- Connected Carrier Frame -->
+                        <div class="carrier-frame" id="desktop-carrier-frame">
+                            <div class="carrier-arch">
+                                <div class="carrier-arch-latch"></div>
                             </div>
-                            <div>
-                                <p class="text-xs font-bold uppercase tracking-widest opacity-40">Check</p>
-                                <p id="step-summary-1" class="text-[10px] font-medium text-white/60">Pincode</p>
+                            <div class="carrier-connector left"></div>
+                            <div class="carrier-connector right"></div>
+                            <div class="carrier-rail left">
+                                <div class="carrier-side-tab"></div>
                             </div>
+                            <div class="carrier-rail right">
+                                <div class="carrier-side-tab"></div>
+                            </div>
+                            <div class="carrier-base"></div>
                         </div>
 
-                        
-                        <div class="flex items-center gap-4 group cursor-pointer" onclick="goToStep(2)">
-                            <div id="step-icon-2"
-                                class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-white/10 text-white/40 transition-all duration-300">
-                                2
-                            </div>
-                            <div>
-                                <p class="text-xs font-bold uppercase tracking-widest opacity-40">Diet</p>
-                                <p id="step-summary-2" class="text-[10px] font-medium text-white/60">Not selected</p>
-                            </div>
+                        <!-- Lid -->
+                        <div class="dabba-lid" id="desktop-dabba-lid">
+                            <div class="lid-knob"></div>
+                            <div class="lid-top"></div>
+                            <div class="lid-rim"></div>
+                            <div class="lid-body"></div>
+                            <div class="lid-bottom-face"></div>
                         </div>
 
-                        
-                        <div class="flex items-center gap-4 group cursor-pointer" onclick="goToStep(3)">
-                            <div id="step-icon-3"
-                                class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-white/10 text-white/40 transition-all duration-300">
-                                3
+                        <!-- Stack -->
+                        <div class="dabba-stack" id="desktop-dabba-stack">
+                            <div class="dabba dabba-steel" id="desktop-dabba-1">
+                                <div class="dabba-top"></div>
+                                <div class="rim-band rim-band-top"></div>
+                                <div class="dabba-body"><span class="dabba-label" id="desktop-label-1">📍 Pincode</span>
+                                </div>
+                                <div class="rim-band rim-band-bottom"></div>
+                                <div class="dabba-bottom"></div>
                             </div>
-                            <div>
-                                <p class="text-xs font-bold uppercase tracking-widest opacity-40">Plan</p>
-                                <p id="step-summary-3" class="text-[10px] font-medium text-white/60">Not selected</p>
+                            <div class="dabba dabba-steel" id="desktop-dabba-2">
+                                <div class="dabba-top"></div>
+                                <div class="rim-band rim-band-top"></div>
+                                <div class="dabba-body"><span class="dabba-label" id="desktop-label-2">🥗 Diet</span>
+                                </div>
+                                <div class="rim-band rim-band-bottom"></div>
+                                <div class="dabba-bottom"></div>
+                            </div>
+                            <div class="dabba dabba-steel" id="desktop-dabba-3">
+                                <div class="dabba-top"></div>
+                                <div class="rim-band rim-band-top"></div>
+                                <div class="dabba-body"><span class="dabba-label" id="desktop-label-3">📅 Plan</span>
+                                </div>
+                                <div class="rim-band rim-band-bottom"></div>
+                                <div class="dabba-bottom"></div>
+                            </div>
+                            <div class="dabba dabba-steel" id="desktop-dabba-4">
+                                <div class="dabba-top"></div>
+                                <div class="rim-band rim-band-top"></div>
+                                <div class="dabba-body"><span class="dabba-label" id="desktop-label-4">👤 Contact</span>
+                                </div>
+                                <div class="rim-band rim-band-bottom"></div>
+                                <div class="dabba-bottom"></div>
                             </div>
                         </div>
+                        <div class="stack-shadow" id="desktop-stack-shadow"></div>
+                    </div>
+                </div>
 
-                        
-                        <div class="flex items-center gap-4 group cursor-pointer" onclick="goToStep(4)">
-                            <div id="step-icon-4"
-                                class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-white/10 text-white/40 transition-all duration-300">
-                                4
-                            </div>
-                            <div>
-                                <p class="text-xs font-bold uppercase tracking-widest opacity-40">Contact</p>
-                                <p id="step-summary-4" class="text-[10px] font-medium text-white/60">Not selected</p>
-                            </div>
+                <!-- Step navigation list -->
+                <div class="flex flex-col gap-3 mb-4">
+                    <div class="flex items-center gap-3">
+                        <div id="step-icon-1"
+                            class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm step-active transition-all duration-300 shrink-0">
+                            1
                         </div>
+                        <div class="min-w-0">
+                            <p class="text-sm font-bold uppercase tracking-wider opacity-60">Check</p>
+                            <p id="step-summary-1" class="text-xs font-medium text-white/60 truncate">Pincode</p>
+                        </div>
+                    </div>
 
-                        
-                        <div class="flex items-center gap-4 group cursor-pointer" onclick="goToStep(5)">
-                            <div id="step-icon-5"
-                                class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-white/10 text-white/40 transition-all duration-300">
-                                5
-                            </div>
-                            <div>
-                                <p class="text-xs font-bold uppercase tracking-widest opacity-40">Delivery</p>
-                                <p id="step-summary-5" class="text-[10px] font-medium text-white/60">Not selected</p>
-                            </div>
+                    <div class="flex items-center gap-3">
+                        <div id="step-icon-2"
+                            class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm bg-white/10 text-white/40 transition-all duration-300 shrink-0">
+                            2
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-sm font-bold uppercase tracking-wider opacity-60">Diet</p>
+                            <p id="step-summary-2" class="text-xs font-medium text-white/60 truncate">Not selected</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <div id="step-icon-3"
+                            class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm bg-white/10 text-white/40 transition-all duration-300 shrink-0">
+                            3
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-sm font-bold uppercase tracking-wider opacity-60">Plan</p>
+                            <p id="step-summary-3" class="text-xs font-medium text-white/60 truncate">Not selected</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <div id="step-icon-4"
+                            class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm bg-white/10 text-white/40 transition-all duration-300 shrink-0">
+                            4
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-sm font-bold uppercase tracking-wider opacity-60">Contact</p>
+                            <p id="step-summary-4" class="text-xs font-medium text-white/60 truncate">Not selected</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <div id="step-icon-5"
+                            class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm bg-white/10 text-white/40 transition-all duration-300 shrink-0">
+                            5
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-sm font-bold uppercase tracking-wider opacity-60">Delivery</p>
+                            <p id="step-summary-5" class="text-xs font-medium text-white/60 truncate">Not selected</p>
                         </div>
                     </div>
                 </div>
 
-                
+                <!-- Live Pricing Card -->
                 <div id="desktop-pricing-card"
-                    class="hidden mt-auto bg-white/5 rounded-3xl p-6 border border-white/5 space-y-4">
-                    <div class="flex items-center gap-2 mb-2 text-dabba-maroon">
-                        <i data-lucide="calculator" class="w-5 h-5"></i>
-                        <h4 class="text-sm font-bold uppercase tracking-widest text-white">Live pricing</h4>
+                    class="hidden mt-6 bg-white/5 rounded-2xl p-4 border border-white/5 space-y-2">
+                    <div class="flex items-center gap-2 mb-1">
+                        <i data-lucide="calculator" class="w-4 h-4 text-dabba-maroon"></i>
+                        <h4 class="text-xs font-bold uppercase tracking-widest text-white">Live pricing</h4>
                     </div>
 
-                    <div class="space-y-2 text-xs">
+                    <div class="space-y-1.5 text-[11px]">
                         <div class="flex justify-between">
                             <span class="opacity-60">Per meal</span>
                             <span class="font-bold">₹<span id="price-per-meal">273</span></span>
@@ -225,12 +872,12 @@
                         </div>
                     </div>
 
-                    <div class="pt-4 border-t border-white/10">
-                        <div class="flex justify-between items-end mb-4">
+                    <div class="pt-2 border-t border-white/10">
+                        <div class="flex justify-between items-end mb-2">
                             <p class="text-[10px] font-bold uppercase tracking-widest opacity-60">Order Total</p>
                             <div class="text-right">
-                                <p class="text-[10px] line-through opacity-40 mb-1">₹<span id="old-total">0</span></p>
-                                <p class="text-2xl font-serif font-bold">₹<span id="final-total">0</span></p>
+                                <p class="text-[10px] line-through opacity-40 mb-0.5">₹<span id="old-total">0</span></p>
+                                <p class="text-xl font-serif font-bold">₹<span id="final-total">0</span></p>
                             </div>
                         </div>
                         <p id="save-badge"
@@ -241,10 +888,11 @@
             </div>
         </aside>
 
-        
+
         <div class="flex-1 bg-white lg:rounded-tl-[3rem] shadow-2xl relative flex flex-col">
             <div class="flex-1 overflow-y-auto custom-scrollbar">
-                
+
+
                 <div id="step-content-1"
                     class="step-container p-6 lg:p-16 max-w-4xl mx-auto animate-in fade-in slide-in-from-right-8 duration-500">
                     <div class="mb-12">
@@ -271,12 +919,12 @@
                                 class="absolute right-2 top-2 bottom-2 px-6 bg-dabba-maroon text-white text-[10px] font-bold uppercase tracking-widest rounded-xl hover:scale-105 transition-all shadow-lg shadow-dabba-maroon/20">Check</button>
                         </div>
                         <div id="pincode-result" class="mt-4 hidden animate-in fade-in slide-in-from-top-2">
-                            
+
                         </div>
                     </div>
                 </div>
 
-                
+
                 <div id="step-content-2"
                     class="step-container hidden p-6 lg:p-16 max-w-4xl mx-auto animate-in fade-in slide-in-from-right-8 duration-500">
                     <div class="mb-12">
@@ -294,11 +942,11 @@
                     </div>
 
                     <div class="grid sm:grid-cols-2 gap-6 mb-12">
-                        
+
                         <label class="relative group cursor-pointer">
                             <input type="radio" name="diet" value="veg" class="peer sr-only"
                                 onchange="updateDiet('Veg')">
-                            
+
                             <div
                                 class="h-full border-2 border-gray-100 rounded-[2.5rem] p-8 transition-all duration-300 peer-checked:border-dabba-maroon peer-checked:bg-dabba-maroon/5 group-hover:border-gray-200">
                                 <div
@@ -310,7 +958,7 @@
                                 <p class="text-sm text-gray-500 leading-relaxed">Fresh, seasonal greens, legumes, and
                                     traditional Indian favorites.</p>
                             </div>
-                            
+
                             <div
                                 class="absolute top-8 right-8 w-6 h-6 border-2 border-gray-200 rounded-full flex items-center justify-center transition-all duration-300 peer-checked:bg-dabba-maroon peer-checked:border-dabba-maroon peer-checked:[&_svg]:opacity-100">
                                 <svg class="w-3 h-3 text-white opacity-0 transition-opacity duration-300" fill="none"
@@ -321,11 +969,11 @@
                             </div>
                         </label>
 
-                        
+
                         <label class="relative group cursor-pointer">
                             <input type="radio" name="diet" value="non-veg" class="peer sr-only"
                                 onchange="updateDiet('Non-Veg')">
-                            
+
                             <div
                                 class="h-full border-2 border-gray-100 rounded-[2.5rem] p-8 transition-all duration-300 peer-checked:border-dabba-maroon peer-checked:bg-dabba-maroon/5 group-hover:border-gray-200">
                                 <div
@@ -337,7 +985,7 @@
                                 <p class="text-sm text-gray-500 leading-relaxed">Juicy meats, aromatic gravies, and
                                     high-protein gourmet meals.</p>
                             </div>
-                            
+
                             <div
                                 class="absolute top-8 right-8 w-6 h-6 border-2 border-gray-200 rounded-full flex items-center justify-center transition-all duration-300 peer-checked:bg-dabba-maroon peer-checked:border-dabba-maroon peer-checked:[&_svg]:opacity-100">
                                 <svg class="w-3 h-3 text-white opacity-0 transition-opacity duration-300" fill="none"
@@ -350,7 +998,7 @@
                     </div>
                 </div>
 
-                
+
                 <div id="step-content-3"
                     class="step-container hidden p-8 lg:p-16 max-w-4xl mx-auto animate-in fade-in slide-in-from-right-8 duration-500">
                     <div class="mb-12">
@@ -364,7 +1012,7 @@
                         </h2>
                     </div>
 
-                    
+
                     <div class="mb-10">
                         <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-6">Meal Slots</p>
                         <div class="grid grid-cols-2 gap-4">
@@ -403,7 +1051,7 @@
                         </div>
                     </div>
 
-                    
+
                     <div class="mb-10">
                         <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-6">Duration (Delivery
                             Days)</p>
@@ -436,7 +1084,7 @@
                         </div>
                     </div>
 
-                    
+
                     <div class="grid sm:grid-cols-2 gap-8 mb-10">
                         <div>
                             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Start date</p>
@@ -458,7 +1106,7 @@
                         </div>
                     </div>
 
-                    
+
                     <div class="mt-12 pt-12 border-t border-gray-100">
                         <div class="flex items-center gap-3 mb-8">
                             <span
@@ -472,13 +1120,13 @@
 
                         <div class="max-h-[400px] overflow-y-auto custom-scrollbar pr-2">
                             <div id="calendar-list" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                
+
                             </div>
                         </div>
                     </div>
                 </div>
 
-                
+
                 <div id="step-content-4"
                     class="step-container hidden p-8 lg:p-16 max-w-4xl mx-auto animate-in fade-in slide-in-from-right-8 duration-500">
                     <div class="mb-12">
@@ -497,7 +1145,7 @@
                         <div>
                             <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Full
                                 Name</label>
-                            <input type="text" id="contact-name" placeholder="John Doe"
+                            <input type="text" id="contact-name" placeholder="John Doe" oninput="updateDabbaStack()"
                                 class="w-full px-6 py-4 rounded-2xl border border-gray-100 bg-gray-50/50 text-sm font-medium focus:ring-2 focus:ring-dabba-maroon/20 outline-none transition-all">
                         </div>
 
@@ -538,7 +1186,7 @@
                     </form>
                 </div>
 
-                
+
                 <div id="step-content-5"
                     class="step-container hidden p-8 lg:p-16 max-w-4xl mx-auto animate-in fade-in slide-in-from-right-8 duration-500">
                     <div class="mb-12">
@@ -585,7 +1233,7 @@
                 </div>
             </div>
 
-            
+
             <div class="bg-white/80 backdrop-blur-md border-t border-gray-100 p-6 flex justify-between items-center">
                 <button id="prev-btn"
                     class="hidden px-8 py-4 rounded-2xl border border-gray-100 text-sm font-bold text-gray-400 hover:bg-gray-50 transition-all"
@@ -604,13 +1252,14 @@
 
     <script>
         let currentStep = 1;
+        let isOrderCompleted = false;
         const config = {
             pincode: null,
             diet: null,
             slots: { lunch: true, dinner: false },
             duration: 1,
             people: 1,
-            skips: [], 
+            skips: [],
             pricing: {
                 1: 273,
                 3: 265,
@@ -624,7 +1273,7 @@
             const pin = document.getElementById('check-pincode').value;
             const resultDiv = document.getElementById('pincode-result');
 
-            
+
             const isValidPin = /^[1-9][0-9]{5}$/.test(pin);
 
             if (!isValidPin) {
@@ -633,10 +1282,11 @@
             }
 
             resultDiv.classList.remove('hidden');
-            
+
             config.pincode = pin;
             document.getElementById('final-pincode').value = pin;
             document.getElementById('step-summary-1').innerText = pin;
+            updateDabbaStack();
             resultDiv.innerHTML = `<div class="p-4 bg-green-50 text-green-700 rounded-xl text-xs font-bold border border-green-100 flex items-center gap-2">
                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path></svg>
                 DabbaGo is available in your area! Proceeding...
@@ -676,14 +1326,14 @@
                 check.classList.remove('bg-dabba-maroon');
                 check.classList.add('border-2', 'border-gray-100');
             }
-            config.skips = []; 
+            config.skips = [];
             generateCalendar();
             calculatePricing();
         }
 
         function updateDuration(days, el) {
             config.duration = days;
-            config.skips = []; 
+            config.skips = [];
             document.querySelectorAll('.duration-btn').forEach(btn => {
                 btn.classList.remove('border-dabba-maroon', 'bg-dabba-maroon/5');
                 btn.classList.add('border-gray-100');
@@ -771,13 +1421,13 @@
         function openCalendar() {
             const view = document.getElementById('calendar-view');
             if (view) view.classList.remove('hidden');
-            document.body.style.overflow = 'hidden'; 
+            document.body.style.overflow = 'hidden';
         }
 
         function closeCalendar() {
             const view = document.getElementById('calendar-view');
             if (view) view.classList.add('hidden');
-            document.body.style.overflow = ''; 
+            document.body.style.overflow = '';
         }
 
         function calculatePricing() {
@@ -814,7 +1464,7 @@
                 badge.classList.add('hidden');
             }
 
-            
+
             const slotText = (config.slots.lunch && config.slots.dinner) ? 'L+D' : (config.slots.lunch ? 'Lunch' : (config.slots.dinner ? 'Dinner' : 'None'));
             const summaryText = `${config.duration} Days · ${slotText}${skippedMealsCount > 0 ? ` (${skippedMealsCount} skipped)` : ''}`;
             document.getElementById('step-summary-3').innerText = summaryText;
@@ -829,23 +1479,23 @@
 
                 if (!icon) continue;
 
-                
+
                 icon.classList.remove('step-active', 'step-completed', 'bg-white/10', 'text-white/40');
                 if (i < currentStep) {
-                    icon.classList.add('step-completed'); 
+                    icon.classList.add('step-completed');
                 } else if (i === currentStep) {
-                    icon.classList.add('step-active'); 
+                    icon.classList.add('step-active');
                 } else {
-                    icon.classList.add('bg-white/10', 'text-white/40'); 
+                    icon.classList.add('bg-white/10', 'text-white/40');
                 }
 
-                
+
                 if (content) {
                     if (i === currentStep) content.classList.remove('hidden');
                     else content.classList.add('hidden');
                 }
 
-                
+
                 if (dot) {
                     dot.classList.remove('bg-white/10', 'bg-dabba-maroon', 'bg-[#4caf50]');
                     if (i < currentStep) {
@@ -858,7 +1508,7 @@
                 }
             }
 
-            
+
             const stepNumEl = document.getElementById('current-step-num');
             const mobileStepNumEl = document.getElementById('mobile-step-num');
             const prevBtn = document.getElementById('prev-btn');
@@ -874,16 +1524,32 @@
                 nextBtn.innerText = currentStep === 5 ? 'Confirm & Pay' : 'Next →';
             }
 
-            
+
             const desktopPricing = document.getElementById('desktop-pricing-card');
             const mobilePricing = document.getElementById('mobile-pricing-trigger');
+            const isPricingHidden = currentStep < 3;
 
             if (desktopPricing) {
-                desktopPricing.classList.toggle('hidden', currentStep < 3);
+                desktopPricing.classList.toggle('hidden', isPricingHidden);
+
+                const dabbaPanel = document.getElementById('desktop-dabba-panel');
+                const tiffinStage = document.getElementById('desktop-tiffin-stage');
+                if (dabbaPanel && tiffinStage) {
+                    if (isPricingHidden) {
+                        dabbaPanel.style.height = "260px";
+                        tiffinStage.style.transform = "scale(0.50)";
+                    } else {
+                        dabbaPanel.style.height = "160px";
+                        tiffinStage.style.transform = "scale(0.35)";
+                    }
+                }
             }
             if (mobilePricing) {
-                mobilePricing.classList.toggle('hidden', currentStep < 3);
+                mobilePricing.classList.toggle('hidden', isPricingHidden);
             }
+
+            // Sync the visual tiffin stack state
+            updateDabbaStack();
         }
 
         function changeStep(dir) {
@@ -891,7 +1557,9 @@
 
             const newStep = currentStep + dir;
             if (newStep < 1 || newStep > 5) {
-                if (newStep > 5) alert('Subscription Created! (Proceeding to payment...)');
+                if (newStep > 5) {
+                    completeOrder();
+                }
                 return;
             }
 
@@ -949,12 +1617,12 @@
         }
 
         function goToStep(step) {
-            
+
             if (step <= currentStep) {
                 currentStep = step;
                 updateStepUI();
             } else {
-                
+
                 for (let i = currentStep; i < step; i++) {
                     if (!validateStep(i)) return;
                 }
@@ -963,18 +1631,297 @@
             }
         }
 
-        
+        function updateDabbaStack() {
+            const pincode = config.pincode || '';
+            const diet = config.diet || '';
+            const duration = config.duration || 30;
+            const nameInput = document.getElementById('contact-name');
+            const name = nameInput ? nameInput.value : '';
+
+            // Update Labels
+            const label1 = pincode ? `📍 PIN: ${pincode}` : '📍 PINCODE';
+            const label2 = diet ? (diet.toLowerCase().includes('veg') && !diet.toLowerCase().includes('non') ? '🥗 VEG' : '🍖 NON-VEG') : '🥗 DIET';
+            const label3 = `📅 ${duration} DAYS`;
+            const label4 = name ? `👤 ${name.toUpperCase().substring(0, 12)}` : '👤 CONTACT';
+
+            // Sync Desktop tiffins
+            const dkL1 = document.getElementById('desktop-label-1');
+            const dkL2 = document.getElementById('desktop-label-2');
+            const dkL3 = document.getElementById('desktop-label-3');
+            const dkL4 = document.getElementById('desktop-label-4');
+            if (dkL1) dkL1.innerText = label1;
+            if (dkL2) dkL2.innerText = label2;
+            if (dkL3) dkL3.innerText = label3;
+            if (dkL4) dkL4.innerText = label4;
+
+            // Sync Mobile tiffins
+            const mbL1 = document.getElementById('mobile-label-1');
+            const mbL2 = document.getElementById('mobile-label-2');
+            const mbL3 = document.getElementById('mobile-label-3');
+            const mbL4 = document.getElementById('mobile-label-4');
+            if (mbL1) mbL1.innerText = label1;
+            if (mbL2) mbL2.innerText = label2;
+            if (mbL3) mbL3.innerText = label3;
+            if (mbL4) mbL4.innerText = label4;
+
+            // Update Diet color styles on Step 2 dabba
+            const d1_dk = document.getElementById('desktop-dabba-2');
+            const d1_mb = document.getElementById('mobile-dabba-2');
+            if (diet) {
+                const dietClass = (diet.toLowerCase().includes('veg') && !diet.toLowerCase().includes('non')) ? 'dabba-veg' : 'dabba-nonveg';
+                if (d1_dk) d1_dk.className = `dabba ${dietClass}`;
+                if (d1_mb) d1_mb.className = `dabba ${dietClass}`;
+            } else {
+                if (d1_dk) d1_dk.className = 'dabba dabba-steel';
+                if (d1_mb) d1_mb.className = 'dabba dabba-steel';
+            }
+
+            // Stacking activation based on currentStep
+            for (let i = 1; i <= 4; i++) {
+                const dkDabba = document.getElementById(`desktop-dabba-${i}`);
+                const mbDabba = document.getElementById(`mobile-dabba-${i}`);
+
+                if (i <= currentStep) {
+                    dkDabba?.classList.add('animate-in', 'active');
+                    mbDabba?.classList.add('animate-in', 'active');
+                } else {
+                    dkDabba?.classList.remove('animate-in', 'active');
+                    mbDabba?.classList.remove('animate-in', 'active');
+                }
+            }
+
+            // Activate Lid and Carrier Frame on Step 5
+            const dkLid = document.getElementById('desktop-dabba-lid');
+            const mbLid = document.getElementById('mobile-dabba-lid');
+            const dkCarrier = document.getElementById('desktop-carrier-frame');
+            const mbCarrier = document.getElementById('mobile-carrier-frame');
+            const dkStage = document.getElementById('desktop-tiffin-stage');
+            const mbStage = document.getElementById('mobile-tiffin-stage');
+
+            if (currentStep === 5) {
+                dkLid?.classList.add('animate-in', 'active');
+                mbLid?.classList.add('animate-in', 'active');
+
+                // Final grill (carrier frame) is ONLY added when the person completes the 5th step
+                if (isOrderCompleted) {
+                    setTimeout(() => {
+                        dkCarrier?.classList.add('active');
+                        mbCarrier?.classList.add('active');
+                        setTimeout(() => {
+                            dkStage?.classList.add('assembled');
+                            mbStage?.classList.add('assembled');
+                        }, 400);
+                    }, 450);
+                } else {
+                    dkCarrier?.classList.remove('active');
+                    mbCarrier?.classList.remove('active');
+                    dkStage?.classList.remove('assembled');
+                    mbStage?.classList.remove('assembled');
+                }
+            } else {
+                dkLid?.classList.remove('animate-in', 'active');
+                mbLid?.classList.remove('animate-in', 'active');
+                dkCarrier?.classList.remove('active');
+                mbCarrier?.classList.remove('active');
+                dkStage?.classList.remove('assembled');
+                mbStage?.classList.remove('assembled');
+            }
+
+            // Sync dynamic ground shadow sizing
+            const dkShadow = document.getElementById('desktop-stack-shadow');
+            const mbShadow = document.getElementById('mobile-stack-shadow');
+            const activeCount = Math.min(currentStep, 4);
+            if (dkShadow) dkShadow.style.width = `${100 + activeCount * 12}px`;
+            if (mbShadow) mbShadow.style.width = `${100 + activeCount * 12}px`;
+        }
+
+        function completeOrder() {
+            if (isOrderCompleted) return;
+            isOrderCompleted = true;
+
+            // Trigger final grill (carrier frame) slide-down!
+            updateDabbaStack();
+
+            // Prepare Success Modal texts dynamically
+            const name = document.getElementById('contact-name').value || 'John Doe';
+            const pincode = config.pincode || '400001';
+            const diet = config.diet || 'Veg';
+            const duration = config.duration || 30;
+            const slotText = (config.slots.lunch && config.slots.dinner) ? 'Lunch + Dinner' : (config.slots.lunch ? 'Lunch Only' : (config.slots.dinner ? 'Dinner Only' : 'None'));
+
+            // Set texts inside the success modal
+            document.querySelectorAll('.success-name').forEach(el => el.innerText = name.toUpperCase());
+            document.querySelectorAll('.success-name-full').forEach(el => el.innerText = name);
+            document.querySelectorAll('.success-pin').forEach(el => el.innerText = pincode);
+            document.querySelectorAll('.success-duration').forEach(el => el.innerText = duration);
+
+            const successDietDabba = document.getElementById('success-dabba-diet');
+            const successDietLabel = document.getElementById('success-diet-label');
+            if (successDietDabba && successDietLabel) {
+                if (diet.toLowerCase().includes('veg') && !diet.toLowerCase().includes('non')) {
+                    successDietDabba.className = 'dabba dabba-veg active animate-in';
+                    successDietLabel.innerText = '🥗 VEG';
+                    document.querySelector('.success-diet-summary').innerText = '🥗 Veg Subscription';
+                } else {
+                    successDietDabba.className = 'dabba dabba-nonveg active animate-in';
+                    successDietLabel.innerText = '🍖 NON-VEG';
+                    document.querySelector('.success-diet-summary').innerText = '🍖 Non-Veg Subscription';
+                }
+            }
+
+            document.querySelector('.success-duration-summary').innerText = `${duration} Days (${slotText})`;
+            document.querySelector('.success-pin-summary').innerText = `PIN: ${pincode}`;
+
+            // Show beautiful modal overlay after locking animation finishes (1200ms)
+            setTimeout(() => {
+                const successModal = document.getElementById('success-modal');
+                if (successModal) {
+                    successModal.classList.remove('hidden');
+                    // Trigger fade-in
+                    setTimeout(() => {
+                        successModal.classList.remove('opacity-0');
+                        successModal.querySelector('div').classList.remove('scale-95');
+                    }, 50);
+                }
+            }, 1200);
+        }
+
+
         generateCalendar();
         calculatePricing();
         updateStepUI();
         lucide.createIcons();
 
-        
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('active'); observer.unobserve(entry.target); } });
         }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     </script>
+    <!-- Beautiful Premium Success Modal overlay -->
+    <div id="success-modal"
+        class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-dabba-dark/85 backdrop-blur-md hidden opacity-0 transition-opacity duration-500">
+        <div
+            class="bg-white rounded-[2.5rem] max-w-lg w-full p-8 lg:p-12 shadow-2xl relative overflow-hidden transform scale-95 transition-transform duration-500 flex flex-col items-center text-center border border-gray-100">
+            <!-- Confetti/Celebration circles in background -->
+            <div
+                class="absolute -top-24 -left-24 w-48 h-48 bg-green-100 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse">
+            </div>
+            <div
+                class="absolute -bottom-24 -right-24 w-48 h-48 bg-dabba-maroon/10 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse">
+            </div>
+
+            <!-- Floating Completed Dabba in Modal Header! -->
+            <div class="w-full h-40 flex items-center justify-center relative mb-6">
+                <!-- Mini success tiffin stage -->
+                <div class="tiffin-stage transform scale-[0.42] origin-center absolute -top-24" style="height: 342px;">
+                    <div class="carrier-frame active">
+                        <div class="carrier-arch">
+                            <div class="carrier-arch-latch"></div>
+                        </div>
+                        <div class="carrier-connector left"></div>
+                        <div class="carrier-connector right"></div>
+                        <div class="carrier-rail left">
+                            <div class="carrier-side-tab"></div>
+                        </div>
+                        <div class="carrier-rail right">
+                            <div class="carrier-side-tab"></div>
+                        </div>
+                        <div class="carrier-base"></div>
+                    </div>
+                    <div class="dabba-lid active animate-in">
+                        <div class="lid-knob"></div>
+                        <div class="lid-top"></div>
+                        <div class="lid-rim"></div>
+                        <div class="lid-body"></div>
+                        <div class="lid-bottom-face"></div>
+                    </div>
+                    <div class="dabba-stack">
+                        <div class="dabba dabba-steel active animate-in" style="transform:none;opacity:1;">
+                            <div class="dabba-top"></div>
+                            <div class="rim-band rim-band-top"></div>
+                            <div class="dabba-body"><span class="dabba-label">📍 PIN: <span
+                                        class="success-pin">400001</span></span></div>
+                            <div class="rim-band rim-band-bottom"></div>
+                            <div class="dabba-bottom"></div>
+                        </div>
+                        <div class="dabba dabba-veg active animate-in" id="success-dabba-diet"
+                            style="transform:none;opacity:1;">
+                            <div class="dabba-top"></div>
+                            <div class="rim-band rim-band-top"></div>
+                            <div class="dabba-body"><span class="dabba-label" id="success-diet-label">🥗 VEG</span>
+                            </div>
+                            <div class="rim-band rim-band-bottom"></div>
+                            <div class="dabba-bottom"></div>
+                        </div>
+                        <div class="dabba dabba-steel active animate-in" style="transform:none;opacity:1;">
+                            <div class="dabba-top"></div>
+                            <div class="rim-band rim-band-top"></div>
+                            <div class="dabba-body"><span class="dabba-label">📅 <span
+                                        class="success-duration">30</span> DAYS</span></div>
+                            <div class="rim-band rim-band-bottom"></div>
+                            <div class="dabba-bottom"></div>
+                        </div>
+                        <div class="dabba dabba-steel active animate-in" style="transform:none;opacity:1;">
+                            <div class="dabba-top"></div>
+                            <div class="rim-band rim-band-top"></div>
+                            <div class="dabba-body"><span class="dabba-label">👤 <span
+                                        class="success-name">KUSHAGRA</span></span></div>
+                            <div class="rim-band rim-band-bottom"></div>
+                            <div class="dabba-bottom"></div>
+                        </div>
+                    </div>
+                    <div class="stack-shadow" style="width:148px;"></div>
+                </div>
+
+                <!-- Superimposed Success Badge -->
+                <div
+                    class="absolute bottom-2 bg-green-500 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg border-4 border-white animate-bounce">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <p class="text-[10px] font-bold text-dabba-maroon uppercase tracking-[0.25em] mb-2">Order Confirmed</p>
+            <h3 class="text-3xl font-serif font-bold text-dabba-dark leading-snug mb-3">
+                Your Dabba is locked & <span class="italic text-dabba-maroon">ready!</span>
+            </h3>
+            <p class="text-xs text-gray-400 font-medium max-w-sm mb-6 leading-relaxed">
+                Thank you, <span class="font-bold text-gray-700 success-name-full">John Doe</span>! We've locked in your
+                custom tiffin subscription. Your delivery cycle starts shortly.
+            </p>
+
+            <!-- Order Specs Breakdown -->
+            <div
+                class="w-full bg-gray-50 rounded-2xl p-4 mb-8 text-left space-y-2 border border-gray-100 text-xs text-gray-500">
+                <div class="flex justify-between">
+                    <span>Diet Style</span>
+                    <span class="font-bold text-dabba-dark success-diet-summary">🥗 Veg Subscription</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Plan Duration</span>
+                    <span class="font-bold text-dabba-dark success-duration-summary">30 Days (Lunch + Dinner)</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Delivery Location</span>
+                    <span class="font-bold text-dabba-dark success-pin-summary">PIN: 400001</span>
+                </div>
+            </div>
+
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row gap-3 w-full">
+                <a href="../index.html"
+                    class="flex-1 px-6 py-4 rounded-xl border border-gray-100 text-xs font-bold text-gray-400 hover:bg-gray-50 transition-all uppercase tracking-widest text-center">
+                    Go Back Home
+                </a>
+                <button onclick="window.location.reload()"
+                    class="flex-1 px-6 py-4 rounded-xl bg-dabba-maroon text-white text-xs font-bold uppercase tracking-widest hover:scale-[1.02] transition-all shadow-lg shadow-dabba-maroon/20">
+                    Manage Order
+                </button>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
