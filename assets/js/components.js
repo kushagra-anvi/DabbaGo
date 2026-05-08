@@ -26,6 +26,7 @@ const components = {
                     <a href="${homeLink}#how-it-works" class="nav-link hover:text-dabba-maroon transition-colors whitespace-nowrap">How It Works</a>
                     <a href="${homeLink}#weekly-menu" class="nav-link hover:text-dabba-maroon transition-colors whitespace-nowrap">Menu</a>
                     <a href="${prefix}order.html" class="nav-link hover:text-dabba-maroon transition-colors whitespace-nowrap">Subscription</a>
+                    <a href="${homeLink}#testimonials" class="nav-link hover:text-dabba-maroon transition-colors whitespace-nowrap">Stories</a>
                     <a href="${homeLink}#faq" class="nav-link hover:text-dabba-maroon transition-colors whitespace-nowrap">FAQ</a>
                 </div>
 
@@ -54,6 +55,7 @@ const components = {
                 <a href="${homeLink}#how-it-works" class="mobile-nav-link-dropdown px-6 py-3 rounded-xl text-[15px] font-semibold transition-all">How It Works</a>
                 <a href="${homeLink}#weekly-menu" class="mobile-nav-link-dropdown px-6 py-3 rounded-xl text-[15px] font-semibold transition-all">Menu</a>
                 <a href="${prefix}order.html" class="mobile-nav-link-dropdown px-6 py-3 rounded-xl text-[15px] font-semibold transition-all">Subscription</a>
+                <a href="${homeLink}#testimonials" class="mobile-nav-link-dropdown px-6 py-3 rounded-xl text-[15px] font-semibold transition-all">Stories</a>
                 <a href="${homeLink}#faq" class="mobile-nav-link-dropdown px-6 py-3 rounded-xl text-[15px] font-semibold transition-all">FAQ</a>
 
                 <div class="mt-4 pt-6 border-t border-black/5 flex flex-col gap-3">
@@ -80,7 +82,7 @@ const components = {
                             </div>
                             <span class="text-4xl font-serif font-bold text-dabba-maroon tracking-tight">DabbaGo</span>
                         </div>
-                        <p class="text-sm text-gray-400 mb-8 italic max-w-xs leading-relaxed opacity-70">"Our job is to filling your tummy with delicious food and with fast and free delivery."</p>
+                        <p class="text-sm text-gray-400 mb-8 italic max-w-xs leading-relaxed opacity-70">"Gourmet, nutritionist-approved home-style meals delivered fresh in sustainable, modern dabbas—elevating your daily lunch experience."</p>
                     </div>
                     <div class="reveal">
                         <h4 class="text-[10px] font-bold text-white uppercase tracking-[0.3em] mb-8 opacity-80">Experience</h4>

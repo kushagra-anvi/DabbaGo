@@ -120,6 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     initDragScroll(document.getElementById('menu-container'));
     initDragScroll(document.getElementById('process-container'));
+    initDragScroll(document.getElementById('testimonials-container'));
 
     
     const menuSlider = document.getElementById('menu-container');
@@ -142,6 +143,30 @@ document.addEventListener('DOMContentLoaded', () => {
             menuSlider.addEventListener('scroll', () => {
                 const cards = menuSlider.querySelectorAll('.menu-day');
                 const scrollPos = menuSlider.scrollLeft + menuSlider.offsetWidth / 2;
+                let activeIndex = 0;
+                cards.forEach((card, i) => {
+                    if (card.offsetLeft <= scrollPos) activeIndex = i;
+                });
+                dots.forEach((dot, i) => {
+                    if (i === activeIndex) {
+                        dot.classList.remove('bg-dabba-maroon/20');
+                        dot.classList.add('bg-dabba-maroon', 'w-4');
+                    } else {
+                        dot.classList.remove('bg-dabba-maroon', 'w-4');
+                        dot.classList.add('bg-dabba-maroon/20');
+                    }
+                });
+            });
+        }
+    }
+
+    const testimonialSlider = document.getElementById('testimonials-container');
+    if (testimonialSlider) {
+        const dots = document.querySelectorAll('#testimonial-dots .testimonial-dot');
+        if (dots.length) {
+            testimonialSlider.addEventListener('scroll', () => {
+                const cards = testimonialSlider.querySelectorAll('.group');
+                const scrollPos = testimonialSlider.scrollLeft + testimonialSlider.offsetWidth / 2;
                 let activeIndex = 0;
                 cards.forEach((card, i) => {
                     if (card.offsetLeft <= scrollPos) activeIndex = i;
