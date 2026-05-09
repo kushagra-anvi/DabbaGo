@@ -109,7 +109,7 @@ const components = {
                     </div>
                 </div>
                 <div class="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
-                    <p class="text-sm text-gray-500">&copy; 2026 DabbaGo. Crafted for Gourmet Living.</p>
+                    <p class="text-sm text-gray-500">&copy; 2026 DabbaGo. Crafted for Gourmet Living. | Powered By <a href="https://olatechdigital.com/" class="hover:text-dabba-maroon transition-colors" target="_blank" rel="noopener">Olatech Digital Solution</a></p>
                     
                     <!-- Direct SVG Social Media Links (Universally Visible & Fully Responsive) -->
                     <div class="flex items-center gap-3">
