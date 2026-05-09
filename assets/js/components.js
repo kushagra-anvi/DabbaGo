@@ -109,7 +109,7 @@ const components = {
                     </div>
                 </div>
                 <div class="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
-                    <p class="text-sm text-gray-500">&copy; 2026 DabbaGo. Crafted for Gourmet Living. | Powered By <a href="https://olatechdigital.com/" class="hover:text-dabba-maroon transition-colors" target="_blank" rel="noopener">Olatech Digital Solution</a></p>
+                    <p class="text-sm text-gray-500">&copy; 2026 DabbaGo. | Powered By <a href="https://olatechdigital.com/" class="hover:text-dabba-maroon transition-colors" target="_blank" rel="noopener">Olatech Digital Solution</a></p>
                     
                     <!-- Direct SVG Social Media Links (Universally Visible & Fully Responsive) -->
                     <div class="flex items-center gap-3">
@@ -134,8 +134,8 @@ const components = {
     init() {
         const headerPlaceholder = document.getElementById('header-placeholder');
         const footerPlaceholder = document.getElementById('footer-placeholder');
-        
-        
+
+
         const isRoot = !window.location.pathname.includes('/pages/');
 
         if (headerPlaceholder) {
@@ -145,15 +145,15 @@ const components = {
             footerPlaceholder.innerHTML = this.getFooter(isRoot);
         }
 
-        
+
         this.setupMobileMenu();
 
-        
+
         if (window.refreshReveal) {
             window.refreshReveal();
         }
 
-        
+
         if (window.lucide) {
             window.lucide.createIcons();
         }
@@ -162,14 +162,14 @@ const components = {
     setupMobileMenu() {
         const btn = document.getElementById('mobile-menu-btn');
         const menu = document.getElementById('mobile-menu');
-        
+
         if (btn && menu) {
             btn.addEventListener('click', () => {
                 menu.classList.toggle('opacity-0');
                 menu.classList.toggle('-translate-y-4');
                 menu.classList.toggle('pointer-events-none');
-                
-                
+
+
                 const lines = btn.querySelectorAll('span');
                 lines[0].classList.toggle('rotate-45');
                 lines[0].classList.toggle('translate-y-2');
@@ -178,7 +178,7 @@ const components = {
                 lines[2].classList.toggle('-translate-y-2');
             });
 
-            
+
             menu.querySelectorAll('a').forEach(link => {
                 link.addEventListener('click', () => {
                     menu.classList.add('opacity-0', '-translate-y-4', 'pointer-events-none');

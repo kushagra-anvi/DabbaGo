@@ -33,6 +33,7 @@
             background-color: #0b0b0d;
             color: #f3f4f6;
             overflow-x: hidden;
+            scrollbar-gutter: stable;
         }
 
         .custom-scrollbar::-webkit-scrollbar {
@@ -55,8 +56,8 @@
             perspective: 1200px;
             overflow: hidden;
             width: 100%;
-            height: calc(100vh - 120px);
-            min-height: 600px;
+            height: auto;
+            min-height: calc(100vh - 120px);
             position: relative;
         }
 
@@ -114,6 +115,54 @@
             box-shadow: none !important;
         }
 
+        /* === DYNAMIC STABLE HEIGHT AFTER 3D ZOOM COMPLETES === */
+        #checkout-flow.state-interior-stable {
+            min-height: 0 !important;
+            height: auto !important;
+            overflow: visible !important;
+        }
+
+        #checkout-flow.state-interior-stable #hero-stage-wrapper {
+            display: none !important;
+        }
+
+        #checkout-flow.state-interior-stable #active-chamber-wrapper {
+            position: relative !important;
+            display: block !important;
+            height: auto !important;
+            min-height: 0 !important;
+            max-height: none !important;
+        }
+
+        #checkout-flow.state-interior-stable .active-dabba-chamber {
+            display: block !important;
+            height: auto !important;
+            min-height: 0 !important;
+            max-height: none !important;
+            max-width: 100% !important;
+            overflow: visible !important;
+        }
+
+        #checkout-flow.state-interior-stable #chamber-viewport {
+            display: block !important;
+            height: auto !important;
+            min-height: 0 !important;
+            overflow: visible !important;
+        }
+
+        body.interior-active {
+            height: auto !important;
+            min-height: 100% !important;
+        }
+
+        /* Tighten outer page container in step view to eliminate footer gaps */
+        body.interior-active main {
+            padding-bottom: 4rem !important;
+        }
+        body.has-pricing-bar main {
+            padding-bottom: 12rem !important;
+        }
+
         /* Force transparent even when dabba-veg/nonveg is added */
         .state-interior .active-dabba-chamber.dabba-veg,
         .state-interior .active-dabba-chamber.dabba-nonveg {
@@ -122,11 +171,6 @@
             border-color: transparent !important;
         }
 
-        /* Hide metallic rims when in full-page interior mode */
-        .state-interior .chamber-rim {
-            opacity: 0 !important;
-            pointer-events: none !important;
-        }
 
         /* === NEW GLOBAL LIGHT MODE STYLING === */
         body {
@@ -134,22 +178,7 @@
             color: #1A1A1A !important;
         }
 
-        /* Global Header Link adaptation for white bg */
-        header a,
-        #header-placeholder a,
-        #header-placeholder span,
-        #header-placeholder button {
-            color: #374151 !important;
-        }
 
-        header a:hover,
-        #header-placeholder a:hover {
-            color: #852747 !important;
-        }
-
-        #header-placeholder svg path {
-            fill: #852747 !important;
-        }
 
         /* Step Title & Badge Adaptations */
         .step-container h2 {
@@ -226,6 +255,11 @@
             color: #1A1A1A !important;
         }
 
+        .step-container .duration-btn.border-dabba-maroon {
+            border-color: #852747 !important;
+            background-color: rgba(133, 39, 71, 0.05) !important;
+        }
+
         .step-container .duration-btn .opacity-60 {
             color: #6b7280 !important;
         }
@@ -250,7 +284,7 @@
             background: #ffffff !important;
             border: 2px solid #cbd5e1 !important;
             color: #374151 !important;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
         }
 
         #prev-btn:hover {
@@ -286,24 +320,22 @@
             box-shadow: none !important;
         }
 
-        /* Floating pricing strip in light mode */
+        /* Floating pricing strip in light mode - Bulletproof Redesigned */
         #sub-pricing-strip {
-            background: rgba(255, 255, 255, 0.88) !important;
-            border-color: rgba(133, 39, 71, 0.15) !important;
-            backdrop-filter: blur(20px) !important;
-            box-shadow: 0 10px 40px rgba(133, 39, 71, 0.1) !important;
+            position: fixed !important;
+            bottom: 24px !important;
+            left: 50% !important;
+            transform: translate(-50%, 120px) !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+            z-index: 50 !important;
         }
 
-        #sub-pricing-strip span.text-white\/60,
-        #sub-pricing-strip div.text-white\/60,
-        #sub-pricing-strip p.text-white\/40,
-        #sub-pricing-strip span.text-white\/40 {
-            color: #6b7280 !important;
-        }
-
-        #sub-pricing-strip span.text-white,
-        #sub-pricing-strip p.text-white {
-            color: #1A1A1A !important;
+        #sub-pricing-strip.active {
+            transform: translate(-50%, 0) !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
         }
 
         /* Step content entry animation */
@@ -312,30 +344,46 @@
         }
 
         @keyframes step-reveal {
-            0% { opacity: 0; transform: translateY(30px) scale(0.97); filter: blur(6px); }
-            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.97);
+                filter: blur(6px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: blur(0);
+            }
         }
 
 
         /* 3D cylindrical stage frame wrapper */
-        .tiffin-stage {}
+        .tiffin-stage {
+            position: relative;
+            width: 280px;
+            height: 342px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+        }
 
         /* === STANDALONE C-CLAMP CARRIER FRAME === */
         .carrier-frame {
             position: absolute;
             bottom: 12px;
             left: 50%;
-            transform: translateX(-50%) translateY(-100%);
+            transform: translateX(-50%) translateY(0);
             width: 196px;
             height: 290px;
             z-index: 10;
-            opacity: 0;
-            transition: transform .8s cubic-bezier(.34, 1.56, .64, 1), opacity .4s ease;
+            opacity: 0.3;
+            transition: opacity .4s ease;
             pointer-events: none;
         }
 
         .carrier-frame.active {
-            transform: translateX(-50%) translateY(0);
             opacity: 1;
         }
 
@@ -434,6 +482,282 @@
             box-shadow: 0 3px 6px rgba(0, 0, 0, .45);
         }
 
+        /* === 3D CYLINDRICAL DABBA & LID STYLES FOR SUCCESS MODAL === */
+        .dabba {
+            position: relative;
+            width: 180px;
+            height: 62px;
+            margin-top: -3px;
+            opacity: 0;
+            transform: translateY(-90px) scale(.85);
+            filter: drop-shadow(0 3px 5px rgba(0, 0, 0, .45));
+        }
+
+        .dabba.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Top ellipse — 3D cylinder cap */
+        .dabba-top {
+            position: absolute;
+            top: 0;
+            left: 6px;
+            right: 6px;
+            height: 22px;
+            border-radius: 50%;
+            z-index: 3;
+        }
+
+        .dabba-steel .dabba-top {
+            background: radial-gradient(ellipse at 40% 40%, #f5f5f5 0%, #e0e0e0 20%, #c8c8c8 45%, #b0b0b0 70%, #999 100%);
+            box-shadow: inset 0 2px 6px rgba(255, 255, 255, .25), inset 0 -2px 4px rgba(0, 0, 0, .1), 0 -1px 0 rgba(255, 255, 255, .35);
+        }
+
+        /* Concentric ring */
+        .dabba-top::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 55%;
+            height: 50%;
+            border-radius: 50%;
+            border: 1.5px solid rgba(255, 255, 255, .15);
+            box-shadow: inset 0 0 4px rgba(0, 0, 0, .06);
+        }
+
+        /* Body cylinder */
+        .dabba-body {
+            position: absolute;
+            top: 10px;
+            bottom: 6px;
+            left: 0;
+            right: 0;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .dabba-steel .dabba-body {
+            background: linear-gradient(90deg, #888 0%, #b8b8b8 8%, #e8e8e8 18%, #f2f2f2 28%, #ddd 42%, #c0c0c0 58%, #e5e5e5 72%, #f0f0f0 82%, #b8b8b8 92%, #888 100%);
+        }
+
+        /* Brushed texture */
+        .dabba-body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0, 0, 0, .02) 1px, rgba(0, 0, 0, .02) 2px);
+            pointer-events: none;
+        }
+
+        /* Center reflection band */
+        .dabba-body::after {
+            content: '';
+            position: absolute;
+            top: 25%;
+            left: 0;
+            right: 0;
+            height: 12px;
+            background: linear-gradient(180deg, transparent, rgba(255, 255, 255, .2), transparent);
+            pointer-events: none;
+        }
+
+        /* Rim bands — top and bottom thick raised rings */
+        .rim-band {
+            position: absolute;
+            left: -1px;
+            right: -1px;
+            height: 7px;
+            z-index: 2;
+        }
+
+        .rim-band-top {
+            top: 8px;
+        }
+
+        .rim-band-bottom {
+            bottom: 4px;
+        }
+
+        .dabba-steel .rim-band {
+            background: linear-gradient(90deg, #777 0%, #aaa 10%, #ddd 22%, #f5f5f5 32%, #ccc 50%, #ddd 68%, #f2f2f2 78%, #aaa 90%, #777 100%);
+            box-shadow: 0 1px 0 rgba(0, 0, 0, .15), inset 0 1px 0 rgba(255, 255, 255, .3);
+            border-radius: 2px;
+        }
+
+        /* Bottom ellipse */
+        .dabba-bottom {
+            position: absolute;
+            bottom: -3px;
+            left: 6px;
+            right: 6px;
+            height: 16px;
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .dabba-steel .dabba-bottom {
+            background: linear-gradient(180deg, #888, #666);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, .45);
+        }
+
+        /* Veg color overrides */
+        .dabba-veg .dabba-top {
+            background: radial-gradient(ellipse at 40% 40%, #81c784 0%, #66bb6a 20%, #4caf50 45%, #388e3c 70%, #2e7d32 100%);
+            box-shadow: inset 0 2px 6px rgba(255, 255, 255, .2), inset 0 -2px 4px rgba(0, 0, 0, .12), 0 -1px 0 rgba(255, 255, 255, .25);
+        }
+
+        .dabba-veg .dabba-body {
+            background: linear-gradient(90deg, #2e7d32 0%, #388e3c 8%, #4caf50 18%, #66bb6a 28%, #43a047 42%, #388e3c 58%, #4caf50 72%, #5cb860 82%, #388e3c 92%, #2e7d32 100%);
+        }
+
+        .dabba-veg .rim-band {
+            background: linear-gradient(90deg, #256d27 0%, #2e7d32 10%, #4caf50 22%, #66bb6a 32%, #388e3c 50%, #4caf50 68%, #5cb860 78%, #2e7d32 90%, #256d27 100%);
+            box-shadow: 0 1px 0 rgba(0, 0, 0, .2), inset 0 1px 0 rgba(255, 255, 255, .2);
+        }
+
+        .dabba-veg .dabba-bottom {
+            background: linear-gradient(180deg, #256d27, #1b5e20);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, .45);
+        }
+
+        .dabba-veg .dabba-label {
+            color: rgba(255, 255, 255, .9);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, .35);
+        }
+
+        /* Nonveg color overrides */
+        .dabba-nonveg .dabba-top {
+            background: radial-gradient(ellipse at 40% 40%, #ef9a9a 0%, #ef5350 20%, #e53935 45%, #c62828 70%, #b71c1c 100%);
+            box-shadow: inset 0 2px 6px rgba(255, 255, 255, .2), inset 0 -2px 4px rgba(0, 0, 0, .12), 0 -1px 0 rgba(255, 255, 255, .2);
+        }
+
+        .dabba-nonveg .dabba-body {
+            background: linear-gradient(90deg, #b71c1c 0%, #c62828 8%, #e53935 18%, #ef5350 28%, #d32f2f 42%, #c62828 58%, #e53935 72%, #ef5350 82%, #c62828 92%, #b71c1c 100%);
+        }
+
+        .dabba-nonveg .rim-band {
+            background: linear-gradient(90deg, #8e1a1a 0%, #b71c1c 10%, #e53935 22%, #ef5350 32%, #c62828 50%, #e53935 68%, #ef5350 78%, #b71c1c 90%, #8e1a1a 100%);
+            box-shadow: 0 1px 0 rgba(0, 0, 0, .2), inset 0 1px 0 rgba(255, 255, 255, .15);
+        }
+
+        .dabba-nonveg .dabba-bottom {
+            background: linear-gradient(180deg, #8e1a1a, #7f1616);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, .45);
+        }
+
+        .dabba-nonveg .dabba-label {
+            color: rgba(255, 255, 255, .9);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, .35);
+        }
+
+        /* Label */
+        .dabba-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 4;
+            font-size: .58rem;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dabba-steel .dabba-label {
+            color: rgba(50, 55, 60, .6);
+            text-shadow: 0 1px 0 rgba(255, 255, 255, .45);
+        }
+
+        /* === LID === */
+        .dabba-lid {
+            position: relative;
+            width: 188px;
+            margin-bottom: -8px;
+            z-index: 6;
+            opacity: 0;
+            transform: translateY(-70px) scale(.9);
+            filter: drop-shadow(0 5px 8px rgba(0, 0, 0, .45));
+        }
+
+        .dabba-lid.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .lid-top {
+            width: calc(100% - 12px);
+            height: 18px;
+            margin: 0 auto;
+            border-radius: 50%;
+            position: relative;
+            z-index: 3;
+            background: radial-gradient(ellipse at 40% 40%, #f8f8f8 0%, #e8e8e8 25%, #d0d0d0 50%, #b8b8b8 80%, #a0a0a0 100%);
+            box-shadow: inset 0 2px 8px rgba(255, 255, 255, .3), inset 0 -1px 3px rgba(0, 0, 0, .06), 0 -1px 0 rgba(255, 255, 255, .4);
+        }
+
+        .lid-top::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50%;
+            height: 45%;
+            border-radius: 50%;
+            border: 1.5px solid rgba(255, 255, 255, .15);
+        }
+
+        .lid-knob {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 14px;
+            border-radius: 7px 7px 4px 4px;
+            z-index: 4;
+            background: linear-gradient(180deg, #e0e0e0, #c0c0c0 40%, #a0a0a0);
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, .15), inset 0 1px 0 rgba(255, 255, 255, .35);
+        }
+
+        .lid-rim {
+            width: 100%;
+            height: 7px;
+            margin: -5px auto 0;
+            position: relative;
+            z-index: 2;
+            border-radius: 2px;
+            background: linear-gradient(90deg, #777 0%, #aaa 10%, #ddd 22%, #f5f5f5 32%, #ccc 50%, #ddd 68%, #f2f2f2 78%, #aaa 90%, #777 100%);
+            box-shadow: 0 1px 0 rgba(0, 0, 0, .15), inset 0 1px 0 rgba(255, 255, 255, .3);
+        }
+
+        .lid-body {
+            width: calc(100% - 8px);
+            height: 8px;
+            margin: -2px auto 0;
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(90deg, #888 0%, #bbb 10%, #e0e0e0 25%, #f0f0f0 35%, #d0d0d0 50%, #e0e0e0 65%, #f0f0f0 75%, #bbb 90%, #888 100%);
+        }
+
+        .lid-bottom-face {
+            width: calc(100% - 12px);
+            height: 12px;
+            margin: -4px auto 0;
+            border-radius: 50%;
+            position: relative;
+            z-index: 0;
+            background: linear-gradient(180deg, #888, #666);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, .35);
+        }
+
         .dabba-stack {
             display: flex;
             flex-direction: column-reverse;
@@ -448,34 +772,34 @@
             height: 62px;
             border-radius: 90px / 20px;
             margin-bottom: -20px;
-            background: linear-gradient(90deg, #18181a 0%, #2d2d32 50%, #18181a 100%);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: linear-gradient(90deg, #c0c0c0 0%, #f0f0f0 50%, #c0c0c0 100%);
+            border: 1px solid rgba(0, 0, 0, 0.05);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 11px;
             font-weight: 800;
-            color: rgba(255, 255, 255, 0.15);
-            text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);
+            color: rgba(50, 55, 60, 0.4);
             transition: background 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease, color 0.4s ease;
-            opacity: 0.15;
+            opacity: 0.3;
             transform: translateY(0) scale(0.92);
             position: relative;
             overflow: visible;
+            padding-top: 6px;
+            /* Offsets 3D perspective cap to center text vertically on cylinder body */
         }
 
         .assembly-level.active {
             opacity: 1;
-            color: #ffffff;
-            background: linear-gradient(90deg,
-                    #121214 0%, #33333a 8%, #484852 20%, #545460 30%,
-                    #40404a 45%, #28282e 60%, #40404a 75%, #4c4c58 85%,
-                    #33333a 92%, #121214 100%);
-            border-color: rgba(255, 255, 255, 0.3);
+            color: rgba(50, 55, 60, 0.7);
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+            background: linear-gradient(90deg, #888 0%, #b8b8b8 8%, #e8e8e8 18%, #f2f2f2 28%, #ddd 42%, #c0c0c0 58%, #e5e5e5 72%, #f0f0f0 82%, #b8b8b8 92%, #888 100%);
+            border-color: rgba(0, 0, 0, 0.1);
             transform: translateY(0) scale(1);
             box-shadow:
-                inset 0 2px 2px rgba(255, 255, 255, 0.25),
-                0 8px 12px rgba(0, 0, 0, 0.6);
+                inset 0 2px 4px rgba(255, 255, 255, 0.4),
+                inset 0 -2px 6px rgba(0, 0, 0, 0.1),
+                0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
 
@@ -486,25 +810,31 @@
                 opacity: 0;
                 filter: brightness(4) saturate(0);
             }
+
             20% {
                 opacity: 1;
                 filter: brightness(2.5) saturate(0.5);
             }
+
             40% {
                 transform: translateY(10px) scale(1.08) rotateX(-2deg);
                 filter: brightness(1.6) saturate(1);
             }
+
             55% {
                 transform: translateY(-6px) scale(0.96) rotateX(1deg);
                 filter: brightness(1.2);
             }
+
             70% {
                 transform: translateY(3px) scale(1.02) rotateX(0deg);
                 filter: brightness(1.05);
             }
+
             85% {
                 transform: translateY(-1px) scale(0.998);
             }
+
             100% {
                 transform: translateY(0) scale(1) rotateX(0deg);
                 opacity: 1;
@@ -518,15 +848,13 @@
 
         @keyframes pulse-ring {
             0% {
-                transform: translate(-50%, -50%) scale(0.6);
-                opacity: 0.9;
-                border-width: 3px;
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.8;
+                border-width: 2px;
             }
-            60% {
-                opacity: 0.3;
-            }
+
             100% {
-                transform: translate(-50%, -50%) scale(3);
+                transform: translate(-50%, -50%) scale(1.3);
                 opacity: 0;
                 border-width: 1px;
             }
@@ -539,10 +867,10 @@
             width: 180px;
             height: 62px;
             border-radius: 90px / 20px;
-            border: 3px solid rgba(133, 39, 71, 0.7);
+            border: 2px solid rgba(111, 30, 59, 0.5);
             pointer-events: none;
-            animation: pulse-ring 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-            box-shadow: 0 0 12px rgba(133, 39, 71, 0.3);
+            animation: pulse-ring 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            box-shadow: 0 0 8px rgba(111, 30, 59, 0.15);
         }
 
         @keyframes sparkle-fly {
@@ -550,9 +878,11 @@
                 transform: translate(0, 0) scale(1.2);
                 opacity: 1;
             }
+
             50% {
                 opacity: 0.8;
             }
+
             100% {
                 transform: translate(var(--sx), var(--sy)) scale(0);
                 opacity: 0;
@@ -574,9 +904,9 @@
             width: 182px;
             height: 25px;
             border-radius: 50% / 8px;
-            background: linear-gradient(90deg, #333 0%, #888 50%, #333 100%);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: inset 0 2px 3px rgba(255, 255, 255, 0.2), 0 -2px 3px rgba(0, 0, 0, 0.6);
+            background: radial-gradient(ellipse at 40% 40%, #f5f5f5 0%, #e0e0e0 20%, #c8c8c8 45%, #b0b0b0 70%, #999 100%);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: inset 0 2px 6px rgba(255, 255, 255, .25), inset 0 -2px 4px rgba(0, 0, 0, .1), 0 -1px 0 rgba(255, 255, 255, .35);
             margin-bottom: -12px;
             z-index: 10;
             opacity: 0;
@@ -588,6 +918,7 @@
         .assembly-lid.active {
             opacity: 1;
             transform: translateX(-50%) translateY(0);
+            bottom: 238px !important;
         }
 
         .stack-shadow {
@@ -604,21 +935,14 @@
            ========================================================================== */
         .active-dabba-chamber {
             max-width: 760px;
-            height: 580px;
-            transition: max-width 0.6s ease, height 0.6s ease, border-radius 0.6s ease, background 0.8s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.8s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.6s ease, border 0.6s ease;
-            border-radius: 40px / 24px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            background: linear-gradient(90deg,
-                    #1e1e1e 0%, #3a3a3a 8%, #4e4e4e 18%, #5a5a5a 28%,
-                    #444444 42%, #2d2d2d 58%, #444444 72%, #4e4e4e 82%,
-                    #323232 92%, #1e1e1e 100%);
-            box-shadow:
-                inset 0 4px 12px rgba(255, 255, 255, 0.08),
-                inset 0 -4px 12px rgba(0, 0, 0, 0.6),
-                0 20px 40px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-height: 580px;
+            transition: max-width 0.6s ease, max-height 0.6s ease;
+            background: transparent;
+            border: none;
+            box-shadow: none;
             overflow: hidden;
             position: relative;
-            transition: background 0.8s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
 
@@ -637,52 +961,152 @@
             border-radius: 10px;
         }
 
-        /* Glass Navbar & Overrides */
-        .glass-nav {
-            background: rgba(255, 255, 255, 0.85) !important;
-            backdrop-filter: blur(24px) !important;
-            -webkit-backdrop-filter: blur(24px) !important;
-            border-bottom: 1px solid rgba(133, 39, 71, 0.1) !important;
-            box-shadow: 0 4px 20px rgba(133, 39, 71, 0.05) !important;
+        /* Hide scrollbars for native carousel look */
+        .scrollbar-none::-webkit-scrollbar {
+            display: none !important;
+        }
+        .scrollbar-none {
+            -ms-overflow-style: none !important;
+            scrollbar-width: none !important;
         }
 
-        .step-container .flex.items-center.gap-3 span {
-            background-color: rgba(133, 39, 71, 0.25) !important;
-            color: #fca5a5 !important;
-            border: 1px solid rgba(133, 39, 71, 0.4) !important;
-            padding: 4px 12px !important;
-            border-radius: 9999px !important;
-            display: inline-flex !important;
-            font-weight: 700 !important;
-            letter-spacing: 0.1em !important;
+        /* Responsive adjustments for the cinematic scales on mobile */
+        @media (max-width: 1024px) {
+            .state-hero #hero-stage-wrapper {
+                transform: scale(0.9) translateZ(0) translateY(0) !important;
+            }
+
+            .state-interior #hero-stage-wrapper {
+                transform: scale(2.0) translateY(var(--zoom-y, 0px)) translateZ(100px) !important;
+            }
         }
 
-        .step-container h2 span.italic.text-dabba-maroon {
-            color: #fca5a5 !important;
-            text-shadow: 0 0 10px rgba(133, 39, 71, 0.4);
-            font-style: italic !important;
-        }
+        /* === MOBILE VIEWPORT PREMIUM RESPONSIVE OPTIMIZATIONS (Width <= 768px) === */
+        @media (max-width: 768px) {
+            /* 1. Body & HTML scroll reset on mobile to avoid clamping height */
+            html, body {
+                height: auto !important;
+                min-height: 100% !important;
+                overflow-y: auto !important;
+            }
 
-        .serviceability-alert {
-            background-color: rgba(22, 101, 52, 0.2) !important;
-            color: #4ade80 !important;
-            border: 1px solid rgba(22, 101, 52, 0.4) !important;
-            box-shadow: 0 0 15px rgba(34, 197, 94, 0.15) !important;
+            /* 2. Compact main page container and header offset */
+            main {
+                padding-top: 5rem !important; /* pt-20 equivalent instead of pt-24 */
+            }
+
+            #checkout-flow {
+                min-height: 0 !important;
+                margin-bottom: 2rem !important;
+            }
+
+            /* 3. Sleek bottom-docked glass subscription pricing bar on mobile */
+            #sub-pricing-strip {
+                width: 100% !important;
+                max-width: 100% !important;
+                bottom: 0 !important;
+                left: 50% !important;
+                right: auto !important;
+                transform: translate(-50%, 120px) !important;
+                border-radius: 24px 24px 0 0 !important;
+                border-left: none !important;
+                border-right: none !important;
+                border-bottom: none !important;
+                border-color: rgba(111, 30, 59, 0.1) !important;
+                padding: 1rem 1.25rem !important;
+                box-shadow: 0 -10px 40px rgba(111, 30, 59, 0.08) !important;
+            }
+
+            #sub-pricing-strip.active {
+                transform: translate(-50%, 0) !important;
+            }
+
+            /* 4. Compact spacings inside step containers */
+            .step-container .mb-12 {
+                margin-bottom: 1.5rem !important; /* mb-6 equivalent */
+            }
+
+            .step-container .mb-10 {
+                margin-bottom: 1.25rem !important; /* mb-5 equivalent */
+            }
+
+            .step-container h2 {
+                font-size: 1.625rem !important; /* Tighter heading font on mobile */
+                line-height: 1.25 !important;
+            }
+
+            /* Step 2 Diet card scaling on mobile */
+            .step-container .grid.sm\:grid-cols-2 {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+
+            .step-container .grid.sm\:grid-cols-2 .p-8 {
+                padding: 1.25rem !important;
+                border-radius: 1.5rem !important;
+            }
+
+            .step-container .grid.sm\:grid-cols-2 .w-20 {
+                width: 3.5rem !important;
+                height: 3.5rem !important;
+                margin-bottom: 0.75rem !important;
+            }
+
+            .step-container .grid.sm\:grid-cols-2 h3 {
+                font-size: 1.125rem !important;
+                margin-bottom: 0.25rem !important;
+            }
+
+            .step-container .grid.sm\:grid-cols-2 p {
+                font-size: 0.75rem !important;
+                line-height: 1.4 !important;
+            }
+
+            /* Step 3 slots card scaling on mobile */
+            .step-container #slot-lunch,
+            .step-container #slot-dinner {
+                padding: 1rem !important;
+                border-radius: 1.25rem !important;
+            }
+
+            .step-container #slot-lunch .text-2xl,
+            .step-container #slot-dinner .text-2xl {
+                font-size: 1.25rem !important;
+            }
+
+            .step-container #slot-lunch .text-sm,
+            .step-container #slot-dinner .text-sm {
+                font-size: 0.8125rem !important;
+            }
+
+            .step-container #slot-lunch .text-\[10px\],
+            .step-container #slot-dinner .text-\[10px\] {
+                font-size: 9px !important;
+            }
+
+            /* Hide check boxes inside slots on mobile */
+            #lunch-check,
+            #dinner-check {
+                display: none !important;
+            }
         }
     </style>
 </head>
 
-<body class="bg-white text-dabba-dark selection:bg-dabba-maroon selection:text-white flex flex-col min-h-screen overflow-x-hidden">
+<body
+    class="bg-white text-dabba-dark selection:bg-dabba-maroon selection:text-white flex flex-col min-h-screen overflow-x-hidden">
 
     <div id="header-placeholder"></div>
 
-    <main class="w-full min-h-screen pt-24 pb-12 px-4 max-w-7xl mx-auto flex flex-col justify-center items-center">
+    <main class="w-full flex-1 min-h-screen pt-24 pb-48 px-4 max-w-7xl mx-auto flex flex-col items-center">
 
         <!-- MAIN PERSPECTIVE CONTAINER FOR THE CAMPAIGN STATES -->
-        <div id="checkout-flow" class="state-hero w-full flex flex-col items-center justify-center relative">
+        <div id="checkout-flow"
+            class="state-hero w-full flex-1 flex flex-col items-center justify-start relative min-h-[800px] mb-24">
 
             <!-- STATE 1: HERO VIEW (Zooms stack center stage, progressive unlock reveal) -->
-            <div id="hero-stage-wrapper" class="absolute inset-0 flex flex-col items-center justify-center z-10">
+            <div id="hero-stage-wrapper"
+                class="w-full relative flex flex-col items-center justify-center z-10 mt-8 mb-32 pb-32 lg:my-auto lg:py-16">
                 <div class="text-center mb-8">
                     <p class="text-[10px] font-bold text-dabba-maroon uppercase tracking-[0.3em] mb-2">Build-A-Tiffin
                         Experience</p>
@@ -746,24 +1170,16 @@
 
             <!-- STATE 2: INTERIOR FOCUS CHAMBER (Zoomed Inside) -->
             <div id="active-chamber-wrapper"
-                class="absolute inset-0 flex flex-col items-center z-20 pointer-events-none pt-4">
+                class="absolute inset-0 w-full flex flex-col items-center z-20 pointer-events-none pt-0">
                 <div class="active-dabba-chamber w-full relative flex-1">
-                    <!-- 3D Metallic Top Rim & Lip -->
-                    <div
-                        class="chamber-rim absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-white/20 via-transparent to-black/50 border-b border-white/5 rounded-t-[40px] z-20 pointer-events-none shadow-inner transition-opacity duration-500">
-                    </div>
-                    <!-- 3D Metallic Bottom Rim & Lip -->
-                    <div
-                        class="chamber-rim absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-black/60 via-transparent to-white/10 border-t border-black/40 rounded-b-[40px] z-20 pointer-events-none shadow-inner transition-opacity duration-500">
-                    </div>
 
                     <!-- Viewport with scrollable content inside metallic cylinder -->
                     <div id="chamber-viewport"
-                        class="chamber-viewport w-full h-full p-6 lg:p-12 overflow-y-auto transition-opacity duration-300 custom-scrollbar">
-                        <div id="step-forms-wrapper">
+                        class="chamber-viewport w-full h-full px-6 py-2 lg:px-12 lg:py-0 overflow-y-auto transition-opacity duration-300 custom-scrollbar">
+                        <div id="step-forms-wrapper" class="pb-40 md:pb-48">
                             <!-- === INSERTED STEP FORMS === -->
                             <div id="step-content-1"
-                                class="step-container p-6 lg:p-16 max-w-4xl mx-auto animate-in fade-in slide-in-from-right-8 duration-500">
+                                class="step-container px-6 py-2 lg:px-16 lg:py-0 max-w-4xl mx-auto animate-in fade-in slide-in-from-right-8 duration-500">
                                 <div class="mb-12">
                                     <div class="flex items-center gap-3 mb-4">
                                         <span
@@ -796,7 +1212,7 @@
                             </div>
 
                             <div id="step-content-2"
-                                class="step-container hidden p-6 lg:p-16 max-w-4xl mx-auto animate-in fade-in slide-in-from-right-8 duration-500">
+                                class="step-container hidden px-6 py-2 lg:px-16 lg:py-0 max-w-4xl mx-auto animate-in fade-in slide-in-from-right-8 duration-500">
                                 <div class="mb-12">
                                     <div class="flex items-center gap-3 mb-4">
                                         <span
@@ -872,7 +1288,7 @@
                             </div>
 
                             <div id="step-content-3"
-                                class="step-container hidden p-8 lg:p-16 max-w-4xl mx-auto animate-in fade-in slide-in-from-right-8 duration-500">
+                                class="step-container hidden px-6 py-2 lg:px-16 lg:py-0 max-w-4xl mx-auto animate-in fade-in slide-in-from-right-8 duration-500">
                                 <div class="mb-12">
                                     <div class="flex items-center gap-3 mb-4">
                                         <span
@@ -905,7 +1321,8 @@
                                                     viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round"
                                                         stroke-width="4" d="M5 13l4 4L19 7"></path>
-                                                </svg></div>
+                                                </svg>
+                                            </div>
                                         </div>
                                         <div id="slot-dinner"
                                             class="p-6 border-2 border-white/10 rounded-3xl flex items-center justify-between cursor-pointer transition-all"
@@ -929,29 +1346,29 @@
                                     <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-6">
                                         Duration (Delivery
                                         Days)</p>
-                                    <div class="flex flex-wrap gap-3">
+                                    <div class="flex flex-nowrap overflow-x-auto scrollbar-none -mx-6 px-6 md:mx-0 md:px-0 md:flex-wrap md:overflow-visible gap-3 pb-2">
                                         <button
-                                            class="duration-btn px-6 py-4 rounded-2xl border-2 border-dabba-maroon bg-dabba-maroon/5 text-white font-bold text-xs transition-all"
+                                            class="duration-btn flex-shrink-0 px-6 py-4 rounded-2xl border-2 border-dabba-maroon bg-dabba-maroon/5 text-white font-bold text-xs transition-all"
                                             onclick="updateDuration(1, this)">
                                             1 <br><span class="text-[9px] font-medium opacity-60">₹273 / meal</span>
                                         </button>
                                         <button
-                                            class="duration-btn px-6 py-4 rounded-2xl border-2 border-white/10 text-white font-bold text-xs transition-all"
+                                            class="duration-btn flex-shrink-0 px-6 py-4 rounded-2xl border-2 border-white/10 text-white font-bold text-xs transition-all"
                                             onclick="updateDuration(3, this)">
                                             3 <br><span class="text-[9px] font-medium opacity-60">₹265 / meal</span>
                                         </button>
                                         <button
-                                            class="duration-btn px-6 py-4 rounded-2xl border-2 border-white/10 text-white font-bold text-xs transition-all"
+                                            class="duration-btn flex-shrink-0 px-6 py-4 rounded-2xl border-2 border-white/10 text-white font-bold text-xs transition-all"
                                             onclick="updateDuration(7, this)">
                                             7 <br><span class="text-[9px] font-medium opacity-60">₹251 / meal</span>
                                         </button>
                                         <button
-                                            class="duration-btn px-6 py-4 rounded-2xl border-2 border-white/10 text-white font-bold text-xs transition-all"
+                                            class="duration-btn flex-shrink-0 px-6 py-4 rounded-2xl border-2 border-white/10 text-white font-bold text-xs transition-all"
                                             onclick="updateDuration(14, this)">
                                             14 <br><span class="text-[9px] font-medium opacity-60">₹238 / meal</span>
                                         </button>
                                         <button
-                                            class="duration-btn px-6 py-4 rounded-2xl border-2 border-white/10 text-white font-bold text-xs transition-all"
+                                            class="duration-btn flex-shrink-0 px-6 py-4 rounded-2xl border-2 border-white/10 text-white font-bold text-xs transition-all"
                                             onclick="updateDuration(30, this)">
                                             30 <br><span class="text-[9px] font-medium opacity-60">₹213 / meal</span>
                                         </button>
@@ -1003,7 +1420,7 @@
                             </div>
 
                             <div id="step-content-4"
-                                class="step-container hidden p-8 lg:p-16 max-w-4xl mx-auto animate-in fade-in slide-in-from-right-8 duration-500">
+                                class="step-container hidden px-6 py-2 lg:px-16 lg:py-0 max-w-4xl mx-auto animate-in fade-in slide-in-from-right-8 duration-500">
                                 <div class="mb-12">
                                     <div class="flex items-center gap-3 mb-4">
                                         <span
@@ -1066,7 +1483,7 @@
                             </div>
 
                             <div id="step-content-5"
-                                class="step-container hidden p-8 lg:p-16 max-w-4xl mx-auto animate-in fade-in slide-in-from-right-8 duration-500">
+                                class="step-container hidden px-6 py-2 lg:px-16 lg:py-0 max-w-4xl mx-auto animate-in fade-in slide-in-from-right-8 duration-500">
                                 <div class="mb-12">
                                     <div class="flex items-center gap-3 mb-4">
                                         <span
@@ -1112,45 +1529,25 @@
                                     </div>
                                 </form>
                             </div>
+
+                             <!-- Inside-Dabba Navigation Drawer (Dynamic) -->
+                             <div
+                                 class="flex flex-row justify-between items-center w-full max-w-4xl mx-auto mt-4 pt-6 border-t border-gray-100 gap-3 px-6 lg:px-16 pointer-events-auto">
+                                 <button id="prev-btn" onclick="zoomOutToHero(true)"
+                                     class="w-auto px-4 py-3.5 sm:px-6 sm:py-4 rounded-xl bg-white border border-gray-200 hover:bg-gray-50 text-gray-500 font-bold transition-all flex items-center justify-center gap-2 shadow-sm text-xs">
+                                     <span>←</span> <span class="hidden sm:inline">Return to </span>Stack
+                                 </button>
+                                 <button id="next-btn" onclick="handleNextStep()"
+                                     class="flex-1 sm:flex-none sm:w-auto px-6 py-3.5 sm:px-10 sm:py-4 rounded-xl bg-dabba-maroon text-white font-bold hover:bg-[#852747] transition-all flex items-center justify-center gap-2 shadow-lg shadow-dabba-maroon/20 uppercase tracking-widest text-xs">
+                                     Next <span>→</span>
+                                 </button>
+                             </div>
                         </div>
                     </div>
 
-                    <!-- Subtle Sub-Chamber Live Pricing strip (Only visible in steps 3-5) -->
-                    <div id="sub-pricing-strip"
-                        class="fixed bottom-24 left-1/2 -translate-x-1/2 w-full max-w-4xl px-6 py-4 bg-black/70 backdrop-blur-xl rounded-2xl border border-white/10 flex items-center justify-between z-30 transition-all duration-500 translate-y-16 opacity-0 pointer-events-none">
-                        <div class="flex items-center gap-2">
-                            <span class="text-xs font-bold text-white/60 tracking-wider">LIVE PLAN PRICE:</span>
-                            <span class="text-sm font-black text-white">₹<span id="price-per-meal">273</span> <span
-                                    class="text-[10px] font-normal text-white/40">/ meal</span></span>
-                        </div>
-                        <div class="flex items-center gap-4 text-[11px] text-white/60">
-                            <div><span id="summary-meals-day">1</span> meals/day</div>
-                            <div>x <span id="summary-days">1</span> days</div>
-                            <div>x <span id="summary-people">1</span> ppl</div>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <div class="text-right">
-                                <p class="text-[9px] text-white/40 leading-none">ORDER TOTAL</p>
-                                <p class="text-sm font-black text-green-400">₹<span id="final-total">273</span></p>
-                            </div>
-                            <span id="save-badge"
-                                class="bg-green-500/20 text-green-400 border border-green-500/30 text-[9px] font-bold px-2 py-0.5 rounded hidden">SAVE
-                                <span id="save-percent">0</span>%</span>
-                        </div>
-                    </div>
                 </div>
 
-                <!-- Inside-Dabba Navigation Drawer -->
-                <div class="flex justify-between items-center w-full max-w-5xl mt-auto pb-6 pt-4 gap-4 pointer-events-auto px-6">
-                    <button id="prev-btn" onclick="zoomOutToHero(true)"
-                        class="px-6 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-white font-medium transition-all flex items-center gap-2">
-                        <span>←</span> Return to Stack
-                    </button>
-                    <button id="next-btn" onclick="handleNextStep()"
-                        class="px-8 py-3 rounded-xl bg-dabba-maroon text-white font-bold hover:bg-[#852747] transition-all flex items-center gap-2 shadow-lg shadow-dabba-maroon/20">
-                        Next <span>→</span>
-                    </button>
-                </div>
+
             </div>
         </div>
     </main>
@@ -1167,6 +1564,8 @@
             people: 1,
             slots: { lunch: true, dinner: false },
             skips: [],
+            step3Completed: false,
+            step4Completed: false,
             pricing: {
                 1: 273,
                 3: 265,
@@ -1194,16 +1593,13 @@
         const flowContainer = document.getElementById('checkout-flow');
 
         function diveIntoStep() {
-            console.log(`%c 🎬 [DIVE] Zooming into Dabba Level ${currentStep} `, 'background: #6f1e3b; color: #ffffff; font-weight: bold; padding: 4px; border-radius: 4px;');
             if (isAnimating) {
-                console.warn('⚠️ [DIVE BLOCK] Aborted: Another animation is actively running.');
                 return;
             }
             isAnimating = true;
 
             // Set vertical zoom height based on current step
             const zoomY = zoomYOffsets[currentStep] || 0;
-            console.log(`%c 🎥 [CAMERA] Positioning stack focus offset to: ${zoomY}px`, 'color: #fca5a5; font-style: italic;');
             flowContainer.style.setProperty('--zoom-y', `${zoomY}px`);
 
             // Mark active level on stack so it glows/solidifies during focus
@@ -1221,25 +1617,93 @@
             flowContainer.classList.add('state-interior');
 
             document.body.classList.add('interior-active');
+            updateStepUI();
 
             setTimeout(() => {
                 isAnimating = false;
-                console.log('%c 🏁 [DIVE COMPLETED] Camera lens locked inside chamber viewport.', 'color: #4ade80;');
+                flowContainer.classList.add('state-interior-stable');
+
+                // FORCE NATURAL RELATIVE EXPANDABLE LAYOUT VIA INLINE STYLES
+                const wrapper = document.getElementById('active-chamber-wrapper');
+                const chamber = document.querySelector('.active-dabba-chamber');
+                const viewport = document.getElementById('chamber-viewport');
+
+                if (wrapper) {
+                    wrapper.style.setProperty('position', 'relative', 'important');
+                    wrapper.style.setProperty('height', 'auto', 'important');
+                    wrapper.style.setProperty('display', 'block', 'important');
+                    wrapper.style.setProperty('min-height', '0', 'important');
+                    wrapper.style.setProperty('max-height', 'none', 'important');
+                }
+                if (chamber) {
+                    chamber.style.setProperty('height', 'auto', 'important');
+                    chamber.style.setProperty('max-height', 'none', 'important');
+                    chamber.style.setProperty('display', 'block', 'important');
+                    chamber.style.setProperty('overflow', 'visible', 'important');
+                }
+                if (viewport) {
+                    viewport.style.setProperty('height', 'auto', 'important');
+                    viewport.style.setProperty('overflow', 'visible', 'important');
+                    viewport.style.setProperty('display', 'block', 'important');
+                }
+                if (flowContainer) {
+                    flowContainer.style.setProperty('min-height', '0', 'important');
+                    flowContainer.style.setProperty('height', 'auto', 'important');
+                    flowContainer.style.setProperty('overflow', 'visible', 'important');
+                }
             }, 1500);
         }
 
+        function removeStableStyles() {
+            flowContainer.classList.remove('state-interior-stable');
+
+            const wrapper = document.getElementById('active-chamber-wrapper');
+            const chamber = document.querySelector('.active-dabba-chamber');
+            const viewport = document.getElementById('chamber-viewport');
+
+            if (wrapper) {
+                wrapper.style.removeProperty('position');
+                wrapper.style.removeProperty('height');
+                wrapper.style.removeProperty('display');
+                wrapper.style.removeProperty('min-height');
+                wrapper.style.removeProperty('max-height');
+            }
+            if (chamber) {
+                chamber.style.removeProperty('height');
+                chamber.style.removeProperty('max-height');
+                chamber.style.removeProperty('display');
+                chamber.style.removeProperty('overflow');
+            }
+            if (viewport) {
+                viewport.style.removeProperty('height');
+                viewport.style.removeProperty('overflow');
+                viewport.style.removeProperty('display');
+            }
+            if (flowContainer) {
+                flowContainer.style.removeProperty('min-height');
+                flowContainer.style.removeProperty('height');
+                flowContainer.style.removeProperty('overflow');
+            }
+        }
+
         function zoomOutToHero(reverse = false) {
-            console.log(`%c 🍿 [ZOOM OUT] Camera pulling back to Hero View `, 'background: #1e1b4b; color: #ffffff; font-weight: bold; padding: 4px; border-radius: 4px;');
             if (isAnimating) {
-                console.warn('⚠️ [ZOOM OUT BLOCK] Aborted: Another animation is actively running.');
                 return;
             }
             isAnimating = true;
 
+            removeStableStyles();
             flowContainer.classList.remove('state-interior');
             flowContainer.classList.add('state-hero');
 
             document.body.classList.remove('interior-active');
+
+            // Hide pricing strip immediately when returning to stack
+            const pricingStrip = document.getElementById('sub-pricing-strip');
+            if (pricingStrip) {
+                pricingStrip.classList.remove('active');
+                document.body.classList.remove('has-pricing-bar');
+            }
 
             // Refresh back label button
             const startBtnText = document.getElementById('start-btn-step-icon');
@@ -1249,14 +1713,11 @@
 
             setTimeout(() => {
                 isAnimating = false;
-                console.log('%c 🏁 [ZOOM OUT COMPLETED] Camera in full viewport hero view.', 'color: #e2e8f0;');
             }, 1500);
         }
 
         function executeStepTransition(onComplete) {
-            console.log(`%c 🏗️ [TRANSITION] Commencing Step ${currentStep} complete/lock seq `, 'background: #14532d; color: #ffffff; font-weight: bold; padding: 4px; border-radius: 4px;');
             if (isAnimating) {
-                console.warn('⚠️ [TRANSITION BLOCK] Aborted: Another animation is actively running.');
                 return;
             }
             isAnimating = true;
@@ -1271,7 +1732,7 @@
             }
 
             // Phase 1: Cinematic zoom back to hero view
-            console.log('%c 🎥 [PHASE 1] Dynamic camera pull-back in action...', 'color: #94a3b8;');
+            removeStableStyles();
             flowContainer.classList.remove('state-interior');
             flowContainer.classList.add('state-hero');
 
@@ -1279,7 +1740,6 @@
 
             setTimeout(() => {
                 // Phase 2: Drop-bounce materialization with metallic flash
-                console.log('%c 🪐 [PHASE 2] Drop-bounce elastic materialization triggered.', 'color: #a78bfa;');
                 targetStackLevel.classList.remove('opacity-0', 'pointer-events-none');
                 targetStackLevel.classList.add('active', 'materializing');
 
@@ -1293,7 +1753,6 @@
 
                 // Phase 3: Staggered sparkle burst + double pulse ring
                 setTimeout(() => {
-                    console.log('%c ✨ [PHASE 3] Sparkle particle and pulse ring wave burst!', 'color: #fbbf24;');
                     spawnSparkles(targetStackLevel);
                     spawnPulseRing(targetStackLevel);
                     // Second delayed pulse ring for cinematic layered effect
@@ -1302,7 +1761,6 @@
 
                 // Phase 4: Settle, advance step, prepare for re-entry
                 setTimeout(() => {
-                    console.log('%c 📦 [PHASE 4] Dabba level locked. Moving to next...', 'color: #60a5fa;');
                     targetStackLevel.classList.remove('materializing');
 
                     if (onComplete) onComplete();
@@ -1318,7 +1776,6 @@
 
                     // Dramatic pause beat, then dive back in
                     setTimeout(() => {
-                        console.log('%c 🎬 [AUTO DIVE] Diving back in!', 'color: #4ade80;');
                         diveIntoStep();
                     }, 500);
 
@@ -1327,17 +1784,23 @@
         }
 
         function handleNextStep() {
-            console.log('%c 👉 [NEXT CLICK] Requesting step advance...', 'color: #e2e8f0; font-weight: bold;');
             if (isAnimating) return;
 
             if (!validateStep(currentStep)) {
-                console.warn(`❌ [VALIDATION FAILED] Step ${currentStep} failed requirements.`);
                 return;
             }
 
+            if (currentStep === 3) {
+                config.step3Completed = true;
+            }
+            if (currentStep === 4) {
+                config.step4Completed = true;
+            }
+
             if (currentStep === 5) {
-                console.log('%c 🏆 [ORDER COMPLETE] Compiling final custom subscription order!', 'color: #22c55e; font-weight: bold;');
-                completeOrder();
+                executeStepTransition(() => {
+                    completeOrder();
+                });
                 return;
             }
 
@@ -1348,13 +1811,10 @@
         }
 
         function handlePrevStep() {
-            console.log('%c 👈 [PREV CLICK] Requesting step backward...', 'color: #e2e8f0; font-weight: bold;');
             if (isAnimating || currentStep === 1) return;
 
             // Zoom out to witness removal, step backward, and zoom inside previous
-            flowContainer.classList.remove('state-interior');
-            flowContainer.classList.add('state-hero');
-
+            zoomOutToHero(true);
             setTimeout(() => {
                 const prevStackLevel = document.getElementById(`assembly-dabba-${currentStep}`);
                 if (prevStackLevel) {
@@ -1370,7 +1830,7 @@
                 setTimeout(() => {
                     diveIntoStep();
                 }, 400);
-            }, 1000);
+            }, 800);
         }
 
         function updateStepUI() {
@@ -1408,13 +1868,16 @@
                 }
             }
 
-            // Sync step-wise inline sub-pricing strip display (steps 3-5 only)
+            // Sync step-wise inline sub-pricing strip display (step 3 form visible only)
             const pricingStrip = document.getElementById('sub-pricing-strip');
             if (pricingStrip) {
-                if (currentStep >= 3) {
-                    pricingStrip.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-16');
+                const isFormVisible = document.body.classList.contains('interior-active');
+                if (currentStep === 3 && isFormVisible) {
+                    pricingStrip.classList.add('active');
+                    document.body.classList.add('has-pricing-bar');
                 } else {
-                    pricingStrip.classList.add('opacity-0', 'pointer-events-none', 'translate-y-16');
+                    pricingStrip.classList.remove('active');
+                    document.body.classList.remove('has-pricing-bar');
                 }
             }
         }
@@ -1441,8 +1904,8 @@
 
             updateDabbaStack();
 
-            resultDiv.innerHTML = `<div class="p-4 serviceability-alert rounded-xl text-xs font-bold flex items-center gap-2">
-                <svg class="w-4 h-4 text-green-400 animate-pulse" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path></svg>
+            resultDiv.innerHTML = `<div class="p-4 bg-green-50 text-green-700 rounded-xl text-xs font-bold border border-green-100 flex items-center gap-2">
+                <svg class="w-4 h-4 text-green-600 animate-pulse" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path></svg>
                 DabbaGo is fully operational in your area! Loading fabricator...
             </div>`;
 
@@ -1463,14 +1926,20 @@
             const check = document.getElementById(`${slot}-check`);
 
             if (config.slots[slot]) {
-                if (el) el.classList.add('border-dabba-maroon', 'bg-dabba-maroon/5');
+                if (el) {
+                    el.classList.add('border-dabba-maroon', 'bg-dabba-maroon/5');
+                    el.classList.remove('border-white/10');
+                }
                 if (check) {
                     check.innerHTML = '<svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path></svg>';
                     check.classList.add('bg-dabba-maroon');
                     check.classList.remove('border-2', 'border-white/10');
                 }
             } else {
-                if (el) el.classList.remove('border-dabba-maroon', 'bg-dabba-maroon/5');
+                if (el) {
+                    el.classList.remove('border-dabba-maroon', 'bg-dabba-maroon/5');
+                    el.classList.add('border-white/10');
+                }
                 if (check) {
                     check.innerHTML = '';
                     check.classList.remove('bg-dabba-maroon');
@@ -1487,10 +1956,10 @@
             config.skips = [];
             document.querySelectorAll('.duration-btn').forEach(btn => {
                 btn.classList.remove('border-dabba-maroon', 'bg-dabba-maroon/5');
-                btn.classList.add('border-white/5');
+                btn.classList.add('border-white/10');
             });
             el.classList.add('border-dabba-maroon', 'bg-dabba-maroon/5');
-            el.classList.remove('border-white/5');
+            el.classList.remove('border-white/10');
             generateCalendar();
             calculatePricing();
             updateDabbaStack();
@@ -1531,15 +2000,11 @@
                 spark.style.animationDelay = `${Math.random() * 0.15}s`;
                 spark.style.animationDuration = `${0.5 + Math.random() * 0.4}s`;
 
-                if (config.diet) {
-                    if (config.diet.toLowerCase().includes('veg') && !config.diet.toLowerCase().includes('non')) {
-                        spark.style.background = '#4ade80';
-                        spark.style.boxShadow = `0 0 ${size * 2}px ${size}px rgba(74, 222, 128, 0.7), 0 0 ${size * 5}px ${size * 2}px rgba(74, 222, 128, 0.2)`;
-                    } else {
-                        spark.style.background = '#f87171';
-                        spark.style.boxShadow = `0 0 ${size * 2}px ${size}px rgba(248, 113, 113, 0.7), 0 0 ${size * 5}px ${size * 2}px rgba(248, 113, 113, 0.2)`;
-                    }
-                }
+                // Warm, premium champagne gold & maroon color palette for high-end feel
+                const colors = ['#6f1e3b', '#fbbf24', '#fef3c7', '#fcd34d', '#ffffff'];
+                const selectedColor = colors[Math.floor(Math.random() * colors.length)];
+                spark.style.background = selectedColor;
+                spark.style.boxShadow = `0 0 ${size * 2}px ${size}px ${selectedColor}, 0 0 ${size * 4}px ${size * 1.5}px rgba(251, 191, 36, 0.25)`;
                 document.body.appendChild(spark);
                 spark.addEventListener('animationend', () => spark.remove());
             }
@@ -1548,13 +2013,6 @@
         function spawnPulseRing(targetEl) {
             const ring = document.createElement('div');
             ring.className = 'dabba-pulse-ring';
-            if (config.diet) {
-                if (config.diet.toLowerCase().includes('veg') && !config.diet.toLowerCase().includes('non')) {
-                    ring.style.borderColor = 'rgba(74, 222, 128, 0.5)';
-                } else {
-                    ring.style.borderColor = 'rgba(248, 113, 113, 0.5)';
-                }
-            }
             targetEl.appendChild(ring);
             ring.addEventListener('animationend', () => ring.remove());
         }
@@ -1726,7 +2184,7 @@
 
             const label1 = pincode ? `📍 PIN: ${pincode}` : '📍 PINCODE';
             const label2 = diet ? (diet.toLowerCase().includes('veg') && !diet.toLowerCase().includes('non') ? '🥗 VEG' : '🍖 NON-VEG') : '🥗 DIET PREF';
-            const label3 = `📅 ${duration} DAYS`;
+            const label3 = (currentStep < 3 && !isOrderCompleted) ? '📅 PLAN SETUP' : `📅 ${duration} DAYS`;
             const label4 = name ? `👤 ${name.toUpperCase().substring(0, 12)}` : '👤 CONTACT INFO';
             const label5 = '🗺️ DELIVERY ADDR';
 
@@ -1742,11 +2200,18 @@
             if (d4) d4.innerText = label4;
             if (d5) d5.innerText = label5;
 
-            // Activate levels only up to current step
+            // Activate levels based on completion or if they are less than currentStep
             for (let i = 1; i <= 5; i++) {
                 const level = document.getElementById(`assembly-dabba-${i}`);
                 if (level) {
-                    if (i < currentStep || (isOrderCompleted && i === 5)) {
+                    let isCompleted = false;
+                    if (i === 1 && pincode) isCompleted = true;
+                    if (i === 2 && diet) isCompleted = true;
+                    if (i === 3 && (config.step3Completed || currentStep > 3)) isCompleted = true;
+                    if (i === 4 && (config.step4Completed || currentStep > 4)) isCompleted = true;
+                    if (i === 5 && isOrderCompleted) isCompleted = true;
+
+                    if (isCompleted || i < currentStep) {
                         level.classList.add('active');
                         level.classList.remove('opacity-0', 'pointer-events-none');
                         if (i === 2 && diet) {
@@ -1758,25 +2223,32 @@
                                 level.classList.remove('veg-active');
                             }
                         }
-                    } else if (i > currentStep) {
+                    } else {
                         level.classList.remove('active', 'veg-active', 'nonveg-active');
-                        level.classList.add('opacity-0', 'pointer-events-none');
+                        level.classList.remove('opacity-0'); // Removes Tailwind utility to let the premium 0.15 faded CSS styling shine through
+                        level.classList.add('pointer-events-none');
                     }
                 }
             }
 
             // Sync lid bottom offset dynamically
             const assemblyLid = document.getElementById('assembly-lid');
-            const dabbaStack = document.getElementById('desktop-dabba-stack');
             if (assemblyLid) {
-                if (currentStep === 5 || isOrderCompleted) {
+                if (isOrderCompleted) {
                     assemblyLid.classList.add('active');
-                    if (dabbaStack) {
-                        const stackH = dabbaStack.offsetHeight;
-                        assemblyLid.style.bottom = `${stackH + 8}px`;
-                    }
+                    assemblyLid.style.setProperty('bottom', '238px', 'important');
                 } else {
                     assemblyLid.classList.remove('active');
+                }
+            }
+
+            // Sync carrier frame
+            const dkCarrier = document.getElementById('desktop-carrier-frame');
+            if (dkCarrier) {
+                if (isOrderCompleted) {
+                    dkCarrier.classList.add('active');
+                } else {
+                    dkCarrier.classList.remove('active');
                 }
             }
         }
@@ -1802,11 +2274,11 @@
             const successDietLabel = document.getElementById('success-diet-label');
             if (successDietDabba && successDietLabel) {
                 if (diet.toLowerCase().includes('veg') && !diet.toLowerCase().includes('non')) {
-                    successDietDabba.className = 'dabba dabba-veg active animate-in';
+                    successDietDabba.className = 'dabba dabba-steel active animate-in';
                     successDietLabel.innerText = '🥗 VEG';
                     document.querySelector('.success-diet-summary').innerText = '🥗 Veg Subscription';
                 } else {
-                    successDietDabba.className = 'dabba dabba-nonveg active animate-in';
+                    successDietDabba.className = 'dabba dabba-steel active animate-in';
                     successDietLabel.innerText = '🍖 NON-VEG';
                     document.querySelector('.success-diet-summary').innerText = '🍖 Non-Veg Subscription';
                 }
@@ -1827,6 +2299,7 @@
             }
 
             // Return to camera hero view for epic lock animation before success modal!
+            removeStableStyles();
             flowContainer.classList.remove('state-interior');
             flowContainer.classList.add('state-hero');
 
@@ -1845,6 +2318,7 @@
         generateCalendar();
         calculatePricing();
         updateStepUI();
+        updateDabbaStack();
         if (window.lucide) lucide.createIcons();
 
         // Dynamically initialize start date to tomorrow
@@ -1853,10 +2327,6 @@
         const tomorrowStr = tomorrow.toISOString().split('T')[0];
         const dateInput = document.getElementById('start-date');
         if (dateInput) dateInput.value = tomorrowStr;
-
-        // High visibility initial load diagnostics
-        console.log("%c 🎬 [DabbaGo] Cinematic Checkout Experience Initialized successfully!", "background: #6f1e3b; color: #fca5a5; font-weight: bold; padding: 6px 12px; border-radius: 8px; border: 1px solid #fca5a5;");
-        console.log(`%c Current Step: ${currentStep} | Order Completed: ${isOrderCompleted}`, "color: #b0b0b5; font-weight: bold;");
     </script>
 
     <!-- Beautiful Premium Success Modal overlay -->
@@ -1906,7 +2376,7 @@
                             <div class="rim-band rim-band-bottom"></div>
                             <div class="dabba-bottom"></div>
                         </div>
-                        <div class="dabba dabba-veg active animate-in" id="success-dabba-diet"
+                        <div class="dabba dabba-steel active animate-in" id="success-dabba-diet"
                             style="transform:none;opacity:1;">
                             <div class="dabba-top"></div>
                             <div class="rim-band rim-band-top"></div>
@@ -1981,6 +2451,37 @@
                     Manage Order
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- Subtle Sub-Chamber Live Pricing strip (Only visible in steps 3-5) - Premium Light-Mode Redesign -->
+    <div id="sub-pricing-strip" class="w-[calc(100%-2rem)] max-w-4xl bg-white/95 backdrop-blur-md rounded-2xl border border-dabba-maroon/15 shadow-[0_20px_50px_rgba(111,30,59,0.12)] flex items-center justify-between px-6 py-4 md:py-5">
+        <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-xl bg-dabba-maroon/5 flex items-center justify-center text-dabba-maroon text-xl">
+                💰
+            </div>
+            <div>
+                <p class="text-[9px] md:text-[10px] font-bold text-dabba-maroon uppercase tracking-widest leading-none mb-1">Live Subscription Pricing</p>
+                <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500 font-medium">
+                    <span class="text-dabba-dark font-bold text-sm md:text-base">₹<span id="price-per-meal">273</span> <span class="text-[10px] font-normal text-gray-400">/ meal</span></span>
+                    <span class="text-gray-300">|</span>
+                    <span class="flex items-center gap-1"><span id="summary-meals-day" class="font-bold text-dabba-dark">1</span> meals/day</span>
+                    <span class="text-gray-300">•</span>
+                    <span class="flex items-center gap-1"><span id="summary-days" class="font-bold text-dabba-dark">1</span> days</span>
+                    <span class="text-gray-300">•</span>
+                    <span class="flex items-center gap-1"><span id="summary-people" class="font-bold text-dabba-dark">1</span> guest</span>
+                </div>
+            </div>
+        </div>
+        <div class="flex items-center gap-3 md:gap-5">
+            <div class="text-right">
+                <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-1">Grand Total</p>
+                <p class="text-lg md:text-2xl font-black text-dabba-maroon leading-none">₹<span id="final-total">273</span></p>
+            </div>
+            <span id="save-badge" class="bg-green-50 text-green-700 border border-green-200 text-[10px] font-bold px-2.5 py-1 rounded-lg hidden animate-pulse">
+                🎉 SAVE <span id="save-percent">0</span>%
+            </span>
+        </div>
     </div>
 </body>
 
