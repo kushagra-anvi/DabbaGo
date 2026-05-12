@@ -654,6 +654,31 @@
             text-shadow: 0 1px 2px rgba(0, 0, 0, .35);
         }
 
+        /* Mix color overrides */
+        .dabba-mix .dabba-top {
+            background: radial-gradient(ellipse at 40% 40%, #ffb74d 0%, #ffa726 20%, #fb8c00 45%, #e65100 70%, #bf360c 100%);
+            box-shadow: inset 0 2px 6px rgba(255, 255, 255, .2), inset 0 -2px 4px rgba(0, 0, 0, .12), 0 -1px 0 rgba(255, 255, 255, .2);
+        }
+
+        .dabba-mix .dabba-body {
+            background: linear-gradient(90deg, #bf360c 0%, #e65100 8%, #fb8c00 18%, #ffa726 28%, #f57c00 42%, #e65100 58%, #fb8c00 72%, #ffb74d 82%, #e65100 92%, #bf360c 100%);
+        }
+
+        .dabba-mix .rim-band {
+            background: linear-gradient(90deg, #8d2400 0%, #bf360c 10%, #fb8c00 22%, #ffa726 32%, #e65100 50%, #fb8c00 68%, #ffa726 78%, #bf360c 90%, #8d2400 100%);
+            box-shadow: 0 1px 0 rgba(0, 0, 0, .2), inset 0 1px 0 rgba(255, 255, 255, .15);
+        }
+
+        .dabba-mix .dabba-bottom {
+            background: linear-gradient(180deg, #8d2400, #5d1b00);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, .45);
+        }
+
+        .dabba-mix .dabba-label {
+            color: rgba(255, 255, 255, .9);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, .35);
+        }
+
         /* Label */
         .dabba-label {
             position: absolute;
@@ -802,7 +827,6 @@
                 inset 0 -2px 6px rgba(0, 0, 0, 0.1),
                 0 4px 10px rgba(0, 0, 0, 0.2);
         }
-
 
 
         @keyframes dabba-materialize {
@@ -1222,7 +1246,7 @@
                                         options.</p>
                                 </div>
 
-                                <div class="grid sm:grid-cols-2 gap-6 mb-12">
+                                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
 
                                     <label class="relative group cursor-pointer">
                                         <input type="radio" name="diet" value="veg" class="peer sr-only"
@@ -1278,6 +1302,31 @@
                                             </svg>
                                         </div>
                                     </label>
+
+                                    <label class="relative group cursor-pointer">
+                                        <input type="radio" name="diet" value="mix" class="peer sr-only"
+                                            onchange="updateDiet('Mix')">
+
+                                        <div
+                                            class="h-full border-2 border-white/10 rounded-[2.5rem] p-8 transition-all duration-300 peer-checked:border-dabba-maroon peer-checked:bg-dabba-maroon/5 group-hover:border-white/20">
+                                            <div
+                                                class="w-20 h-20 bg-amber-950/20 rounded-2xl flex items-center justify-center mb-6 overflow-hidden group-hover:scale-105 transition-transform duration-500">
+                                                <img src="../assets/images/dabbago_images/indian_food_mix.png"
+                                                    alt="Mixed Veg and Non-Veg Meal" class="w-full h-full object-cover">
+                                            </div>
+                                            <h3 class="text-xl font-bold text-white mb-2">Mix</h3>
+                                            <p class="text-sm text-gray-400 leading-relaxed">Best of both worlds. Perfect blend of vegetarian and non-vegetarian delights.</p>
+                                        </div>
+
+                                        <div
+                                            class="absolute top-8 right-8 w-6 h-6 border-2 border-gray-200 rounded-full flex items-center justify-center transition-all duration-300 peer-checked:bg-dabba-maroon peer-checked:border-dabba-maroon peer-checked:[&_svg]:opacity-100">
+                                            <svg class="w-3 h-3 text-white opacity-0 transition-opacity duration-300"
+                                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4"
+                                                    d="M5 13l4 4L19 7"></path>
+                                            </svg>
+                                        </div>
+                                    </label>
                                 </div>
                             </div>
 
@@ -1298,7 +1347,21 @@
                                 <div class="mb-10">
                                     <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-6">Meal
                                         Slots</p>
-                                    <div class="grid grid-cols-2 gap-4">
+                                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                                        <div id="slot-breakfast"
+                                            class="p-6 border-2 border-white/10 rounded-3xl flex items-center justify-between cursor-pointer transition-all"
+                                            onclick="toggleSlot('breakfast')">
+                                            <div class="flex items-center gap-4">
+                                                <span class="text-2xl">🌅</span>
+                                                <div>
+                                                    <p class="text-sm font-bold">Breakfast</p>
+                                                    <p class="text-[10px] text-gray-400">8:00–9:30 AM</p>
+                                                </div>
+                                            </div>
+                                            <div id="breakfast-check"
+                                                class="w-6 h-6 rounded-full border-2 border-white/10 flex items-center justify-center">
+                                            </div>
+                                        </div>
                                         <div id="slot-lunch"
                                             class="p-6 border-2 border-dabba-maroon bg-dabba-maroon/5 rounded-3xl flex items-center justify-between cursor-pointer transition-all"
                                             onclick="toggleSlot('lunch')">
@@ -1318,6 +1381,20 @@
                                                 </svg>
                                             </div>
                                         </div>
+                                        <div id="slot-snacks"
+                                            class="p-6 border-2 border-white/10 rounded-3xl flex items-center justify-between cursor-pointer transition-all"
+                                            onclick="toggleSlot('snacks')">
+                                            <div class="flex items-center gap-4">
+                                                <span class="text-2xl">☕</span>
+                                                <div>
+                                                    <p class="text-sm font-bold">Snacks</p>
+                                                    <p class="text-[10px] text-gray-400">4:30–6:00 PM</p>
+                                                </div>
+                                            </div>
+                                            <div id="snacks-check"
+                                                class="w-6 h-6 rounded-full border-2 border-white/10 flex items-center justify-center">
+                                            </div>
+                                        </div>
                                         <div id="slot-dinner"
                                             class="p-6 border-2 border-white/10 rounded-3xl flex items-center justify-between cursor-pointer transition-all"
                                             onclick="toggleSlot('dinner')">
@@ -1335,37 +1412,64 @@
                                     </div>
                                 </div>
 
+                                <!-- Upcoming 3-Day Menu Preview Section -->
+                                <div class="mb-10 bg-white/5 p-6 lg:p-8 rounded-[2.5rem] border border-white/10 transition-all duration-300">
+                                    <div class="flex items-center justify-between cursor-pointer" onclick="toggleMenuPreview()">
+                                        <div class="flex items-center gap-4">
+                                            <span class="text-xl p-3 bg-white/5 rounded-2xl border border-white/10" id="menu-toggle-icon">📅</span>
+                                            <div>
+                                                <p class="text-[10px] font-bold text-dabba-maroon uppercase tracking-widest mb-0.5">Interactive Menu</p>
+                                                <h3 class="text-lg lg:text-xl font-serif font-bold text-white flex items-center gap-2">
+                                                    Upcoming 3-Day Menu Preview
+                                                    <span class="text-xs text-gray-400 font-sans font-normal opacity-70" id="menu-toggle-hint">(Tap to View)</span>
+                                                </h3>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-3">
+                                            <svg id="menu-chevron" class="w-5 h-5 text-gray-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 hidden" id="menu-preview-container">
+                                        <!-- Rendered dynamically via JS -->
+                                    </div>
+                                </div>
 
                                 <div class="mb-10">
                                     <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-6">
-                                        Duration (Delivery
-                                        Days)</p>
+                                        Duration (Delivery Days)</p>
                                     <div
-                                        class="flex flex-nowrap overflow-x-auto scrollbar-none -mx-6 px-6 md:mx-0 md:px-0 md:flex-wrap md:overflow-visible gap-3 pb-2">
+                                        class="flex flex-nowrap overflow-x-auto scrollbar-none -mx-6 px-6 md:mx-0 md:px-0 md:flex-wrap md:overflow-visible gap-4 pb-2">
                                         <button
-                                            class="duration-btn flex-shrink-0 px-6 py-4 rounded-2xl border-2 border-dabba-maroon bg-dabba-maroon/5 text-white font-bold text-xs transition-all"
+                                            class="duration-btn flex-shrink-0 p-6 rounded-3xl border-2 border-dabba-maroon bg-dabba-maroon/5 text-white transition-all text-center min-w-[125px] flex flex-col justify-center items-center"
                                             onclick="updateDuration(1, this)">
-                                            1 <br><span class="text-[9px] font-medium opacity-60">₹273 / meal</span>
+                                            <span class="text-3xl font-serif font-black block mb-1">1</span>
+                                            <span class="text-xs font-medium opacity-75">₹273 / meal</span>
                                         </button>
                                         <button
-                                            class="duration-btn flex-shrink-0 px-6 py-4 rounded-2xl border-2 border-white/10 text-white font-bold text-xs transition-all"
+                                            class="duration-btn flex-shrink-0 p-6 rounded-3xl border-2 border-white/10 text-white transition-all text-center min-w-[125px] flex flex-col justify-center items-center"
                                             onclick="updateDuration(3, this)">
-                                            3 <br><span class="text-[9px] font-medium opacity-60">₹265 / meal</span>
+                                            <span class="text-3xl font-serif font-black block mb-1">3</span>
+                                            <span class="text-xs font-medium opacity-75">₹265 / meal</span>
                                         </button>
                                         <button
-                                            class="duration-btn flex-shrink-0 px-6 py-4 rounded-2xl border-2 border-white/10 text-white font-bold text-xs transition-all"
+                                            class="duration-btn flex-shrink-0 p-6 rounded-3xl border-2 border-white/10 text-white transition-all text-center min-w-[125px] flex flex-col justify-center items-center"
                                             onclick="updateDuration(7, this)">
-                                            7 <br><span class="text-[9px] font-medium opacity-60">₹251 / meal</span>
+                                            <span class="text-3xl font-serif font-black block mb-1">7</span>
+                                            <span class="text-xs font-medium opacity-75">₹251 / meal</span>
                                         </button>
                                         <button
-                                            class="duration-btn flex-shrink-0 px-6 py-4 rounded-2xl border-2 border-white/10 text-white font-bold text-xs transition-all"
+                                            class="duration-btn flex-shrink-0 p-6 rounded-3xl border-2 border-white/10 text-white transition-all text-center min-w-[125px] flex flex-col justify-center items-center"
                                             onclick="updateDuration(14, this)">
-                                            14 <br><span class="text-[9px] font-medium opacity-60">₹238 / meal</span>
+                                            <span class="text-3xl font-serif font-black block mb-1">14</span>
+                                            <span class="text-xs font-medium opacity-75">₹238 / meal</span>
                                         </button>
                                         <button
-                                            class="duration-btn flex-shrink-0 px-6 py-4 rounded-2xl border-2 border-white/10 text-white font-bold text-xs transition-all"
+                                            class="duration-btn flex-shrink-0 p-6 rounded-3xl border-2 border-white/10 text-white transition-all text-center min-w-[125px] flex flex-col justify-center items-center"
                                             onclick="updateDuration(30, this)">
-                                            30 <br><span class="text-[9px] font-medium opacity-60">₹213 / meal</span>
+                                            <span class="text-3xl font-serif font-black block mb-1">30</span>
+                                            <span class="text-xs font-medium opacity-75">₹213 / meal</span>
                                         </button>
                                     </div>
                                 </div>
@@ -1492,34 +1596,164 @@
                                     </p>
                                 </div>
 
-                                <form class="space-y-6">
-                                    <div>
-                                        <label
-                                            class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Flat
-                                            / House No. / Building</label>
-                                        <input type="text" placeholder="102, Green Valley Apartments"
-                                            class="w-full px-6 py-4 rounded-2xl border border-white/10 bg-white/5 text-sm font-medium focus:ring-2 focus:ring-dabba-maroon/20 outline-none transition-all">
-                                    </div>
-                                    <div>
-                                        <label
-                                            class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Area
-                                            / Street / Sector</label>
-                                        <input type="text" placeholder="Sector 62, Noida"
-                                            class="w-full px-6 py-4 rounded-2xl border border-white/10 bg-white/5 text-sm font-medium focus:ring-2 focus:ring-dabba-maroon/20 outline-none transition-all">
-                                    </div>
-                                    <div class="grid sm:grid-cols-2 gap-6">
-                                        <div>
-                                            <label
-                                                class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Pincode</label>
-                                            <input type="text" id="final-pincode" readonly
-                                                class="w-full px-6 py-4 rounded-2xl border border-white/10 bg-gray-100 text-sm font-bold text-gray-400 outline-none">
+                                <!-- Address Delivery Option Selector -->
+                                <div class="mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div id="addr-same"
+                                        class="p-6 border-2 border-dabba-maroon bg-dabba-maroon/5 rounded-3xl cursor-pointer transition-all flex items-center justify-between"
+                                        onclick="setAddressMode('same')">
+                                        <div class="flex items-center gap-4">
+                                            <span class="text-2xl">📍</span>
+                                            <div>
+                                                <p class="text-sm font-bold text-white">Same Address</p>
+                                                <p class="text-[10px] text-gray-400">All meals to one location</p>
+                                            </div>
                                         </div>
+                                        <div id="addr-same-check"
+                                            class="w-6 h-6 rounded-full bg-dabba-maroon flex items-center justify-center">
+                                            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div id="addr-split"
+                                        class="p-6 border-2 border-white/10 rounded-3xl cursor-pointer transition-all flex items-center justify-between"
+                                        onclick="setAddressMode('split')">
+                                        <div class="flex items-center gap-4">
+                                            <span class="text-2xl">🌓</span>
+                                            <div>
+                                                <p class="text-sm font-bold text-white">Split Morning / Evening</p>
+                                                <p class="text-[10px] text-gray-400">Office / Gym / Residential split</p>
+                                            </div>
+                                        </div>
+                                        <div id="addr-split-check"
+                                            class="w-6 h-6 rounded-full border border-white/10 flex items-center justify-center">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <form class="space-y-6">
+                                    <!-- Single Address Form -->
+                                    <div id="single-address-fields" class="space-y-6">
                                         <div>
-                                            <label
-                                                class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Landmark
-                                                (Optional)</label>
-                                            <input type="text" placeholder="Near Apollo Hospital"
+                                            <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Flat / House No. / Building / Street</label>
+                                            <input type="text" id="delivery-address-single" placeholder="102, Green Valley Apartments"
                                                 class="w-full px-6 py-4 rounded-2xl border border-white/10 bg-white/5 text-sm font-medium focus:ring-2 focus:ring-dabba-maroon/20 outline-none transition-all">
+                                        </div>
+                                        <div class="grid sm:grid-cols-2 gap-6">
+                                            <div>
+                                                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Area / Street / Sector</label>
+                                                <input type="text" id="delivery-area-single" placeholder="Sector 62, Noida"
+                                                    class="w-full px-6 py-4 rounded-2xl border border-white/10 bg-white/5 text-sm font-medium focus:ring-2 focus:ring-dabba-maroon/20 outline-none transition-all">
+                                            </div>
+                                            <div>
+                                                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Landmark (Optional)</label>
+                                                <input type="text" id="delivery-landmark-single" placeholder="Near Apollo Hospital"
+                                                    class="w-full px-6 py-4 rounded-2xl border border-white/10 bg-white/5 text-sm font-medium focus:ring-2 focus:ring-dabba-maroon/20 outline-none transition-all">
+                                            </div>
+                                        </div>
+                                        <div class="grid sm:grid-cols-2 gap-6">
+                                            <div>
+                                                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Pincode</label>
+                                                <div class="relative">
+                                                    <input type="text" id="delivery-pincode-single" maxlength="6"
+                                                        class="w-full pl-6 pr-28 py-4 rounded-2xl border border-white/10 bg-white/5 text-sm font-medium focus:ring-2 focus:ring-dabba-maroon/20 outline-none transition-all"
+                                                        oninput="onSplitPincodeChange('single')">
+                                                    <button type="button" onclick="checkSplitPincode('single')" id="btn-verify-single"
+                                                        class="absolute right-2 top-2 bottom-2 px-4 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 text-[10px] font-bold uppercase tracking-widest rounded-xl transition-all">
+                                                        Verified
+                                                    </button>
+                                                </div>
+                                                <p id="status-pincode-single" class="mt-2 text-[10px] text-green-400 font-semibold flex items-center gap-1">
+                                                    <span class="inline-block w-1.5 h-1.5 bg-green-400 rounded-full animate-ping"></span> Serviceable Pincode
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Split Address Forms -->
+                                    <div id="split-address-fields" class="hidden space-y-6">
+                                        <!-- Morning Address (Breakfast & Lunch) -->
+                                        <div class="p-6 bg-white/5 rounded-3xl border border-white/5 space-y-6">
+                                            <div class="flex items-center gap-3">
+                                                <span class="text-xl">🌅</span>
+                                                <h3 class="text-xs font-bold tracking-wider text-white uppercase">Morning Delivery Address <span class="text-[9px] text-gray-400 font-normal normal-case">(Breakfast & Lunch)</span></h3>
+                                            </div>
+                                            <div>
+                                                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Flat / House No. / Building / Street</label>
+                                                <input type="text" id="delivery-address-morning" placeholder="e.g., Office Floor 4, Cyber City"
+                                                    class="w-full px-6 py-4 rounded-2xl border border-white/10 bg-white/5 text-sm font-medium focus:ring-2 focus:ring-dabba-maroon/20 outline-none transition-all">
+                                            </div>
+                                            <div class="grid sm:grid-cols-2 gap-6">
+                                                <div>
+                                                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Area / Street / Sector</label>
+                                                    <input type="text" id="delivery-area-morning" placeholder="Sector 62, Noida"
+                                                        class="w-full px-6 py-4 rounded-2xl border border-white/10 bg-white/5 text-sm font-medium focus:ring-2 focus:ring-dabba-maroon/20 outline-none transition-all">
+                                                </div>
+                                                <div>
+                                                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Landmark (Optional)</label>
+                                                    <input type="text" id="delivery-landmark-morning" placeholder="Near Apollo Hospital"
+                                                        class="w-full px-6 py-4 rounded-2xl border border-white/10 bg-white/5 text-sm font-medium focus:ring-2 focus:ring-dabba-maroon/20 outline-none transition-all">
+                                                </div>
+                                            </div>
+                                            <div class="grid sm:grid-cols-2 gap-6">
+                                                <div>
+                                                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Pincode</label>
+                                                    <div class="relative">
+                                                        <input type="text" id="delivery-pincode-morning" maxlength="6"
+                                                            class="w-full pl-6 pr-28 py-4 rounded-2xl border border-white/10 bg-white/5 text-sm font-medium focus:ring-2 focus:ring-dabba-maroon/20 outline-none transition-all"
+                                                            oninput="onSplitPincodeChange('morning')">
+                                                        <button type="button" onclick="checkSplitPincode('morning')" id="btn-verify-morning"
+                                                            class="absolute right-2 top-2 bottom-2 px-4 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 text-[10px] font-bold uppercase tracking-widest rounded-xl transition-all">
+                                                            Verified
+                                                        </button>
+                                                    </div>
+                                                    <p id="status-pincode-morning" class="mt-2 text-[10px] text-green-400 font-semibold flex items-center gap-1">
+                                                        <span class="inline-block w-1.5 h-1.5 bg-green-400 rounded-full animate-ping"></span> Serviceable Pincode
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Evening Address (Snacks & Dinner) -->
+                                        <div class="p-6 bg-white/5 rounded-3xl border border-white/5 space-y-6">
+                                            <div class="flex items-center gap-3">
+                                                <span class="text-xl">🌙</span>
+                                                <h3 class="text-xs font-bold tracking-wider text-white uppercase">Evening Delivery Address <span class="text-[9px] text-gray-400 font-normal normal-case">(Snacks & Dinner)</span></h3>
+                                            </div>
+                                            <div>
+                                                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Flat / House No. / Building / Street</label>
+                                                <input type="text" id="delivery-address-evening" placeholder="e.g., Block B-402, Residential Palms"
+                                                    class="w-full px-6 py-4 rounded-2xl border border-white/10 bg-white/5 text-sm font-medium focus:ring-2 focus:ring-dabba-maroon/20 outline-none transition-all">
+                                            </div>
+                                            <div class="grid sm:grid-cols-2 gap-6">
+                                                <div>
+                                                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Area / Street / Sector</label>
+                                                    <input type="text" id="delivery-area-evening" placeholder="Sector 62, Noida"
+                                                        class="w-full px-6 py-4 rounded-2xl border border-white/10 bg-white/5 text-sm font-medium focus:ring-2 focus:ring-dabba-maroon/20 outline-none transition-all">
+                                                </div>
+                                                <div>
+                                                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Landmark (Optional)</label>
+                                                    <input type="text" id="delivery-landmark-evening" placeholder="Near Apollo Hospital"
+                                                        class="w-full px-6 py-4 rounded-2xl border border-white/10 bg-white/5 text-sm font-medium focus:ring-2 focus:ring-dabba-maroon/20 outline-none transition-all">
+                                                </div>
+                                            </div>
+                                            <div class="grid sm:grid-cols-2 gap-6">
+                                                <div>
+                                                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Pincode</label>
+                                                    <div class="relative">
+                                                        <input type="text" id="delivery-pincode-evening" maxlength="6"
+                                                            class="w-full pl-6 pr-28 py-4 rounded-2xl border border-white/10 bg-white/5 text-sm font-medium focus:ring-2 focus:ring-dabba-maroon/20 outline-none transition-all"
+                                                            oninput="onSplitPincodeChange('evening')">
+                                                        <button type="button" onclick="checkSplitPincode('evening')" id="btn-verify-evening"
+                                                            class="absolute right-2 top-2 bottom-2 px-4 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 text-[10px] font-bold uppercase tracking-widest rounded-xl transition-all">
+                                                            Verified
+                                                        </button>
+                                                    </div>
+                                                    <p id="status-pincode-evening" class="mt-2 text-[10px] text-green-400 font-semibold flex items-center gap-1">
+                                                        <span class="inline-block w-1.5 h-1.5 bg-green-400 rounded-full animate-ping"></span> Serviceable Pincode
+                                                    </p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </form>
@@ -1557,7 +1791,8 @@
             diet: null,
             duration: 1,
             people: 1,
-            slots: { lunch: true, dinner: false },
+            slots: { breakfast: false, lunch: true, snacks: false, dinner: false },
+            addressMode: 'same',
             skips: [],
             step3Completed: false,
             step4Completed: false,
@@ -1573,6 +1808,11 @@
         let currentStep = 1;
         let isAnimating = false;
         let isOrderCompleted = false;
+        const pincodeStatus = {
+            single: true,
+            morning: true,
+            evening: true
+        };
 
         // Camera Vertical Offset calibration matching the stacked dabbas:
         // Stacking bottom-up, we move the stack vertically using transform translateY to align the active dabba with the viewport center.
@@ -1745,10 +1985,13 @@
                 targetStackLevel.classList.add('active', 'materializing');
 
                 if (currentStep >= 2 && config.diet) {
-                    if (config.diet.toLowerCase().includes('veg') && !config.diet.toLowerCase().includes('non')) {
+                    const dietLower = config.diet.toLowerCase();
+                    if (dietLower === 'veg') {
                         targetStackLevel.classList.add('veg-active');
-                    } else {
+                    } else if (dietLower === 'non-veg') {
                         targetStackLevel.classList.add('nonveg-active');
+                    } else {
+                        targetStackLevel.classList.add('mix-active');
                     }
                 }
 
@@ -1823,7 +2066,7 @@
                 const prevStackLevel = document.getElementById(`assembly-dabba-${currentStep}`);
                 if (prevStackLevel) {
                     prevStackLevel.classList.add('opacity-0', 'pointer-events-none');
-                    prevStackLevel.classList.remove('active', 'veg-active', 'nonveg-active');
+                    prevStackLevel.classList.remove('active', 'veg-active', 'nonveg-active', 'mix-active');
                 }
 
                 currentStep--;
@@ -1879,6 +2122,7 @@
                 if (currentStep === 3 && isFormVisible) {
                     pricingStrip.classList.add('active');
                     document.body.classList.add('has-pricing-bar');
+                    updateMenuPreview();
                 } else {
                     pricingStrip.classList.remove('active');
                     document.body.classList.remove('has-pricing-bar');
@@ -1903,7 +2147,9 @@
 
             resultDiv.classList.remove('hidden');
             config.pincode = pin;
-            document.getElementById('final-pincode').value = pin;
+            if (document.getElementById('delivery-pincode-single')) document.getElementById('delivery-pincode-single').value = pin;
+            if (document.getElementById('delivery-pincode-morning')) document.getElementById('delivery-pincode-morning').value = pin;
+            if (document.getElementById('delivery-pincode-evening')) document.getElementById('delivery-pincode-evening').value = pin;
             const s1 = document.getElementById('step-summary-1'); if (s1) s1.innerText = pin;
 
             updateDabbaStack();
@@ -1916,12 +2162,157 @@
             setTimeout(() => handleNextStep(), 1000);
         }
 
+        const menuData = {
+            Veg: {
+                Day1: {
+                    breakfast: "🌅 Gobi Paratha with Fresh Curd",
+                    lunch: "☀️ Bhindi Do Piaza & Dal",
+                    snacks: "☕ Samosa & Masala Chai",
+                    dinner: "🌙 Pav Bhaji Special"
+                },
+                Day2: {
+                    breakfast: "🌅 Poha with Roasted Peanuts",
+                    lunch: "☀️ Mughlai Gobhi & Kabuli",
+                    snacks: "☕ Veg Grilled Sandwich & Tea",
+                    dinner: "🌙 Subz Khurchan & Roti"
+                },
+                Day3: {
+                    breakfast: "🌅 Idli Sambar & Coconut Chutney",
+                    lunch: "☀️ Chilli Mushroom Feast",
+                    snacks: "☕ Dhokla with Chutney & Tea",
+                    dinner: "🌙 Baigan Bharta Smoked"
+                }
+            },
+            'Non-Veg': {
+                Day1: {
+                    breakfast: "🌅 Egg Masala Omelette & Toast",
+                    lunch: "☀️ Murg Do Piaza & Dal",
+                    snacks: "☕ Chicken Tikka Roll & Chai",
+                    dinner: "🌙 Keema Pav Classic"
+                },
+                Day2: {
+                    breakfast: "🌅 Scrambled Eggs with Toast",
+                    lunch: "☀️ Chicken Mughlai & Kabuli",
+                    snacks: "☕ Chicken Mayo Sandwich & Tea",
+                    dinner: "🌙 Murg Khurchan & Roti"
+                },
+                Day3: {
+                    breakfast: "🌅 Egg Bhurji Paratha",
+                    lunch: "☀️ Chilli Chicken Feast",
+                    snacks: "☕ Chicken Nuggets & Hot Tea",
+                    dinner: "🌙 Murgi Bharta Smoked"
+                }
+            },
+            Mix: {
+                Day1: {
+                    breakfast: "🌅 Egg Omelette / Gobi Paratha",
+                    lunch: "☀️ Murg Do Piaza / Bhindi Do Piaza",
+                    snacks: "☕ Chicken Tikka / Samosa & Chai",
+                    dinner: "🌙 Keema Pav / Pav Bhaji Special"
+                },
+                Day2: {
+                    breakfast: "🌅 Scrambled Eggs / Poha",
+                    lunch: "☀️ Chicken Mughlai / Mughlai Gobhi",
+                    snacks: "☕ Chicken Mayo / Veg Grilled Sandwich",
+                    dinner: "🌙 Murg / Subz Khurchan & Roti"
+                },
+                Day3: {
+                    breakfast: "🌅 Egg Bhurji / Idli Sambar",
+                    lunch: "☀️ Chilli Chicken / Chilli Mushroom",
+                    snacks: "☕ Chicken Nuggets / Dhokla & Tea",
+                    dinner: "🌙 Murgi Bharta / Baigan Bharta"
+                }
+            }
+        };
+
+        function updateMenuPreview() {
+            const diet = config.diet || 'Veg';
+            const dietKey = diet === 'Mix' ? 'Mix' : (diet === 'Non-Vegetarian' || diet === 'Non Veg' || diet === 'Non-Veg' ? 'Non-Veg' : 'Veg');
+            const data = menuData[dietKey] || menuData.Veg;
+
+            const days = ['Day1', 'Day2', 'Day3'];
+            const dayLabels = ['Tomorrow (Day 1)', 'Day 2', 'Day 3'];
+            let html = '';
+
+            days.forEach((dayKey, idx) => {
+                const dayMenu = data[dayKey];
+                html += `
+                    <div class="p-6 bg-white/5 rounded-3xl border border-white/5 space-y-4 hover:border-dabba-maroon/20 transition-all duration-300">
+                        <div class="flex items-center justify-between border-b border-white/5 pb-3">
+                            <h4 class="text-sm font-bold text-white">${dayLabels[idx]}</h4>
+                            <span class="text-[10px] bg-dabba-maroon/10 text-dabba-maroon font-bold uppercase tracking-widest px-2 py-0.5 rounded">Gourmet</span>
+                        </div>
+                        <div class="space-y-3 text-xs">
+                `;
+
+                const slots = [
+                    { id: 'breakfast', icon: '🌅', label: 'Breakfast' },
+                    { id: 'lunch', icon: '☀️', label: 'Lunch' },
+                    { id: 'snacks', icon: '☕', label: 'Snacks' },
+                    { id: 'dinner', icon: '🌙', label: 'Dinner' }
+                ];
+
+                slots.forEach(slot => {
+                    const isSelected = config.slots[slot.id];
+                    const mealName = dayMenu[slot.id];
+                    html += `
+                        <div class="flex items-start gap-2.5 transition-all duration-200 ${isSelected ? 'opacity-100 scale-[1.01]' : 'opacity-30 filter grayscale'}">
+                            <span class="text-base">${slot.icon}</span>
+                            <div>
+                                <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">${slot.label} ${isSelected ? '<span class="text-[8px] bg-green-500/10 text-green-400 px-1.5 py-0.2 rounded font-bold uppercase tracking-widest ml-1">Selected</span>' : ''}</p>
+                                <p class="text-xs font-semibold text-white mt-0.5">${mealName}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+
+            const container = document.getElementById('menu-preview-container');
+            if (container) container.innerHTML = html;
+        }
+
+        let isMenuExpanded = false;
+        function toggleMenuPreview() {
+            isMenuExpanded = !isMenuExpanded;
+            const container = document.getElementById('menu-preview-container');
+            const chevron = document.getElementById('menu-chevron');
+            const hint = document.getElementById('menu-toggle-hint');
+            const icon = document.getElementById('menu-toggle-icon');
+
+            if (container) {
+                if (isMenuExpanded) {
+                    container.classList.remove('hidden');
+                    if (chevron) chevron.classList.add('rotate-180');
+                    if (hint) hint.innerText = '(Tap to Collapse)';
+                    if (icon) icon.innerText = '📖';
+                } else {
+                    container.classList.add('hidden');
+                    if (chevron) chevron.classList.remove('rotate-180');
+                    if (hint) hint.innerText = '(Tap to View)';
+                    if (icon) icon.innerText = '📅';
+                }
+            }
+        }
+
         function updateDiet(val) {
             config.diet = val;
             const s2 = document.getElementById('step-summary-2'); if (s2) s2.innerText = val;
             updateChamberTheme();
             calculatePricing();
             updateDabbaStack();
+            updateMenuPreview();
+
+            // Auto advance to next step after a short cinematic beat so user sees their choice is recorded
+            setTimeout(() => {
+                if (currentStep === 2) {
+                    handleNextStep();
+                }
+            }, 600);
         }
 
         function toggleSlot(slot) {
@@ -1953,6 +2344,7 @@
             config.skips = [];
             generateCalendar();
             calculatePricing();
+            updateMenuPreview();
         }
 
         function updateDuration(days, el) {
@@ -1972,12 +2364,15 @@
         function updateChamberTheme() {
             const chamber = document.querySelector('.active-dabba-chamber');
             if (!chamber) return;
-            chamber.classList.remove('dabba-veg', 'dabba-nonveg');
+            chamber.classList.remove('dabba-veg', 'dabba-nonveg', 'dabba-mix');
             if (currentStep >= 2 && config.diet) {
-                if (config.diet.toLowerCase().includes('veg') && !config.diet.toLowerCase().includes('non')) {
+                const dietLower = config.diet.toLowerCase();
+                if (dietLower === 'veg') {
                     chamber.classList.add('dabba-veg');
-                } else {
+                } else if (dietLower === 'non-veg') {
                     chamber.classList.add('dabba-nonveg');
+                } else {
+                    chamber.classList.add('dabba-mix');
                 }
             }
         }
@@ -2030,7 +2425,7 @@
                 alert('Please select your dietary preference.');
                 return false;
             }
-            if (step === 3 && !config.slots.lunch && !config.slots.dinner) {
+            if (step === 3 && !config.slots.breakfast && !config.slots.lunch && !config.slots.snacks && !config.slots.dinner) {
                 alert('Please select at least one meal slot.');
                 return false;
             }
@@ -2046,7 +2441,129 @@
                     return false;
                 }
             }
+            if (step === 5) {
+                if (config.addressMode === 'same') {
+                    const single = document.getElementById('delivery-address-single').value;
+                    const area = document.getElementById('delivery-area-single').value;
+                    if (!single) {
+                        alert('Please enter your Flat / House No. / Building address.');
+                        return false;
+                    }
+                    if (!area) {
+                        alert('Please enter your Area / Street / Sector.');
+                        return false;
+                    }
+                } else {
+                    const morning = document.getElementById('delivery-address-morning').value;
+                    const morningArea = document.getElementById('delivery-area-morning').value;
+                    const evening = document.getElementById('delivery-address-evening').value;
+                    const eveningArea = document.getElementById('delivery-area-evening').value;
+                    if (!morning) {
+                        alert('Please enter your morning delivery Flat / House No. / Building.');
+                        return false;
+                    }
+                    if (!morningArea) {
+                        alert('Please enter your morning Area / Street / Sector.');
+                        return false;
+                    }
+                    if (!pincodeStatus.morning) {
+                        alert('Please verify your morning pincode first.');
+                        return false;
+                    }
+                    if (!evening) {
+                        alert('Please enter your evening delivery Flat / House No. / Building.');
+                        return false;
+                    }
+                    if (!eveningArea) {
+                        alert('Please enter your evening Area / Street / Sector.');
+                        return false;
+                    }
+                    if (!pincodeStatus.evening) {
+                        alert('Please verify your evening pincode first.');
+                        return false;
+                    }
+                }
+            }
             return true;
+        }
+
+        function setAddressMode(mode) {
+            config.addressMode = mode;
+            const sameEl = document.getElementById('addr-same');
+            const splitEl = document.getElementById('addr-split');
+            const sameCheck = document.getElementById('addr-same-check');
+            const splitCheck = document.getElementById('addr-split-check');
+            const singleFields = document.getElementById('single-address-fields');
+            const splitFields = document.getElementById('split-address-fields');
+
+            if (mode === 'same') {
+                sameEl.classList.add('border-dabba-maroon', 'bg-dabba-maroon/5');
+                sameEl.classList.remove('border-white/10');
+                sameCheck.classList.add('bg-dabba-maroon');
+                sameCheck.classList.remove('border', 'border-white/10');
+                sameCheck.innerHTML = `<svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path></svg>`;
+
+                splitEl.classList.remove('border-dabba-maroon', 'bg-dabba-maroon/5');
+                splitEl.classList.add('border-white/10');
+                splitCheck.classList.remove('bg-dabba-maroon');
+                splitCheck.classList.add('border', 'border-white/10');
+                splitCheck.innerHTML = '';
+
+                singleFields.classList.remove('hidden');
+                splitFields.classList.add('hidden');
+            } else {
+                splitEl.classList.add('border-dabba-maroon', 'bg-dabba-maroon/5');
+                splitEl.classList.remove('border-white/10');
+                splitCheck.classList.add('bg-dabba-maroon');
+                splitCheck.classList.remove('border', 'border-white/10');
+                splitCheck.innerHTML = `<svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path></svg>`;
+
+                sameEl.classList.remove('border-dabba-maroon', 'bg-dabba-maroon/5');
+                sameEl.classList.add('border-white/10');
+                sameCheck.classList.remove('bg-dabba-maroon');
+                sameCheck.classList.add('border', 'border-white/10');
+                sameCheck.innerHTML = '';
+
+                singleFields.classList.add('hidden');
+                splitFields.classList.remove('hidden');
+            }
+        }
+
+        function onSplitPincodeChange(slot) {
+            pincodeStatus[slot] = false;
+            const btn = document.getElementById('btn-verify-' + slot);
+            const status = document.getElementById('status-pincode-' + slot);
+            if (btn) {
+                btn.className = 'absolute right-2 top-2 bottom-2 px-4 bg-dabba-maroon text-white text-[10px] font-bold uppercase tracking-widest rounded-xl transition-all';
+                btn.innerText = 'Verify';
+            }
+            if (status) {
+                status.className = 'mt-2 text-[10px] text-amber-500 font-semibold flex items-center gap-1';
+                status.innerHTML = `<span class="inline-block w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span> Pincode changed - Please verify`;
+            }
+        }
+
+        function checkSplitPincode(slot) {
+            const pinVal = document.getElementById('delivery-pincode-' + slot).value.trim();
+            const isValidPin = /^[1-9][0-9]{5}$/.test(pinVal);
+            const btn = document.getElementById('btn-verify-' + slot);
+            const status = document.getElementById('status-pincode-' + slot);
+
+            if (!isValidPin) {
+                alert('Please enter a valid 6-digit Indian pincode.');
+                return;
+            }
+
+            pincodeStatus[slot] = true;
+            if (btn) {
+                btn.className = 'absolute right-2 top-2 bottom-2 px-4 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 text-[10px] font-bold uppercase tracking-widest rounded-xl transition-all';
+                btn.innerText = 'Verified';
+            }
+            if (status) {
+                status.className = 'mt-2 text-[10px] text-green-400 font-semibold flex items-center gap-1';
+                status.innerHTML = `<span class="inline-block w-1.5 h-1.5 bg-green-400 rounded-full animate-ping"></span> Serviceable Pincode`;
+            }
+            alert(`Pincode ${pinVal} verified successfully!`);
         }
 
         function sendOTP() {
@@ -2090,6 +2607,20 @@
                 item.className = 'relative flex flex-col gap-3 p-5 bg-white/5 rounded-3xl border border-white/5 transition-all hover:border-white/10';
 
                 let slotsHtml = '';
+                if (config.slots.breakfast) {
+                    const isSkipped = config.skips.includes(`${i}-breakfast`);
+                    slotsHtml += `
+                        <label class="flex items-center justify-between group cursor-pointer">
+                            <div class="flex items-center gap-3">
+                                <div class="w-4 h-4 rounded border border-white/20 flex items-center justify-center transition-all ${isSkipped ? 'border-white/10' : 'bg-[#6f1e3b] border-[#6f1e3b]'}">
+                                    ${isSkipped ? '' : '<svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path></svg>'}
+                                </div>
+                                <span class="text-[10px] font-bold ${isSkipped ? 'text-gray-600 line-through' : 'text-white'} uppercase tracking-widest">Breakfast</span>
+                            </div>
+                            <input type="checkbox" class="sr-only" ${isSkipped ? 'checked' : ''} onchange="toggleMealSkip(${i}, 'breakfast')">
+                            <span class="text-[9px] font-bold text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity">${isSkipped ? 'Add back' : 'Skip'}</span>
+                        </label>`;
+                }
                 if (config.slots.lunch) {
                     const isSkipped = config.skips.includes(`${i}-lunch`);
                     slotsHtml += `
@@ -2101,6 +2632,20 @@
                                 <span class="text-[10px] font-bold ${isSkipped ? 'text-gray-600 line-through' : 'text-white'} uppercase tracking-widest">Lunch</span>
                             </div>
                             <input type="checkbox" class="sr-only" ${isSkipped ? 'checked' : ''} onchange="toggleMealSkip(${i}, 'lunch')">
+                            <span class="text-[9px] font-bold text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity">${isSkipped ? 'Add back' : 'Skip'}</span>
+                        </label>`;
+                }
+                if (config.slots.snacks) {
+                    const isSkipped = config.skips.includes(`${i}-snacks`);
+                    slotsHtml += `
+                        <label class="flex items-center justify-between group cursor-pointer">
+                            <div class="flex items-center gap-3">
+                                <div class="w-4 h-4 rounded border border-white/20 flex items-center justify-center transition-all ${isSkipped ? 'border-white/10' : 'bg-[#6f1e3b] border-[#6f1e3b]'}">
+                                    ${isSkipped ? '' : '<svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path></svg>'}
+                                </div>
+                                <span class="text-[10px] font-bold ${isSkipped ? 'text-gray-600 line-through' : 'text-white'} uppercase tracking-widest">Snacks</span>
+                            </div>
+                            <input type="checkbox" class="sr-only" ${isSkipped ? 'checked' : ''} onchange="toggleMealSkip(${i}, 'snacks')">
                             <span class="text-[9px] font-bold text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity">${isSkipped ? 'Add back' : 'Skip'}</span>
                         </label>`;
                 }
@@ -2145,7 +2690,7 @@
         function calculatePricing() {
             const perMeal = config.pricing[config.duration] || 273;
             const basePerMeal = config.pricing[1];
-            const activeSlotsCount = (config.slots.lunch ? 1 : 0) + (config.slots.dinner ? 1 : 0);
+            const activeSlotsCount = (config.slots.breakfast ? 1 : 0) + (config.slots.lunch ? 1 : 0) + (config.slots.snacks ? 1 : 0) + (config.slots.dinner ? 1 : 0);
 
             const totalPotentialMeals = activeSlotsCount * config.duration;
             const skippedMealsCount = config.skips.length;
@@ -2187,7 +2732,11 @@
             const name = nameInput ? nameInput.value : '';
 
             const label1 = pincode ? `📍 PIN: ${pincode}` : '📍 PINCODE';
-            const label2 = diet ? (diet.toLowerCase().includes('veg') && !diet.toLowerCase().includes('non') ? '🥗 VEG' : '🍖 NON-VEG') : '🥗 DIET PREF';
+            const label2 = diet ? (
+                diet.toLowerCase() === 'veg' ? '🥗 VEG' :
+                diet.toLowerCase() === 'non-veg' ? '🍖 NON-VEG' :
+                '🍛 MIX'
+            ) : '🥗 DIET PREF';
             const label3 = (currentStep < 3 && !isOrderCompleted) ? '📅 PLAN SETUP' : `📅 ${duration} DAYS`;
             const label4 = name ? `👤 ${name.toUpperCase().substring(0, 12)}` : '👤 CONTACT INFO';
             const label5 = '🗺️ DELIVERY ADDR';
@@ -2219,16 +2768,18 @@
                         level.classList.add('active');
                         level.classList.remove('opacity-0', 'pointer-events-none');
                         if (i === 2 && diet) {
-                            if (diet.toLowerCase().includes('veg') && !diet.toLowerCase().includes('non')) {
+                            const dietLower = diet.toLowerCase();
+                            level.classList.remove('veg-active', 'nonveg-active', 'mix-active');
+                            if (dietLower === 'veg') {
                                 level.classList.add('veg-active');
-                                level.classList.remove('nonveg-active');
-                            } else {
+                            } else if (dietLower === 'non-veg') {
                                 level.classList.add('nonveg-active');
-                                level.classList.remove('veg-active');
+                            } else {
+                                level.classList.add('mix-active');
                             }
                         }
                     } else {
-                        level.classList.remove('active', 'veg-active', 'nonveg-active');
+                        level.classList.remove('active', 'veg-active', 'nonveg-active', 'mix-active');
                         level.classList.remove('opacity-0'); // Removes Tailwind utility to let the premium 0.15 faded CSS styling shine through
                         level.classList.add('pointer-events-none');
                     }
@@ -2267,7 +2818,12 @@
             const pincode = config.pincode || '400001';
             const diet = config.diet || 'Veg';
             const duration = config.duration || 1;
-            const slotText = (config.slots.lunch && config.slots.dinner) ? 'Lunch + Dinner' : (config.slots.lunch ? 'Lunch Only' : (config.slots.dinner ? 'Dinner Only' : 'None'));
+            const slotParts = [];
+            if (config.slots.breakfast) slotParts.push('Breakfast');
+            if (config.slots.lunch) slotParts.push('Lunch');
+            if (config.slots.snacks) slotParts.push('Snacks');
+            if (config.slots.dinner) slotParts.push('Dinner');
+            const slotText = slotParts.join(' + ') || 'None';
 
             document.querySelectorAll('.success-name').forEach(el => el.innerText = name.toUpperCase());
             document.querySelectorAll('.success-name-full').forEach(el => el.innerText = name);
@@ -2277,19 +2833,48 @@
             const successDietDabba = document.getElementById('success-dabba-diet');
             const successDietLabel = document.getElementById('success-diet-label');
             if (successDietDabba && successDietLabel) {
-                if (diet.toLowerCase().includes('veg') && !diet.toLowerCase().includes('non')) {
-                    successDietDabba.className = 'dabba dabba-steel active animate-in';
+                const dLower = diet.toLowerCase();
+                successDietDabba.className = 'dabba dabba-steel active animate-in';
+                if (dLower === 'veg') {
                     successDietLabel.innerText = '🥗 VEG';
                     document.querySelector('.success-diet-summary').innerText = '🥗 Veg Subscription';
-                } else {
-                    successDietDabba.className = 'dabba dabba-steel active animate-in';
+                } else if (dLower === 'non-veg') {
                     successDietLabel.innerText = '🍖 NON-VEG';
                     document.querySelector('.success-diet-summary').innerText = '🍖 Non-Veg Subscription';
+                } else {
+                    successDietLabel.innerText = '🍛 MIX';
+                    document.querySelector('.success-diet-summary').innerText = '🍛 Mix Subscription';
                 }
             }
 
             document.querySelector('.success-duration-summary').innerText = `${duration} Days (${slotText})`;
             document.querySelector('.success-pin-summary').innerText = `PIN: ${pincode}`;
+
+            let finalAddressTxt = '';
+            if (config.addressMode === 'split') {
+                const morningVal = document.getElementById('delivery-address-morning').value || 'Office Address';
+                const morningAreaVal = document.getElementById('delivery-area-morning').value || 'Sector 62';
+                const morningLandmarkVal = document.getElementById('delivery-landmark-morning').value;
+                const morningLandmarkTxt = morningLandmarkVal ? `, near ${morningLandmarkVal}` : '';
+
+                const eveningVal = document.getElementById('delivery-address-evening').value || 'Home Address';
+                const eveningAreaVal = document.getElementById('delivery-area-evening').value || 'Indirapuram';
+                const eveningLandmarkVal = document.getElementById('delivery-landmark-evening').value;
+                const eveningLandmarkTxt = eveningLandmarkVal ? `, near ${eveningLandmarkVal}` : '';
+
+                finalAddressTxt = `🌅 Morning: ${morningVal}, ${morningAreaVal}${morningLandmarkTxt}<br>🌙 Evening: ${eveningVal}, ${eveningAreaVal}${eveningLandmarkTxt}`;
+            } else {
+                const singleVal = document.getElementById('delivery-address-single').value || 'Flat 102, Green Valley Apartments';
+                const singleAreaVal = document.getElementById('delivery-area-single').value || 'Sector 62';
+                const singleLandmarkVal = document.getElementById('delivery-landmark-single').value;
+                const singleLandmarkTxt = singleLandmarkVal ? `, near ${singleLandmarkVal}` : '';
+
+                finalAddressTxt = `${singleVal}, ${singleAreaVal}${singleLandmarkTxt}`;
+            }
+            const addressSummaryEl = document.querySelector('.success-address-summary');
+            if (addressSummaryEl) {
+                addressSummaryEl.innerHTML = finalAddressTxt;
+            }
 
             const dkCarrier = document.getElementById('desktop-carrier-frame');
             const dkStage = document.getElementById('desktop-tiffin-stage');
@@ -2331,6 +2916,19 @@
         const tomorrowStr = tomorrow.toISOString().split('T')[0];
         const dateInput = document.getElementById('start-date');
         if (dateInput) dateInput.value = tomorrowStr;
+
+        // Auto verify pincode if passed via URL parameters (from advertisement campaigns)
+        const urlParams = new URLSearchParams(window.location.search);
+        const prefilledPincode = urlParams.get('pincode');
+        if (prefilledPincode && /^[1-9][0-9]{5}$/.test(prefilledPincode)) {
+            const pinInput = document.getElementById('check-pincode');
+            if (pinInput) {
+                pinInput.value = prefilledPincode;
+                setTimeout(() => {
+                    checkServiceability();
+                }, 400);
+            }
+        }
     </script>
 
     <!-- Beautiful Premium Success Modal overlay -->
@@ -2441,6 +3039,10 @@
                 <div class="flex justify-between">
                     <span>Delivery Location</span>
                     <span class="font-bold text-dabba-dark success-pin-summary">PIN: 400001</span>
+                </div>
+                <div class="flex justify-between items-start gap-4">
+                    <span class="flex-shrink-0">Delivery Address</span>
+                    <span class="font-bold text-dabba-dark text-right success-address-summary">102, Green Valley Apartments, Sector 62</span>
                 </div>
             </div>
 
