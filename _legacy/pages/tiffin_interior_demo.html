@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiffin Interior Mockup | DabbaGo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/index.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'dabba-maroon': '#6f1e3b',
+                        'dabba-beige': '#FFF9E5',
+                        'dabba-dark': '#1A1A1A',
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: radial-gradient(circle at center, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            color: #1a1a1a;
+        }
+
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* The Tiffin Interior Chamber Container */
+        .tiffin-chamber {
+            position: relative;
+            width: 520px;
+            height: 520px;
+            background-image: url('../assets/images/tiffin_top_view.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.15));
+            border-radius: 50%;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Smooth scaling for responsive smaller screens */
+        @media (max-width: 640px) {
+            .tiffin-chamber {
+                width: 360px;
+                height: 360px;
+            }
+        }
+
+        /* The Inner Bounds Circle where the forms reside */
+        .tiffin-content-area {
+            position: absolute;
+            top: 14%;
+            left: 14%;
+            right: 14%;
+            bottom: 14%;
+            border-radius: 50%;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2.5rem;
+            text-align: center;
+            scrollbar-width: none; /* Hide scrollbars for absolute immersion */
+        }
+
+        .tiffin-content-area::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Smooth fade-in animation for step changes */
+        .mock-step {
+            animation: form-entry 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes form-entry {
+            0% {
+                opacity: 0;
+                transform: scale(0.95) translateY(12px);
+                filter: blur(4px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+                filter: blur(0);
+            }
+        }
+
+        /* Premium glassy inner overlay card */
+        .glass-overlay {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px rgba(111, 30, 59, 0.04);
+        }
+    </style>
+</head>
+
+<body class="flex flex-col items-center justify-between p-4 sm:p-8">
+
+    <!-- Header Section -->
+    <header class="text-center max-w-xl mb-6">
+        <span class="text-[10px] font-extrabold text-dabba-maroon uppercase tracking-[0.3em] bg-dabba-maroon/10 px-4 py-1.5 rounded-full mb-3 inline-block">Interactive Prototype</span>
+        <h1 class="text-2xl sm:text-4xl font-serif font-bold text-dabba-dark leading-tight">
+            Inside the <span class="italic text-dabba-maroon">Tiffin Chamber</span>
+        </h1>
+        <p class="text-xs sm:text-sm text-gray-500 mt-2 font-medium">
+            This demo demonstrates how the customized subscription step fields will fit gracefully inside the open, top-down tiffin container. Use the controls below to switch steps!
+        </p>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 flex items-center justify-center my-6">
+        <!-- Giant Tiffin Chamber -->
+        <div class="tiffin-chamber">
+            <!-- Scrollable, bounded interior circle content -->
+            <div class="tiffin-content-area" id="chamber-content">
+                
+                <!-- STEP 1: PINCODE (Default) -->
+                <div id="mock-step-1" class="mock-step">
+                    <div class="glass-overlay p-6 rounded-3xl w-full max-w-sm flex flex-col items-center">
+                        <span class="text-3xl mb-3">📍</span>
+                        <h2 class="text-lg font-bold text-dabba-dark mb-1">Serviceable Pincode</h2>
+                        <p class="text-[11px] text-gray-400 mb-4 leading-relaxed max-w-[240px]">
+                            Let's check if DabbaGo delivers fresh meals to your doorstep.
+                        </p>
+                        <div class="relative w-full flex items-center">
+                            <input type="text" placeholder="Enter Pincode (e.g. 201301)" maxlength="6"
+                                class="w-full px-4 py-3.5 rounded-2xl border-2 border-slate-200 bg-white text-sm font-bold text-center tracking-widest focus:border-dabba-maroon focus:ring-0 outline-none transition-all">
+                        </div>
+                        <button onclick="changeMockStep(2)"
+                            class="mt-4 w-full py-3 rounded-xl bg-dabba-maroon text-white text-[10px] font-bold uppercase tracking-widest hover:bg-[#852747] transition-all flex items-center justify-center gap-2 shadow-lg shadow-dabba-maroon/20">
+                            Check Serviceability <span>→</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- STEP 2: DIET SELECTION (Hidden) -->
+                <div id="mock-step-2" class="mock-step hidden">
+                    <div class="glass-overlay p-5 rounded-3xl w-full max-w-sm flex flex-col items-center">
+                        <span class="text-3xl mb-2">🥗</span>
+                        <h2 class="text-base font-bold text-dabba-dark mb-1">Choose Taste Profile</h2>
+                        <p class="text-[10px] text-gray-400 mb-3 leading-tight max-w-[240px]">
+                            Select your diet to customize your upcoming recipes.
+                        </p>
+                        
+                        <!-- Diet Grid Pill Selection -->
+                        <div class="space-y-2 w-full">
+                            <label class="flex items-center gap-3 p-2.5 rounded-2xl border-2 border-slate-200 bg-white hover:border-dabba-maroon/40 cursor-pointer transition-all">
+                                <input type="radio" name="mock-diet" class="accent-dabba-maroon w-4 h-4 ml-2" checked>
+                                <div class="text-left">
+                                    <p class="text-xs font-bold text-dabba-dark">Vegetarian</p>
+                                    <p class="text-[9px] text-gray-400">Fresh greens & lentils</p>
+                                </div>
+                            </label>
+                            <label class="flex items-center gap-3 p-2.5 rounded-2xl border-2 border-slate-200 bg-white hover:border-dabba-maroon/40 cursor-pointer transition-all">
+                                <input type="radio" name="mock-diet" class="accent-dabba-maroon w-4 h-4 ml-2">
+                                <div class="text-left">
+                                    <p class="text-xs font-bold text-dabba-dark">Non-Vegetarian</p>
+                                    <p class="text-[9px] text-gray-400">Juicy proteins & aromatics</p>
+                                </div>
+                            </label>
+                        </div>
+
+                        <button onclick="changeMockStep(3)"
+                            class="mt-3.5 w-full py-2.5 rounded-xl bg-dabba-maroon text-white text-[10px] font-bold uppercase tracking-widest hover:bg-[#852747] transition-all flex items-center justify-center gap-2 shadow-md">
+                            Select Diet <span>→</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- STEP 3: PLAN SETUP (Hidden) -->
+                <div id="mock-step-3" class="mock-step hidden">
+                    <div class="glass-overlay p-4 sm:p-5 rounded-3xl w-full max-w-sm flex flex-col items-center">
+                        <span class="text-2xl mb-1.5">📅</span>
+                        <h2 class="text-sm sm:text-base font-bold text-dabba-dark mb-1">Duration & Slots</h2>
+                        
+                        <div class="w-full space-y-3 mt-1 text-left">
+                            <!-- Toggle Slots Pills -->
+                            <div>
+                                <p class="text-[9px] font-extrabold text-gray-400 uppercase tracking-widest mb-1.5 text-center">Select Meal Slots</p>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button class="py-2 px-1 rounded-xl border border-dabba-maroon bg-dabba-maroon/5 text-dabba-maroon font-bold text-[10px] uppercase text-center">
+                                        ☀️ Lunch
+                                    </button>
+                                    <button class="py-2 px-1 rounded-xl border border-slate-200 bg-white hover:border-dabba-maroon/20 text-slate-500 font-bold text-[10px] uppercase text-center">
+                                        🌙 Dinner
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Duration slider mock -->
+                            <div>
+                                <p class="text-[9px] font-extrabold text-gray-400 uppercase tracking-widest mb-1 text-center">Delivery Cycle</p>
+                                <div class="flex justify-between items-center bg-white p-2 rounded-xl border border-slate-200">
+                                    <span class="text-[11px] font-bold text-dabba-dark">30 Days Plan</span>
+                                    <span class="text-[10px] bg-green-500/10 text-green-600 font-extrabold px-2 py-0.5 rounded">₹213 / meal</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button onclick="changeMockStep(1)"
+                            class="mt-4 w-full py-2.5 rounded-xl bg-emerald-600 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-700 transition-all flex items-center justify-center gap-2 shadow-md">
+                            Complete Order 🔒
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Control Buttons Section -->
+    <footer class="w-full max-w-md bg-white p-4 rounded-3xl border border-slate-200 shadow-lg flex flex-col items-center gap-3">
+        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Toggle Interactive Mockup Steps</p>
+        <div class="flex gap-2 w-full">
+            <button id="ctrl-btn-1" onclick="changeMockStep(1)"
+                class="flex-1 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all bg-dabba-maroon text-white shadow-sm">
+                Step 1: Pincode
+            </button>
+            <button id="ctrl-btn-2" onclick="changeMockStep(2)"
+                class="flex-1 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all bg-slate-100 hover:bg-slate-200 text-slate-600">
+                Step 2: Diet
+            </button>
+            <button id="ctrl-btn-3" onclick="changeMockStep(3)"
+                class="flex-1 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all bg-slate-100 hover:bg-slate-200 text-slate-600">
+                Step 3: Plan
+            </button>
+        </div>
+    </footer>
+
+    <script>
+        function changeMockStep(stepNum) {
+            // Hide all mock steps
+            for (let i = 1; i <= 3; i++) {
+                const stepEl = document.getElementById(`mock-step-${i}`);
+                const ctrlBtn = document.getElementById(`ctrl-btn-${i}`);
+                
+                if (stepEl) {
+                    stepEl.classList.add('hidden');
+                }
+                if (ctrlBtn) {
+                    ctrlBtn.className = "flex-1 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all bg-slate-100 hover:bg-slate-200 text-slate-600";
+                }
+            }
+
+            // Show active step
+            const activeStep = document.getElementById(`mock-step-${stepNum}`);
+            const activeBtn = document.getElementById(`ctrl-btn-${stepNum}`);
+            
+            if (activeStep) {
+                activeStep.classList.remove('hidden');
+            }
+            if (activeBtn) {
+                activeBtn.className = "flex-1 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all bg-dabba-maroon text-white shadow-md";
+            }
+        }
+    </script>
+</body>
+
+</html>

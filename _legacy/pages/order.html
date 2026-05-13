@@ -1315,7 +1315,8 @@
                                                     alt="Mixed Veg and Non-Veg Meal" class="w-full h-full object-cover">
                                             </div>
                                             <h3 class="text-xl font-bold text-white mb-2">Mix</h3>
-                                            <p class="text-sm text-gray-400 leading-relaxed">Best of both worlds. Perfect blend of vegetarian and non-vegetarian delights.</p>
+                                            <p class="text-sm text-gray-400 leading-relaxed">Best of both worlds.
+                                                Perfect blend of vegetarian and non-vegetarian delights.</p>
                                         </div>
 
                                         <div
@@ -1413,25 +1414,36 @@
                                 </div>
 
                                 <!-- Upcoming 3-Day Menu Preview Section -->
-                                <div class="mb-10 bg-white/5 p-6 lg:p-8 rounded-[2.5rem] border border-white/10 transition-all duration-300">
-                                    <div class="flex items-center justify-between cursor-pointer" onclick="toggleMenuPreview()">
+                                <div
+                                    class="mb-10 bg-white/5 p-6 lg:p-8 rounded-[2.5rem] border border-white/10 transition-all duration-300">
+                                    <div class="flex items-center justify-between cursor-pointer"
+                                        onclick="toggleMenuPreview()">
                                         <div class="flex items-center gap-4">
-                                            <span class="text-xl p-3 bg-white/5 rounded-2xl border border-white/10" id="menu-toggle-icon">📅</span>
+                                            <span class="text-xl p-3 bg-white/5 rounded-2xl border border-white/10"
+                                                id="menu-toggle-icon">📅</span>
                                             <div>
-                                                <p class="text-[10px] font-bold text-dabba-maroon uppercase tracking-widest mb-0.5">Interactive Menu</p>
-                                                <h3 class="text-lg lg:text-xl font-serif font-bold text-white flex items-center gap-2">
+                                                <p
+                                                    class="text-[10px] font-bold text-dabba-maroon uppercase tracking-widest mb-0.5">
+                                                    Interactive Menu</p>
+                                                <h3
+                                                    class="text-lg lg:text-xl font-serif font-bold text-white flex items-center gap-2">
                                                     Upcoming 3-Day Menu Preview
-                                                    <span class="text-xs text-gray-400 font-sans font-normal opacity-70" id="menu-toggle-hint">(Tap to View)</span>
+                                                    <span class="text-xs text-gray-400 font-sans font-normal opacity-70"
+                                                        id="menu-toggle-hint">(Tap to View)</span>
                                                 </h3>
                                             </div>
                                         </div>
                                         <div class="flex items-center gap-3">
-                                            <svg id="menu-chevron" class="w-5 h-5 text-gray-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
+                                            <svg id="menu-chevron"
+                                                class="w-5 h-5 text-gray-400 transition-transform duration-300"
+                                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                                    d="M19 9l-7 7-7-7"></path>
                                             </svg>
                                         </div>
                                     </div>
-                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 hidden" id="menu-preview-container">
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 hidden"
+                                        id="menu-preview-container">
                                         <!-- Rendered dynamically via JS -->
                                     </div>
                                 </div>
@@ -1610,8 +1622,10 @@
                                         </div>
                                         <div id="addr-same-check"
                                             class="w-6 h-6 rounded-full bg-dabba-maroon flex items-center justify-center">
-                                            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path>
+                                            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4"
+                                                    d="M5 13l4 4L19 7"></path>
                                             </svg>
                                         </div>
                                     </div>
@@ -1622,7 +1636,8 @@
                                             <span class="text-2xl">🌓</span>
                                             <div>
                                                 <p class="text-sm font-bold text-white">Split Morning / Evening</p>
-                                                <p class="text-[10px] text-gray-400">Office / Gym / Residential split</p>
+                                                <p class="text-[10px] text-gray-400">Office / Gym / Residential split
+                                                </p>
                                             </div>
                                         </div>
                                         <div id="addr-split-check"
@@ -1635,36 +1650,50 @@
                                     <!-- Single Address Form -->
                                     <div id="single-address-fields" class="space-y-6">
                                         <div>
-                                            <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Flat / House No. / Building / Street</label>
-                                            <input type="text" id="delivery-address-single" placeholder="102, Green Valley Apartments"
+                                            <label
+                                                class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Flat
+                                                / House No. / Building / Street</label>
+                                            <input type="text" id="delivery-address-single"
+                                                placeholder="102, Green Valley Apartments"
                                                 class="w-full px-6 py-4 rounded-2xl border border-white/10 bg-white/5 text-sm font-medium focus:ring-2 focus:ring-dabba-maroon/20 outline-none transition-all">
                                         </div>
                                         <div class="grid sm:grid-cols-2 gap-6">
                                             <div>
-                                                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Area / Street / Sector</label>
-                                                <input type="text" id="delivery-area-single" placeholder="Sector 62, Noida"
+                                                <label
+                                                    class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Area
+                                                    / Street / Sector</label>
+                                                <input type="text" id="delivery-area-single"
+                                                    placeholder="Sector 62, Noida"
                                                     class="w-full px-6 py-4 rounded-2xl border border-white/10 bg-white/5 text-sm font-medium focus:ring-2 focus:ring-dabba-maroon/20 outline-none transition-all">
                                             </div>
                                             <div>
-                                                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Landmark (Optional)</label>
-                                                <input type="text" id="delivery-landmark-single" placeholder="Near Apollo Hospital"
+                                                <label
+                                                    class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Landmark
+                                                    (Optional)</label>
+                                                <input type="text" id="delivery-landmark-single"
+                                                    placeholder="Near Apollo Hospital"
                                                     class="w-full px-6 py-4 rounded-2xl border border-white/10 bg-white/5 text-sm font-medium focus:ring-2 focus:ring-dabba-maroon/20 outline-none transition-all">
                                             </div>
                                         </div>
                                         <div class="grid sm:grid-cols-2 gap-6">
                                             <div>
-                                                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Pincode</label>
+                                                <label
+                                                    class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Pincode</label>
                                                 <div class="relative">
                                                     <input type="text" id="delivery-pincode-single" maxlength="6"
                                                         class="w-full pl-6 pr-28 py-4 rounded-2xl border border-white/10 bg-white/5 text-sm font-medium focus:ring-2 focus:ring-dabba-maroon/20 outline-none transition-all"
                                                         oninput="onSplitPincodeChange('single')">
-                                                    <button type="button" onclick="checkSplitPincode('single')" id="btn-verify-single"
+                                                    <button type="button" onclick="checkSplitPincode('single')"
+                                                        id="btn-verify-single"
                                                         class="absolute right-2 top-2 bottom-2 px-4 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 text-[10px] font-bold uppercase tracking-widest rounded-xl transition-all">
                                                         Verified
                                                     </button>
                                                 </div>
-                                                <p id="status-pincode-single" class="mt-2 text-[10px] text-green-400 font-semibold flex items-center gap-1">
-                                                    <span class="inline-block w-1.5 h-1.5 bg-green-400 rounded-full animate-ping"></span> Serviceable Pincode
+                                                <p id="status-pincode-single"
+                                                    class="mt-2 text-[10px] text-green-400 font-semibold flex items-center gap-1">
+                                                    <span
+                                                        class="inline-block w-1.5 h-1.5 bg-green-400 rounded-full animate-ping"></span>
+                                                    Serviceable Pincode
                                                 </p>
                                             </div>
                                         </div>
@@ -1676,39 +1705,56 @@
                                         <div class="p-6 bg-white/5 rounded-3xl border border-white/5 space-y-6">
                                             <div class="flex items-center gap-3">
                                                 <span class="text-xl">🌅</span>
-                                                <h3 class="text-xs font-bold tracking-wider text-white uppercase">Morning Delivery Address <span class="text-[9px] text-gray-400 font-normal normal-case">(Breakfast & Lunch)</span></h3>
+                                                <h3 class="text-xs font-bold tracking-wider text-white uppercase">
+                                                    Morning Delivery Address <span
+                                                        class="text-[9px] text-gray-400 font-normal normal-case">(Breakfast
+                                                        & Lunch)</span></h3>
                                             </div>
                                             <div>
-                                                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Flat / House No. / Building / Street</label>
-                                                <input type="text" id="delivery-address-morning" placeholder="e.g., Office Floor 4, Cyber City"
+                                                <label
+                                                    class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Flat
+                                                    / House No. / Building / Street</label>
+                                                <input type="text" id="delivery-address-morning"
+                                                    placeholder="e.g., Office Floor 4, Cyber City"
                                                     class="w-full px-6 py-4 rounded-2xl border border-white/10 bg-white/5 text-sm font-medium focus:ring-2 focus:ring-dabba-maroon/20 outline-none transition-all">
                                             </div>
                                             <div class="grid sm:grid-cols-2 gap-6">
                                                 <div>
-                                                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Area / Street / Sector</label>
-                                                    <input type="text" id="delivery-area-morning" placeholder="Sector 62, Noida"
+                                                    <label
+                                                        class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Area
+                                                        / Street / Sector</label>
+                                                    <input type="text" id="delivery-area-morning"
+                                                        placeholder="Sector 62, Noida"
                                                         class="w-full px-6 py-4 rounded-2xl border border-white/10 bg-white/5 text-sm font-medium focus:ring-2 focus:ring-dabba-maroon/20 outline-none transition-all">
                                                 </div>
                                                 <div>
-                                                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Landmark (Optional)</label>
-                                                    <input type="text" id="delivery-landmark-morning" placeholder="Near Apollo Hospital"
+                                                    <label
+                                                        class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Landmark
+                                                        (Optional)</label>
+                                                    <input type="text" id="delivery-landmark-morning"
+                                                        placeholder="Near Apollo Hospital"
                                                         class="w-full px-6 py-4 rounded-2xl border border-white/10 bg-white/5 text-sm font-medium focus:ring-2 focus:ring-dabba-maroon/20 outline-none transition-all">
                                                 </div>
                                             </div>
                                             <div class="grid sm:grid-cols-2 gap-6">
                                                 <div>
-                                                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Pincode</label>
+                                                    <label
+                                                        class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Pincode</label>
                                                     <div class="relative">
                                                         <input type="text" id="delivery-pincode-morning" maxlength="6"
                                                             class="w-full pl-6 pr-28 py-4 rounded-2xl border border-white/10 bg-white/5 text-sm font-medium focus:ring-2 focus:ring-dabba-maroon/20 outline-none transition-all"
                                                             oninput="onSplitPincodeChange('morning')">
-                                                        <button type="button" onclick="checkSplitPincode('morning')" id="btn-verify-morning"
+                                                        <button type="button" onclick="checkSplitPincode('morning')"
+                                                            id="btn-verify-morning"
                                                             class="absolute right-2 top-2 bottom-2 px-4 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 text-[10px] font-bold uppercase tracking-widest rounded-xl transition-all">
                                                             Verified
                                                         </button>
                                                     </div>
-                                                    <p id="status-pincode-morning" class="mt-2 text-[10px] text-green-400 font-semibold flex items-center gap-1">
-                                                        <span class="inline-block w-1.5 h-1.5 bg-green-400 rounded-full animate-ping"></span> Serviceable Pincode
+                                                    <p id="status-pincode-morning"
+                                                        class="mt-2 text-[10px] text-green-400 font-semibold flex items-center gap-1">
+                                                        <span
+                                                            class="inline-block w-1.5 h-1.5 bg-green-400 rounded-full animate-ping"></span>
+                                                        Serviceable Pincode
                                                     </p>
                                                 </div>
                                             </div>
@@ -1718,39 +1764,56 @@
                                         <div class="p-6 bg-white/5 rounded-3xl border border-white/5 space-y-6">
                                             <div class="flex items-center gap-3">
                                                 <span class="text-xl">🌙</span>
-                                                <h3 class="text-xs font-bold tracking-wider text-white uppercase">Evening Delivery Address <span class="text-[9px] text-gray-400 font-normal normal-case">(Snacks & Dinner)</span></h3>
+                                                <h3 class="text-xs font-bold tracking-wider text-white uppercase">
+                                                    Evening Delivery Address <span
+                                                        class="text-[9px] text-gray-400 font-normal normal-case">(Snacks
+                                                        & Dinner)</span></h3>
                                             </div>
                                             <div>
-                                                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Flat / House No. / Building / Street</label>
-                                                <input type="text" id="delivery-address-evening" placeholder="e.g., Block B-402, Residential Palms"
+                                                <label
+                                                    class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Flat
+                                                    / House No. / Building / Street</label>
+                                                <input type="text" id="delivery-address-evening"
+                                                    placeholder="e.g., Block B-402, Residential Palms"
                                                     class="w-full px-6 py-4 rounded-2xl border border-white/10 bg-white/5 text-sm font-medium focus:ring-2 focus:ring-dabba-maroon/20 outline-none transition-all">
                                             </div>
                                             <div class="grid sm:grid-cols-2 gap-6">
                                                 <div>
-                                                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Area / Street / Sector</label>
-                                                    <input type="text" id="delivery-area-evening" placeholder="Sector 62, Noida"
+                                                    <label
+                                                        class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Area
+                                                        / Street / Sector</label>
+                                                    <input type="text" id="delivery-area-evening"
+                                                        placeholder="Sector 62, Noida"
                                                         class="w-full px-6 py-4 rounded-2xl border border-white/10 bg-white/5 text-sm font-medium focus:ring-2 focus:ring-dabba-maroon/20 outline-none transition-all">
                                                 </div>
                                                 <div>
-                                                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Landmark (Optional)</label>
-                                                    <input type="text" id="delivery-landmark-evening" placeholder="Near Apollo Hospital"
+                                                    <label
+                                                        class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Landmark
+                                                        (Optional)</label>
+                                                    <input type="text" id="delivery-landmark-evening"
+                                                        placeholder="Near Apollo Hospital"
                                                         class="w-full px-6 py-4 rounded-2xl border border-white/10 bg-white/5 text-sm font-medium focus:ring-2 focus:ring-dabba-maroon/20 outline-none transition-all">
                                                 </div>
                                             </div>
                                             <div class="grid sm:grid-cols-2 gap-6">
                                                 <div>
-                                                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Pincode</label>
+                                                    <label
+                                                        class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Pincode</label>
                                                     <div class="relative">
                                                         <input type="text" id="delivery-pincode-evening" maxlength="6"
                                                             class="w-full pl-6 pr-28 py-4 rounded-2xl border border-white/10 bg-white/5 text-sm font-medium focus:ring-2 focus:ring-dabba-maroon/20 outline-none transition-all"
                                                             oninput="onSplitPincodeChange('evening')">
-                                                        <button type="button" onclick="checkSplitPincode('evening')" id="btn-verify-evening"
+                                                        <button type="button" onclick="checkSplitPincode('evening')"
+                                                            id="btn-verify-evening"
                                                             class="absolute right-2 top-2 bottom-2 px-4 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 text-[10px] font-bold uppercase tracking-widest rounded-xl transition-all">
                                                             Verified
                                                         </button>
                                                     </div>
-                                                    <p id="status-pincode-evening" class="mt-2 text-[10px] text-green-400 font-semibold flex items-center gap-1">
-                                                        <span class="inline-block w-1.5 h-1.5 bg-green-400 rounded-full animate-ping"></span> Serviceable Pincode
+                                                    <p id="status-pincode-evening"
+                                                        class="mt-2 text-[10px] text-green-400 font-semibold flex items-center gap-1">
+                                                        <span
+                                                            class="inline-block w-1.5 h-1.5 bg-green-400 rounded-full animate-ping"></span>
+                                                        Serviceable Pincode
                                                     </p>
                                                 </div>
                                             </div>
@@ -2734,8 +2797,8 @@
             const label1 = pincode ? `📍 PIN: ${pincode}` : '📍 PINCODE';
             const label2 = diet ? (
                 diet.toLowerCase() === 'veg' ? '🥗 VEG' :
-                diet.toLowerCase() === 'non-veg' ? '🍖 NON-VEG' :
-                '🍛 MIX'
+                    diet.toLowerCase() === 'non-veg' ? '🍖 NON-VEG' :
+                        '🍛 MIX'
             ) : '🥗 DIET PREF';
             const label3 = (currentStep < 3 && !isOrderCompleted) ? '📅 PLAN SETUP' : `📅 ${duration} DAYS`;
             const label4 = name ? `👤 ${name.toUpperCase().substring(0, 12)}` : '👤 CONTACT INFO';
@@ -3042,7 +3105,8 @@
                 </div>
                 <div class="flex justify-between items-start gap-4">
                     <span class="flex-shrink-0">Delivery Address</span>
-                    <span class="font-bold text-dabba-dark text-right success-address-summary">102, Green Valley Apartments, Sector 62</span>
+                    <span class="font-bold text-dabba-dark text-right success-address-summary">102, Green Valley
+                        Apartments, Sector 62</span>
                 </div>
             </div>
 

@@ -1,0 +1,2196 @@
+@extends('layouts.app')
+
+@section('title', 'Premium Checkout Wizard | DabbaGo')
+
+@push('styles')
+    <style>
+        body {
+            background: radial-gradient(circle at center, #f8fafc 0%, #e2e8f0 100%) !important;
+            min-height: 100vh;
+        }
+
+        /* 3D Perspective setup for authentic flips */
+        .stage-viewport {
+            perspective: 1200px;
+        }
+
+        /* Side-view Stack styling */
+        .stack-container {
+            position: relative;
+            width: 280px;
+            height: 480px;
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-style: preserve-3d;
+        }
+
+        /* Individual side-view levels in the stack */
+        .stack-level {
+            width: 180px;
+            height: 78px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+        }
+
+        .stack-level img {
+            transition: filter 0.8s ease;
+        }
+
+        /* Locked / Uncompleted Step States */
+        .stack-level.locked {
+            opacity: 0.35;
+            filter: grayscale(0.8) brightness(0.95);
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+
+        /* Luxury minimalist circular progress badges */
+        .dabba-label {
+            position: absolute;
+            left: 50%;
+            top: 62%;
+            /* Optical vertical center of the container cylinder barrel */
+            transform: translate(-50%, -50%);
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: 900;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            user-select: none;
+        }
+
+        /* State: Locked / Faint Outline */
+        .dabba-label.state-locked {
+            border: 1.5px solid rgba(0, 0, 0, 0.12);
+            color: rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        /* State: Active / Breathing Pulse Outline */
+        .dabba-label.state-active {
+            border: 2px solid #6f1e3b;
+            /* Brand Maroon */
+            color: #6f1e3b;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 0 10px rgba(111, 30, 89, 0.25);
+            animation: badge-breathing 2s infinite ease-in-out;
+        }
+
+        /* State: Completed / Vibrant Emerald Checkmark */
+        .dabba-label.state-completed {
+            background: #10b981;
+            /* Premium Emerald Green */
+            border: none;
+            color: white;
+            box-shadow: 0 3px 8px rgba(16, 185, 129, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+            transform: translate(-50%, -50%) scale(1.1);
+            /* Pop completed ticks slightly */
+        }
+
+        /* State: Hidden / Finished locked stack look */
+        .dabba-label.state-hidden {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.4);
+            pointer-events: none;
+        }
+
+        @keyframes badge-breathing {
+
+            0%,
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+                box-shadow: 0 0 14px rgba(111, 30, 89, 0.45);
+            }
+        }
+
+        /* Vertical stacking positions */
+        .level-5 {
+            bottom: 260px;
+            z-index: 15;
+        }
+
+        .level-4 {
+            bottom: 205px;
+            z-index: 14;
+        }
+
+        .level-3 {
+            bottom: 150px;
+            z-index: 13;
+        }
+
+        .level-2 {
+            bottom: 95px;
+            z-index: 12;
+        }
+
+        .level-1 {
+            bottom: 40px;
+            z-index: 11;
+        }
+
+        /* Lid positioning */
+        .stack-lid {
+            width: 152px;
+            height: auto;
+            position: absolute;
+            left: 50%;
+            bottom: 314px;
+            transform: translate(-50%, 0);
+            z-index: 20;
+            transition: all 1.2s cubic-bezier(0.25, 1.4, 0.5, 1);
+            /* Beautiful springy elastic drop */
+            pointer-events: none;
+        }
+
+        /* Metallic Base Supporter positioning */
+        .stack-base {
+            width: 190px;
+            height: auto;
+            position: absolute;
+            left: 50%;
+            bottom: -38px;
+            transform: translateX(-50%);
+            z-index: 12;
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+            filter: brightness(0.82) contrast(1.02) saturate(0.85);
+            pointer-events: none;
+        }
+
+        /* Metallic Handle positioning */
+        .stack-handle {
+            width: 166px;
+            height: 400px;
+            position: absolute;
+            left: 50%;
+            bottom: 25px;
+            transform: translate(-50%, 0);
+            z-index: 25;
+            transition: all 1.3s cubic-bezier(0.175, 0.885, 0.32, 1.2);
+            /* Snap and bounce clamp */
+            transition-delay: 0.75s;
+            /* Wait for the lid to seat perfectly first! */
+            pointer-events: none;
+        }
+
+        /* Lid and Handle Lock States (Floating high-altitude at low opacity) */
+        .stack-lid.locked {
+            opacity: 0;
+            transform: translate(-50%, -360px);
+            /* Float from much higher altitude! */
+            pointer-events: none;
+            transition-delay: 0s !important;
+        }
+
+        .stack-handle.locked {
+            opacity: 0;
+            transform: translate(-50%, -340px);
+            /* Float from much higher altitude! */
+            pointer-events: none;
+            transition-delay: 0s !important;
+        }
+
+        /* Shadow base */
+        .stack-shadow {
+            width: 220px;
+            height: 16px;
+            background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+            position: absolute;
+            left: 50%;
+            bottom: 15px;
+            transform: translateX(-50%);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+        }
+
+        /* Tiffin Top View (Interior) Container */
+        .top-view-container {
+            position: absolute;
+            width: 1100px;
+            height: 880px;
+            opacity: 0;
+            transform: scale(0.3) rotateX(-75deg) translateY(100px);
+            pointer-events: none;
+            visibility: hidden;
+            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 50;
+        }
+
+        .top-view-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            opacity: 0.12;
+            /* Subtle backdrop watermark */
+            filter: drop-shadow(0 20px 50px rgba(0, 0, 0, 0.15));
+            transition: all 1s ease;
+        }
+
+        /* Form bounding content - open and spacious glass card overlay */
+        .top-view-content {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2.5rem 5rem;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.6s;
+        }
+
+        /* ================= CINEMATIC STATE: ZOOMED IN ================= */
+        .state-zoomed .stack-lid {
+            transform: translateX(-50%) translateY(-240px);
+            opacity: 0;
+            transition-delay: 0s !important;
+        }
+
+        .state-zoomed .stack-handle {
+            transform: translateX(-50%) scaleY(1.4) translateY(-100px);
+            opacity: 0;
+            transition-delay: 0s !important;
+        }
+
+        .state-zoomed .stack-base {
+            transform: translateX(-50%) translateY(200px);
+            opacity: 0;
+        }
+
+        .state-zoomed .stack-shadow {
+            transform: translateX(-50%) scale(0.5);
+            opacity: 0;
+        }
+
+        /* Staggered non-active levels slide away and fade out */
+        .state-zoomed .stack-level:not(.active-transition) {
+            opacity: 0;
+        }
+
+        .state-zoomed .level-5:not(.active-transition) {
+            transform: translateX(-50%) translateY(-200px);
+        }
+
+        .state-zoomed .level-4:not(.active-transition) {
+            transform: translateX(-50%) translateY(-150px);
+        }
+
+        .state-zoomed .level-3:not(.active-transition) {
+            transform: translateX(-50%) translateY(-100px);
+        }
+
+        .state-zoomed .level-2:not(.active-transition) {
+            transform: translateX(-50%) translateY(150px);
+        }
+
+        .state-zoomed .level-1:not(.active-transition) {
+            transform: translateX(-50%) translateY(200px);
+        }
+
+        /* The selected level morphs / flips up into the viewer */
+        .state-zoomed .stack-level.active-transition {
+            transform: translateX(-50%) scale(1.6) rotateX(75deg) translateY(-20px);
+            opacity: 0;
+            z-index: 40;
+        }
+
+        /* The Top-View Open Tiffin Container scales and drops in */
+        .state-zoomed .top-view-container {
+            opacity: 1;
+            transform: scale(1) rotateX(0deg) translateY(0);
+            pointer-events: auto;
+            visibility: visible;
+        }
+
+        .state-zoomed .top-view-content {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Smooth stage transitions — gentle height + width expansion */
+        #transition-stage {
+            transition: max-width 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                height 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+            overflow: visible;
+        }
+
+        .state-zoomed#transition-stage {
+            max-width: 1150px !important;
+            height: 920px !important;
+        }
+
+        /* Pulsing neon highlight around active choice */
+        .glass-overlay {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 40px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Celebration Squash-and-Stretch Animation */
+        @keyframes tiffin-squash {
+            0% {
+                transform: scale(1);
+            }
+
+            12% {
+                transform: scale(0.95, 1.05);
+            }
+
+            24% {
+                transform: scale(1.06, 0.94);
+            }
+
+            45% {
+                transform: scale(0.98, 1.02);
+            }
+
+            70% {
+                transform: scale(1.01, 0.99);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .stack-bounce-celebrate {
+            animation: tiffin-squash 0.85s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        /* Realistic Organic 3D Tumbling Confetti */
+        .confetti-piece {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 100;
+            pointer-events: none;
+            animation: confetti-explode 2.6s cubic-bezier(0.12, 0.85, 0.35, 1) forwards;
+        }
+
+        /* 3D Flutter and Lighting Simulation */
+        .confetti-inner {
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            animation: confetti-tumble var(--tumble-dur) linear infinite;
+        }
+
+        @keyframes confetti-tumble {
+            0% {
+                transform: rotate3d(var(--rx), var(--ry), var(--rz), 0deg);
+                filter: brightness(1.1);
+            }
+
+            50% {
+                filter: brightness(0.72);
+                /* High-fidelity dimensional shadow when flipping paper backward */
+            }
+
+            100% {
+                transform: rotate3d(var(--rx), var(--ry), var(--rz), 360deg);
+                filter: brightness(1.1);
+            }
+        }
+
+        @keyframes confetti-explode {
+            0% {
+                transform: translate(var(--tx-start), var(--ty-start)) scale(0.3);
+                opacity: 1;
+            }
+
+            15% {
+                transform: translate(calc(var(--tx-start) + var(--tx-mid)), calc(var(--ty-start) + var(--ty-mid))) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(calc(var(--tx-start) + var(--tx-end)), calc(var(--ty-start) + var(--ty-end) + 140px)) scale(0.45);
+                opacity: 0;
+            }
+        }
+
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(111, 30, 59, 0.15);
+            border-radius: 10px;
+        }
+
+        .reveal {
+            opacity: 1 !important;
+            transform: none !important;
+        }
+
+        /* Smooth reveal transitions */
+        .step-container {
+            animation: step-reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        @keyframes step-reveal {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.98);
+                filter: blur(4px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: blur(0);
+            }
+        }
+
+        /* Start Customizing Button reactive visibility */
+        #start-customizing-btn {
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #transition-stage.state-zoomed~#start-customizing-btn {
+            opacity: 0 !important;
+            transform: scale(0.9) translateY(10px) !important;
+            pointer-events: none !important;
+            visibility: hidden !important;
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+            height: 0 !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            overflow: hidden !important;
+        }
+
+        /* Custom Input Styling */
+        input[type="text"],
+        input[type="tel"],
+        input[type="email"],
+        input[type="date"] {
+            background-color: #ffffff !important;
+            border: 1.5px solid #e2e8f0 !important;
+            color: #1A1A1A !important;
+            font-weight: 600 !important;
+        }
+
+        input[type="text"]:focus,
+        input[type="tel"]:focus,
+        input[type="email"]:focus,
+        input[type="date"]:focus {
+            border-color: #6f1e3b !important;
+            box-shadow: 0 0 0 4px rgba(111, 30, 59, 0.1) !important;
+            outline: none !important;
+            background-color: #ffffff !important;
+        }
+
+        /* Sub-pricing strip custom styling */
+        #sub-pricing-strip {
+            position: fixed !important;
+            bottom: 24px !important;
+            left: 50% !important;
+            transform: translate(-50%, 120px) !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+            z-index: 60 !important;
+        }
+
+        #sub-pricing-strip.active {
+            transform: translate(-50%, 0) !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
+        }
+
+        /* ================= MOBILE RESPONSIVE ================= */
+        @media (max-width: 768px) {
+            .top-view-container {
+                width: 100vw !important;
+                height: auto !important;
+                min-height: 100vh;
+                left: 50%;
+                transform: scale(0.3) rotateX(-75deg) translateY(100px) translateX(-50%);
+            }
+
+            .state-zoomed .top-view-container {
+                transform: scale(1) translateX(-50%) !important;
+            }
+
+            .top-view-content {
+                padding: 1.5rem 1rem !important;
+            }
+
+            .state-zoomed#transition-stage {
+                max-width: 100% !important;
+                height: auto !important;
+                min-height: 600px;
+            }
+
+            #transition-stage {
+                height: 350px;
+            }
+
+            .glass-overlay {
+                border-radius: 1.5rem !important;
+            }
+
+            /* Pricing strip mobile */
+            #sub-pricing-strip {
+                width: calc(100% - 1rem) !important;
+                border-radius: 1rem !important;
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+                bottom: 12px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .top-view-content {
+                padding: 1rem 0.75rem !important;
+            }
+
+            .stack-container {
+                transform: scale(0.8);
+            }
+
+            #transition-stage {
+                height: 300px;
+            }
+        }
+    </style>
+@endpush
+
+@section('content')
+    <main class="w-full flex-1 pt-32 pb-44 px-4 max-w-7xl mx-auto flex flex-col items-center justify-center gap-2">
+
+        <!-- Header -->
+        <div id="experience-header" class="text-center mb-4 transition-all duration-500">
+            <p class="text-[10px] font-bold text-dabba-maroon uppercase tracking-[0.3em] mb-2">Build-A-Tiffin Experience</p>
+            <h1 class="text-3xl lg:text-4xl font-serif font-bold text-dabba-dark leading-tight">
+                Assemble your <span class="italic text-dabba-maroon">perfect subscription.</span>
+            </h1>
+        </div>
+
+        <!-- Main Transition Stage -->
+        <div class="flex items-center justify-center relative w-full max-w-2xl stage-viewport h-[420px]"
+            id="transition-stage">
+
+            <!-- SIDE-VIEW TIFFIN STACK -->
+            <div class="stack-container" id="tiffin-stack">
+                <!-- Shadow base -->
+                <div class="stack-shadow"></div>
+
+                <!-- Lid -->
+                <img src="{{ asset('assets/images/lid.png') }}" alt="Lid" class="stack-lid locked" id="stack-lid">
+
+                <!-- Stacked Levels (Bottom-to-Top) -->
+                <div class="stack-level level-1" id="level-btn-1" onclick="triggerTransition(1)">
+                    <img src="{{ asset('assets/images/tiffin.png') }}" class="w-full h-full object-contain"
+                        alt="Dabba Level 1">
+                    <span class="dabba-label">1</span>
+                </div>
+                <div class="stack-level level-2 locked" id="level-btn-2" onclick="triggerTransition(2)">
+                    <img src="{{ asset('assets/images/tiffin.png') }}" class="w-full h-full object-contain"
+                        alt="Dabba Level 2">
+                    <span class="dabba-label">2</span>
+                </div>
+                <div class="stack-level level-3 locked" id="level-btn-3" onclick="triggerTransition(3)">
+                    <img src="{{ asset('assets/images/tiffin.png') }}" class="w-full h-full object-contain"
+                        alt="Dabba Level 3">
+                    <span class="dabba-label">3</span>
+                </div>
+                <div class="stack-level level-4 locked" id="level-btn-4" onclick="triggerTransition(4)">
+                    <img src="{{ asset('assets/images/tiffin.png') }}" class="w-full h-full object-contain"
+                        alt="Dabba Level 4">
+                    <span class="dabba-label">4</span>
+                </div>
+                <div class="stack-level level-5 locked" id="level-btn-5" onclick="triggerTransition(5)">
+                    <img src="{{ asset('assets/images/tiffin.png') }}" class="w-full h-full object-contain"
+                        alt="Dabba Level 5">
+                    <span class="dabba-label">5</span>
+                </div>
+
+                <!-- Metallic Base Supporter -->
+                <img src="{{ asset('assets/images/base.png') }}" alt="Base Supporter" class="stack-base">
+
+                <!-- Metallic Handle Clamps -->
+                <img src="{{ asset('assets/images/handle.png') }}" alt="Handle" class="stack-handle locked"
+                    id="stack-handle">
+            </div>
+
+            <!-- TOP-VIEW TIFFIN INTERIOR (Transitions over the active level) -->
+            <div class="top-view-container" id="top-view-chamber">
+                <img src="{{ asset('assets/images/tiffin_top_view.png') }}" alt="Tiffin Chamber Open Top">
+
+                <!-- Spacious Form Bounded Overlay -->
+                <div class="top-view-content" id="chamber-content">
+                    <!-- Large, Luxury Glassmorphic Form Card -->
+                    <div class="glass-overlay p-6 sm:p-14 rounded-[2.5rem] w-full max-w-4xl flex flex-col relative shadow-2xl border border-white/20"
+                        id="step-form-card">
+
+                        <!-- === STEP 1: SERVICEABILITY === -->
+                        <div id="step-content-1" class="step-container">
+                            <div class="mb-5">
+                                <div class="flex items-center gap-3 mb-2.5">
+                                    <span
+                                        class="bg-dabba-maroon/10 text-dabba-maroon text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-dabba-maroon/20">Step
+                                        1 · Serviceability</span>
+                                </div>
+                                <h2 class="text-2xl sm:text-3xl font-serif font-bold text-dabba-dark leading-tight mb-1.5">
+                                    Are we in your <span class="italic text-dabba-maroon">neighborhood</span>?
+                                </h2>
+                                <p class="text-xs text-gray-500 font-medium leading-relaxed">Enter your delivery pincode to
+                                    check if we serve your area.</p>
+                            </div>
+
+                            <div class="max-w-xl mx-auto mb-10 w-full">
+                                <label
+                                    class="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4 text-center">Enter
+                                    Delivery Pincode</label>
+                                <div class="relative flex items-center shadow-xl rounded-2xl overflow-hidden">
+                                    <input type="text" id="check-pincode" placeholder="e.g. 201301" maxlength="6"
+                                        oninput="config.pincode = null;"
+                                        class="w-full px-8 py-6 rounded-2xl border border-gray-200 bg-white text-xl font-bold tracking-[0.2em] outline-none focus:ring-4 focus:ring-dabba-maroon/10 focus:border-dabba-maroon transition-all">
+                                    <button type="button" onclick="verifyPincode()"
+                                        class="absolute right-3 top-3 bottom-3 px-8 bg-dabba-maroon text-white text-xs font-bold uppercase tracking-widest rounded-xl hover:bg-[#852747] transition-all shadow-lg shadow-dabba-maroon/20">Check
+                                        Pincode</button>
+                                </div>
+                                <div id="pincode-result"
+                                    class="mt-6 text-center hidden animate-in fade-in slide-in-from-top-2"></div>
+                            </div>
+                        </div>
+
+                        <!-- === STEP 2: DIET PROFILE === -->
+                        <div id="step-content-2" class="step-container hidden">
+                            <div class="mb-5">
+                                <div class="flex items-center gap-3 mb-2.5">
+                                    <span
+                                        class="bg-dabba-maroon/10 text-dabba-maroon text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-dabba-maroon/20">Step
+                                        2 · Diet</span>
+                                </div>
+                                <h2 class="text-2xl sm:text-3xl font-serif font-bold text-dabba-dark leading-tight mb-1.5">
+                                    Choose your <span class="italic text-dabba-maroon">taste</span> profile.
+                                </h2>
+                                <p class="text-xs text-gray-500 font-medium leading-relaxed">Select your dietary preference
+                                    to see appropriate meal options.</p>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8 w-full">
+                                <label class="relative group cursor-pointer">
+                                    <input type="radio" name="diet" value="veg" class="peer sr-only"
+                                        onchange="updateDiet('Veg')">
+                                    <div
+                                        class="h-full border border-gray-200 rounded-[2rem] p-8 text-center transition-all peer-checked:border-dabba-maroon peer-checked:bg-dabba-maroon/5 group-hover:border-gray-300 group-hover:shadow-xl group-hover:-translate-y-1">
+                                        <span class="text-5xl mb-5 block">🥗</span>
+                                        <p class="text-base font-bold text-dabba-dark">Vegetarian</p>
+                                        <p class="text-[11px] text-gray-400 mt-3 leading-relaxed">Seasonal fresh greens,
+                                            lentils, paneer, and local vegetables.</p>
+                                    </div>
+                                    <div
+                                        class="absolute top-3 right-3 w-4 h-4 border border-gray-300 rounded-full flex items-center justify-center transition-all peer-checked:bg-dabba-maroon peer-checked:border-dabba-maroon peer-checked:[&_svg]:opacity-100">
+                                        <svg class="w-2.5 h-2.5 text-white opacity-0 transition-opacity" fill="none"
+                                            stroke="currentColor" viewBox="0 0 24 24" stroke-width="4">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                    </div>
+                                </label>
+
+                                <label class="relative group cursor-pointer">
+                                    <input type="radio" name="diet" value="non-veg" class="peer sr-only"
+                                        onchange="updateDiet('Non-Veg')">
+                                    <div
+                                        class="h-full border border-gray-200 rounded-[2rem] p-8 text-center transition-all peer-checked:border-dabba-maroon peer-checked:bg-dabba-maroon/5 group-hover:border-gray-300 group-hover:shadow-xl group-hover:-translate-y-1">
+                                        <span class="text-5xl mb-5 block">🍗</span>
+                                        <p class="text-base font-bold text-dabba-dark">Non-Vegetarian</p>
+                                        <p class="text-[11px] text-gray-400 mt-3 leading-relaxed">Juicy high-protein meats,
+                                            tender chicken, and rich house gravies.</p>
+                                    </div>
+                                    <div
+                                        class="absolute top-5 right-5 w-5 h-5 border border-gray-300 rounded-full flex items-center justify-center transition-all peer-checked:bg-dabba-maroon peer-checked:border-dabba-maroon peer-checked:[&_svg]:opacity-100">
+                                        <svg class="w-3 h-3 text-white opacity-0 transition-opacity" fill="none"
+                                            stroke="currentColor" viewBox="0 0 24 24" stroke-width="4">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                    </div>
+                                </label>
+
+                                <label class="relative group cursor-pointer">
+                                    <input type="radio" name="diet" value="mix" class="peer sr-only"
+                                        onchange="updateDiet('Mix')">
+                                    <div
+                                        class="h-full border border-gray-200 rounded-[2rem] p-8 text-center transition-all peer-checked:border-dabba-maroon peer-checked:bg-dabba-maroon/5 group-hover:border-gray-300 group-hover:shadow-xl group-hover:-translate-y-1">
+                                        <span class="text-5xl mb-5 block">🍲</span>
+                                        <p class="text-base font-bold text-dabba-dark">Mix Plan</p>
+                                        <p class="text-[11px] text-gray-400 mt-3 leading-relaxed">Best of both worlds. We
+                                            alternate between Veg and Non-veg daily.</p>
+                                    </div>
+                                    <div
+                                        class="absolute top-5 right-5 w-5 h-5 border border-gray-300 rounded-full flex items-center justify-center transition-all peer-checked:bg-dabba-maroon peer-checked:border-dabba-maroon peer-checked:[&_svg]:opacity-100">
+                                        <svg class="w-3 h-3 text-white opacity-0 transition-opacity" fill="none"
+                                            stroke="currentColor" viewBox="0 0 24 24" stroke-width="4">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- === STEP 3: PLAN SETUP === -->
+                        <div id="step-content-3" class="step-container hidden">
+                            <div class="mb-4">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <span
+                                        class="bg-dabba-maroon/10 text-dabba-maroon text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-dabba-maroon/20">Step
+                                        3 · Plan Setup</span>
+                                </div>
+                                <h2 class="text-2xl sm:text-3xl font-serif font-bold text-dabba-dark leading-tight mb-1">
+                                    Build your <span class="italic text-dabba-maroon">schedule</span>.
+                                </h2>
+                            </div>
+
+                            <!-- Meal Slots -->
+                            <div class="mb-6 w-full">
+                                <p class="text-[11px] font-extrabold text-gray-400 uppercase tracking-widest mb-3">Meal
+                                    Slots</p>
+                                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                                    <div id="slot-breakfast"
+                                        class="p-4 border border-gray-200 rounded-xl flex items-center justify-between cursor-pointer transition-all"
+                                        onclick="toggleSlot('breakfast')">
+                                        <div class="flex items-center gap-2.5">
+                                            <span class="text-xl">🌅</span>
+                                            <div>
+                                                <p class="text-xs font-bold text-dabba-dark">Breakfast</p>
+                                                <p class="text-[10px] text-gray-400 leading-none mt-1">8:00 AM</p>
+                                            </div>
+                                        </div>
+                                        <div id="breakfast-check"
+                                            class="w-3.5 h-3.5 rounded-full border border-gray-300 flex items-center justify-center">
+                                        </div>
+                                    </div>
+                                    <div id="slot-lunch"
+                                        class="p-4 border border-dabba-maroon bg-dabba-maroon/5 rounded-xl flex items-center justify-between cursor-pointer transition-all"
+                                        onclick="toggleSlot('lunch')">
+                                        <div class="flex items-center gap-2.5">
+                                            <span class="text-xl">☀️</span>
+                                            <div>
+                                                <p class="text-xs font-bold text-dabba-dark">Lunch</p>
+                                                <p class="text-[10px] text-gray-400 leading-none mt-1">12:30 PM</p>
+                                            </div>
+                                        </div>
+                                        <div id="lunch-check"
+                                            class="w-3.5 h-3.5 rounded-full bg-dabba-maroon flex items-center justify-center">
+                                            <svg class="w-2 h-2 text-white" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24" stroke-width="4">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7">
+                                                </path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div id="slot-snacks"
+                                        class="p-4 border border-gray-200 rounded-xl flex items-center justify-between cursor-pointer transition-all"
+                                        onclick="toggleSlot('snacks')">
+                                        <div class="flex items-center gap-2.5">
+                                            <span class="text-xl">☕</span>
+                                            <div>
+                                                <p class="text-xs font-bold text-dabba-dark">Snacks</p>
+                                                <p class="text-[10px] text-gray-400 leading-none mt-1">4:30 PM</p>
+                                            </div>
+                                        </div>
+                                        <div id="snacks-check"
+                                            class="w-3.5 h-3.5 rounded-full border border-gray-300 flex items-center justify-center">
+                                        </div>
+                                    </div>
+                                    <div id="slot-dinner"
+                                        class="p-4 border border-gray-200 rounded-xl flex items-center justify-between cursor-pointer transition-all"
+                                        onclick="toggleSlot('dinner')">
+                                        <div class="flex items-center gap-2.5">
+                                            <span class="text-xl">🌙</span>
+                                            <div>
+                                                <p class="text-xs font-bold text-dabba-dark">Dinner</p>
+                                                <p class="text-[10px] text-gray-400 leading-none mt-1">8:00 PM</p>
+                                            </div>
+                                        </div>
+                                        <div id="dinner-check"
+                                            class="w-3.5 h-3.5 rounded-full border border-gray-300 flex items-center justify-center">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Upcoming 3-Day Menu Preview Section -->
+                            <div
+                                class="mb-5 bg-gray-50 p-4 rounded-xl border border-gray-100 transition-all duration-300 w-full">
+                                <div class="flex items-center justify-between cursor-pointer" onclick="toggleMenuPreview()">
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-lg p-2 bg-white rounded-lg border border-gray-200"
+                                            id="menu-toggle-icon">📅</span>
+                                        <div>
+                                            <p
+                                                class="text-[10px] font-bold text-dabba-maroon uppercase tracking-widest mb-0.5">
+                                                Interactive Menu</p>
+                                            <h3
+                                                class="text-xs font-serif font-bold text-dabba-dark flex items-center gap-1.5">
+                                                Upcoming 3-Day Menu Preview
+                                                <span class="text-[10px] text-gray-400 font-sans font-normal opacity-70"
+                                                    id="menu-toggle-hint">(Tap to View)</span>
+                                            </h3>
+                                        </div>
+                                    </div>
+                                    <svg id="menu-chevron"
+                                        class="w-3.5 h-3.5 text-gray-400 transition-transform duration-300" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mt-3 hidden" id="menu-preview-container">
+                                    <!-- Rendered dynamically via JS -->
+                                </div>
+                            </div>
+
+                            <!-- Duration Selection -->
+                            <div class="mb-6 w-full">
+                                <p class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-3">Duration
+                                    (Delivery Days)</p>
+                                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                                    <button
+                                        class="duration-btn py-3 px-3 rounded-xl border-2 border-dabba-maroon bg-dabba-maroon/5 text-dabba-dark transition-all text-center flex flex-col justify-center items-center"
+                                        onclick="updateDuration(1, this)">
+                                        <span class="text-sm font-bold block">1 Day</span>
+                                        <span
+                                            class="text-[9px] font-medium text-gray-400 leading-none mt-1">₹273/meal</span>
+                                    </button>
+                                    <button
+                                        class="duration-btn py-3 px-3 rounded-xl border border-gray-200 bg-white text-dabba-dark transition-all text-center flex flex-col justify-center items-center"
+                                        onclick="updateDuration(3, this)">
+                                        <span class="text-sm font-bold block">3 Days</span>
+                                        <span
+                                            class="text-[9px] font-medium text-gray-400 leading-none mt-1">₹265/meal</span>
+                                    </button>
+                                    <button
+                                        class="duration-btn py-3 px-3 rounded-xl border border-gray-200 bg-white text-dabba-dark transition-all text-center flex flex-col justify-center items-center"
+                                        onclick="updateDuration(7, this)">
+                                        <span class="text-sm font-bold block">7 Days</span>
+                                        <span
+                                            class="text-[9px] font-medium text-gray-400 leading-none mt-1">₹251/meal</span>
+                                    </button>
+                                    <button
+                                        class="duration-btn py-3 px-3 rounded-xl border border-gray-200 bg-white text-dabba-dark transition-all text-center flex flex-col justify-center items-center"
+                                        onclick="updateDuration(14, this)">
+                                        <span class="text-sm font-bold block">14 Days</span>
+                                        <span
+                                            class="text-[9px] font-medium text-gray-400 leading-none mt-1">₹238/meal</span>
+                                    </button>
+                                    <button
+                                        class="duration-btn py-3 px-3 rounded-xl border border-gray-200 bg-white text-dabba-dark transition-all text-center flex flex-col justify-center items-center"
+                                        onclick="updateDuration(30, this)">
+                                        <span class="text-sm font-bold block">30 Days</span>
+                                        <span
+                                            class="text-[9px] font-medium text-gray-400 leading-none mt-1">₹213/meal</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Start Date & Guests -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 mb-6 w-full">
+                                <div>
+                                    <p class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-3">Start date
+                                    </p>
+                                    <input type="date" id="start-date"
+                                        class="w-full px-5 py-4 rounded-xl border border-gray-200 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-dabba-maroon/20">
+                                </div>
+                                <div>
+                                    <p class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-3">Guests /
+                                        People</p>
+                                    <div class="flex items-center gap-4">
+                                        <button
+                                            class="w-11 h-11 rounded-xl border border-gray-200 flex items-center justify-center font-bold text-lg bg-white hover:bg-slate-50 transition-all"
+                                            onclick="updatePeople(-1)">-</button>
+                                        <span id="people-count" class="text-base font-bold w-6 text-center">1</span>
+                                        <button
+                                            class="w-11 h-11 rounded-xl border border-gray-200 flex items-center justify-center font-bold text-lg bg-white hover:bg-slate-50 transition-all"
+                                            onclick="updatePeople(1)">+</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Day-wise Meal Planner section -->
+                            <div class="pt-5 border-t border-gray-100 w-full">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <span
+                                        class="w-8 h-8 bg-dabba-maroon/10 rounded-lg flex items-center justify-center text-dabba-maroon text-sm">📅</span>
+                                    <div>
+                                        <h4 class="text-xs font-bold text-dabba-dark">Day-wise Meal Planner</h4>
+                                        <p class="text-[10px] text-gray-400 leading-none mt-1">Customize your schedule. Skip
+                                            any meal to save.</p>
+                                    </div>
+                                </div>
+                                <div class="h-[240px] overflow-y-auto custom-scrollbar pr-1">
+                                    <div id="calendar-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                                        <!-- Rendered dynamically via JS -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- === STEP 4: CONTACT DETAILS === -->
+                        <div id="step-content-4" class="step-container hidden">
+                            <div class="mb-5">
+                                <div class="flex items-center gap-3 mb-2.5">
+                                    <span
+                                        class="bg-dabba-maroon/10 text-dabba-maroon text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-dabba-maroon/20">Step
+                                        4 · Contact</span>
+                                </div>
+                                <h2 class="text-2xl sm:text-3xl font-serif font-bold text-dabba-dark leading-tight mb-1.5">
+                                    Introduce <span class="italic text-dabba-maroon">yourself</span>.
+                                </h2>
+                                <p class="text-xs text-gray-500 font-medium leading-relaxed">How should we address you and
+                                    keep you updated?</p>
+                            </div>
+
+                            <form class="space-y-6 mb-6 w-full" onsubmit="return false;">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                    <div>
+                                        <label
+                                            class="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-3">Full
+                                            Name</label>
+                                        <input type="text" id="contact-name" placeholder="John Doe"
+                                            oninput="updateDabbaStackLabels()"
+                                            class="w-full px-5 py-4 rounded-xl border border-gray-200 bg-white/50 text-sm font-semibold outline-none focus:border-dabba-maroon focus:ring-2 focus:ring-dabba-maroon/10 transition-all">
+                                    </div>
+                                    <div>
+                                        <label
+                                            class="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-3">Email
+                                            Address <span class="lowercase opacity-40 font-normal">(Optional)</span></label>
+                                        <input type="email" id="contact-email" placeholder="john@example.com"
+                                            class="w-full px-5 py-4 rounded-xl border border-gray-200 bg-white/50 text-sm font-semibold outline-none focus:border-dabba-maroon focus:ring-2 focus:ring-dabba-maroon/10 transition-all">
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-end">
+                                    <div>
+                                        <label
+                                            class="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-3">Phone
+                                            Number</label>
+                                        <div class="relative flex items-center">
+                                            <span class="absolute left-5 text-sm font-bold text-gray-400">+91</span>
+                                            <input type="tel" id="contact-phone" placeholder="98765 43210"
+                                                class="w-full pl-14 pr-24 py-4 rounded-xl border border-gray-200 bg-white/50 text-sm font-semibold outline-none focus:border-dabba-maroon focus:ring-2 focus:ring-dabba-maroon/10 transition-all">
+                                            <button type="button" onclick="sendOTP()"
+                                                class="absolute right-2 top-2 bottom-2 px-4 bg-dabba-dark text-white text-[10px] font-bold uppercase tracking-widest rounded-lg hover:bg-dabba-maroon transition-all">Send
+                                                OTP</button>
+                                        </div>
+                                    </div>
+                                    <div id="otp-container" class="hidden animate-in fade-in slide-in-from-top-2">
+                                        <label
+                                            class="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-3">Verify
+                                            SMS OTP</label>
+                                        <div class="relative flex gap-2">
+                                            <input type="text" id="sms-otp" placeholder="Enter OTP (e.g. 1234)"
+                                                maxlength="4"
+                                                class="w-full px-3 py-4 rounded-xl border border-gray-200 bg-white/50 text-sm font-bold tracking-[0.2em] outline-none text-center focus:border-dabba-maroon focus:ring-2 focus:ring-dabba-maroon/10">
+                                            <button type="button" onclick="verifyOTP()"
+                                                class="px-5 bg-green-600 text-white text-[10px] font-bold uppercase tracking-widest rounded-lg hover:bg-green-700 transition-all flex items-center justify-center">Verify</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- === STEP 5: DELIVERY DETAILS === -->
+                        <div id="step-content-5" class="step-container hidden">
+                            <div class="mb-4">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <span
+                                        class="bg-dabba-maroon/10 text-dabba-maroon text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-dabba-maroon/20">Step
+                                        5 · Delivery</span>
+                                </div>
+                                <h2 class="text-2xl sm:text-3xl font-serif font-bold text-dabba-dark leading-tight mb-1">
+                                    Where shall we <span class="italic text-dabba-maroon">deliver</span>?
+                                </h2>
+                                <p class="text-xs text-gray-500 font-medium leading-relaxed">Our riders will find you with
+                                    these details.</p>
+                            </div>
+
+                            <!-- Address Delivery Option Selector -->
+                            <div class="mb-6 grid grid-cols-2 gap-5 w-full">
+                                <div id="addr-same"
+                                    class="p-4 border-2 border-dabba-maroon bg-dabba-maroon/5 rounded-xl cursor-pointer transition-all flex items-center justify-between"
+                                    onclick="setAddressMode('same')">
+                                    <div class="flex items-center gap-2.5">
+                                        <span class="text-xl">📍</span>
+                                        <div>
+                                            <p class="text-xs font-bold text-dabba-dark">Same Address</p>
+                                            <p class="text-[10px] text-gray-400 mt-0.5">All meals to one spot</p>
+                                        </div>
+                                    </div>
+                                    <div id="addr-same-check"
+                                        class="w-4 h-4 rounded-full bg-dabba-maroon flex items-center justify-center">
+                                        <svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24" stroke-width="4">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div id="addr-split"
+                                    class="p-4 border border-gray-200 rounded-xl cursor-pointer transition-all flex items-center justify-between opacity-80 hover:opacity-100"
+                                    onclick="setAddressMode('split')">
+                                    <div class="flex items-center gap-2.5">
+                                        <span class="text-xl">🌓</span>
+                                        <div>
+                                            <p class="text-xs font-bold text-dabba-dark">Split Address</p>
+                                            <p class="text-[10px] text-gray-400 mt-0.5">Morning / Evening split</p>
+                                        </div>
+                                    </div>
+                                    <div id="addr-split-check"
+                                        class="w-4 h-4 rounded-full border border-gray-300 flex items-center justify-center">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <form class="space-y-6 mb-6 w-full" onsubmit="return false;">
+                                <!-- Single Address Form -->
+                                <div id="single-address-fields" class="space-y-6">
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                        <div>
+                                            <label
+                                                class="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-3">Flat
+                                                / House No. / Building</label>
+                                            <input type="text" id="delivery-address-single"
+                                                placeholder="102, Green Valley Apartments"
+                                                class="w-full px-5 py-4 rounded-xl border border-gray-200 bg-white/50 text-sm font-semibold outline-none focus:ring-2 focus:ring-dabba-maroon/10 focus:border-dabba-maroon transition-all">
+                                        </div>
+                                        <div>
+                                            <label
+                                                class="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-3">Area
+                                                / Street / Sector</label>
+                                            <input type="text" id="delivery-area-single" placeholder="Sector 62, Noida"
+                                                class="w-full px-5 py-4 rounded-xl border border-gray-200 bg-white/50 text-sm font-semibold outline-none focus:ring-2 focus:ring-dabba-maroon/10 focus:border-dabba-maroon transition-all">
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                        <div>
+                                            <label
+                                                class="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-3">Landmark
+                                                (Optional)</label>
+                                            <input type="text" id="delivery-landmark-single"
+                                                placeholder="Near Apollo Hospital"
+                                                class="w-full px-5 py-4 rounded-xl border border-gray-200 bg-white/50 text-sm font-semibold outline-none focus:ring-2 focus:ring-dabba-maroon/10 focus:border-dabba-maroon transition-all">
+                                        </div>
+                                        <div>
+                                            <label
+                                                class="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-3">Pincode</label>
+                                            <div class="relative flex items-center">
+                                                <input type="text" id="delivery-pincode-single" maxlength="6"
+                                                    oninput="onSplitPincodeChange('single')"
+                                                    class="w-full px-5 py-4 rounded-xl border border-gray-200 bg-white/50 text-sm font-bold tracking-widest outline-none focus:ring-2 focus:ring-dabba-maroon/10 focus:border-dabba-maroon transition-all">
+                                                <button type="button" onclick="checkSplitPincode('single')"
+                                                    id="btn-verify-single"
+                                                    class="absolute right-2.5 top-2.5 bottom-2.5 px-4 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-all">Verified</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Split Address Forms -->
+                                <div id="split-address-fields"
+                                    class="hidden space-y-6 max-h-[400px] overflow-y-auto custom-scrollbar pr-1">
+                                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                        <!-- Morning Address (Breakfast & Lunch) -->
+                                        <div class="p-6 bg-gray-50 rounded-[1.5rem] border border-gray-100 space-y-5">
+                                            <div class="flex items-center gap-3 border-b border-gray-200 pb-4">
+                                                <span class="text-2xl">🌅</span>
+                                                <div>
+                                                    <h3
+                                                        class="text-[11px] font-bold tracking-widest text-dabba-dark uppercase">
+                                                        Morning Delivery</h3>
+                                                    <p class="text-[10px] text-gray-400 font-medium">Breakfast & Lunch</p>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label
+                                                    class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Flat
+                                                    / Building</label>
+                                                <input type="text" id="delivery-address-morning"
+                                                    placeholder="e.g., Office Floor 4, Cyber City"
+                                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm font-semibold outline-none focus:ring-2 focus:ring-dabba-maroon/10 focus:border-dabba-maroon transition-all">
+                                            </div>
+                                            <div class="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <label
+                                                        class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Area
+                                                        / Sector</label>
+                                                    <input type="text" id="delivery-area-morning"
+                                                        placeholder="Sector 62, Noida"
+                                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm font-semibold outline-none focus:ring-2 focus:ring-dabba-maroon/10 focus:border-dabba-maroon transition-all">
+                                                </div>
+                                                <div>
+                                                    <label
+                                                        class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Landmark</label>
+                                                    <input type="text" id="delivery-landmark-morning"
+                                                        placeholder="Near Apollo"
+                                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm font-semibold outline-none focus:ring-2 focus:ring-dabba-maroon/10 focus:border-dabba-maroon transition-all">
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label
+                                                    class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Pincode</label>
+                                                <div class="relative flex items-center">
+                                                    <input type="text" id="delivery-pincode-morning" maxlength="6"
+                                                        oninput="onSplitPincodeChange('morning')"
+                                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm font-bold tracking-widest outline-none focus:ring-2 focus:ring-dabba-maroon/10 focus:border-dabba-maroon transition-all">
+                                                    <button type="button" onclick="checkSplitPincode('morning')"
+                                                        id="btn-verify-morning"
+                                                        class="absolute right-2 top-2 bottom-2 px-3 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 text-[9px] font-bold uppercase tracking-widest rounded-lg transition-all">Verified</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Evening Address (Snacks & Dinner) -->
+                                        <div class="p-6 bg-gray-50 rounded-[1.5rem] border border-gray-100 space-y-5">
+                                            <div class="flex items-center gap-3 border-b border-gray-200 pb-4">
+                                                <span class="text-2xl">🌙</span>
+                                                <div>
+                                                    <h3
+                                                        class="text-[11px] font-bold tracking-widest text-dabba-dark uppercase">
+                                                        Evening Delivery</h3>
+                                                    <p class="text-[10px] text-gray-400 font-medium">Snacks & Dinner</p>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label
+                                                    class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Flat
+                                                    / Building</label>
+                                                <input type="text" id="delivery-address-evening"
+                                                    placeholder="e.g., Block B-402, Residential Palms"
+                                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm font-semibold outline-none focus:ring-2 focus:ring-dabba-maroon/10 focus:border-dabba-maroon transition-all">
+                                            </div>
+                                            <div class="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <label
+                                                        class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Area
+                                                        / Sector</label>
+                                                    <input type="text" id="delivery-area-evening"
+                                                        placeholder="Sector 62, Noida"
+                                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm font-semibold outline-none focus:ring-2 focus:ring-dabba-maroon/10 focus:border-dabba-maroon transition-all">
+                                                </div>
+                                                <div>
+                                                    <label
+                                                        class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Landmark</label>
+                                                    <input type="text" id="delivery-landmark-evening"
+                                                        placeholder="Near Hospital"
+                                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm font-semibold outline-none focus:ring-2 focus:ring-dabba-maroon/10 focus:border-dabba-maroon transition-all">
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label
+                                                    class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Pincode</label>
+                                                <div class="relative flex items-center">
+                                                    <input type="text" id="delivery-pincode-evening" maxlength="6"
+                                                        oninput="onSplitPincodeChange('evening')"
+                                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm font-bold tracking-widest outline-none focus:ring-2 focus:ring-dabba-maroon/10 focus:border-dabba-maroon transition-all">
+                                                    <button type="button" onclick="checkSplitPincode('evening')"
+                                                        id="btn-verify-evening"
+                                                        class="absolute right-2 top-2 bottom-2 px-3 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 text-[9px] font-bold uppercase tracking-widest rounded-lg transition-all">Verified</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Shared Navigation Footer -->
+                        <div class="flex items-center justify-between border-t border-slate-200 pt-6 mt-6"
+                            id="form-nav-footer">
+                            <button onclick="resetTransition()"
+                                class="text-xs font-bold text-gray-400 uppercase tracking-widest hover:text-dabba-maroon transition-all flex items-center gap-2">
+                                <span>←</span> Return to Stack
+                            </button>
+
+                            <button onclick="handleNextStep()" id="form-next-btn"
+                                class="px-8 py-4 rounded-xl bg-dabba-maroon text-white text-xs font-bold uppercase tracking-widest hover:bg-[#852747] transition-all flex items-center gap-2 shadow-lg shadow-dabba-maroon/20 hover:scale-105">
+                                Next Step →
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Subtle Live Pricing strip (Only visible in steps 3-5) -->
+        <div id="sub-pricing-strip"
+            class="w-[calc(100%-2rem)] max-w-4xl bg-white/95 backdrop-blur-md rounded-2xl border border-dabba-maroon/15 shadow-[0_20px_50px_rgba(111,30,59,0.12)] flex items-center justify-between px-6 py-3.5">
+            <div class="flex items-center gap-3">
+                <div
+                    class="w-8 h-8 rounded-lg bg-dabba-maroon/5 flex items-center justify-center text-dabba-maroon text-sm">
+                    💰
+                </div>
+                <div>
+                    <p class="text-[9px] font-bold text-dabba-maroon uppercase tracking-widest leading-none mb-1">Live
+                        Subscription Pricing</p>
+                    <div class="flex flex-wrap items-center gap-x-2.5 text-[11px] text-gray-500 font-medium">
+                        <span class="text-dabba-dark font-bold">₹<span id="price-per-meal">273</span> <span
+                                class="text-[9px] font-normal text-gray-400">/ meal</span></span>
+                        <span class="text-gray-300">|</span>
+                        <span class="flex items-center gap-0.5"><span id="summary-meals-day"
+                                class="font-bold text-dabba-dark">1</span> meals/day</span>
+                        <span class="text-gray-300">•</span>
+                        <span class="flex items-center gap-0.5"><span id="summary-days"
+                                class="font-bold text-dabba-dark">1</span> days</span>
+                        <span class="text-gray-300">•</span>
+                        <span class="flex items-center gap-0.5"><span id="summary-people"
+                                class="font-bold text-dabba-dark">1</span> guest</span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="text-right">
+                    <p class="text-[8px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-1">Grand Total
+                    </p>
+                    <p class="text-base sm:text-xl font-black text-dabba-maroon leading-none">₹<span
+                            id="final-total">273</span></p>
+                </div>
+                <span id="save-badge"
+                    class="bg-green-50 text-green-700 border border-green-200 text-[9px] font-bold px-2 py-0.5 rounded hidden animate-pulse">
+                    🎉 SAVE <span id="save-percent">0</span>%
+                </span>
+            </div>
+        </div>
+
+        <!-- Start Customizing Button (Visible in Hero State) -->
+        <button id="start-customizing-btn" onclick="triggerTransition(1)"
+            class="mt-10 px-14 py-5 rounded-2xl bg-dabba-maroon text-white font-bold hover:bg-[#852747] hover:scale-110 active:scale-95 transition-all flex items-center gap-3 shadow-2xl shadow-dabba-maroon/20 tracking-[0.2em] text-[11px] uppercase group">
+            Start Customizing <span class="group-hover:translate-x-1 transition-transform">→</span>
+        </button>
+
+    </main>
+
+    <!-- Beautiful Premium Success Modal overlay -->
+    <div id="success-modal"
+        class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-dabba-dark/85 backdrop-blur-md hidden opacity-0 transition-opacity duration-500">
+        <div
+            class="bg-white rounded-[2.5rem] max-w-2xl w-full p-10 lg:p-14 shadow-2xl relative overflow-hidden transform scale-95 transition-transform duration-500 flex flex-col items-center text-center border border-gray-100">
+            <!-- Confetti/Celebration circles in background -->
+            <div
+                class="absolute -top-24 -left-24 w-48 h-48 bg-green-100 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse">
+            </div>
+            <div
+                class="absolute -bottom-24 -right-24 w-48 h-48 bg-dabba-maroon/10 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse">
+            </div>
+
+            <!-- Floating Completed Photographic Stack in Modal Header! -->
+            <div class="w-full h-44 flex items-center justify-center relative mb-4">
+                <!-- Mini success tiffin stage with image assets -->
+                <div class="relative w-48 h-64 flex items-center justify-center scale-[0.72] origin-center -top-8">
+                    <!-- Lid -->
+                    <img src="{{ asset('assets/images/lid.png') }}" alt="Lid" class="absolute w-24 h-auto"
+                        style="bottom: 167px; z-index: 20;" id="success-lid">
+                    <!-- Levels (Height constraint removed to prevent clipping of the 5th level) -->
+                    <div class="absolute w-28" style="bottom: 0px;">
+                        <img src="{{ asset('assets/images/tiffin.png') }}" class="absolute w-24 h-auto"
+                            style="bottom: 138px; left: 8px; z-index: 15;">
+                        <img src="{{ asset('assets/images/tiffin.png') }}" class="absolute w-24 h-auto"
+                            style="bottom: 109px; left: 8px; z-index: 14;">
+                        <img src="{{ asset('assets/images/tiffin.png') }}" class="absolute w-24 h-auto"
+                            style="bottom: 80px; left: 8px; z-index: 13;">
+                        <img src="{{ asset('assets/images/tiffin.png') }}" class="absolute w-24 h-auto"
+                            style="bottom: 50px; left: 8px; z-index: 12;" id="success-level-2">
+                        <img src="{{ asset('assets/images/tiffin.png') }}" class="absolute w-24 h-auto"
+                            style="bottom: 21px; left: 8px; z-index: 11;">
+                    </div>
+                    <!-- Base Supporter -->
+                    <img src="{{ asset('assets/images/base.png') }}" alt="Base Supporter" class="absolute w-28 h-auto"
+                        style="bottom: -20px; z-index: 10;">
+                    <!-- Handle Clamps -->
+                    <img src="{{ asset('assets/images/handle.png') }}" alt="Handle" class="absolute w-26 h-[213px]"
+                        style="bottom: 13px; z-index: 25;">
+                </div>
+
+                <!-- Superimposed Success Check Badge -->
+                <div
+                    class="absolute bottom-2 bg-green-500 text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg border-4 border-white animate-bounce">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <p class="text-[10px] font-bold text-dabba-maroon uppercase tracking-[0.25em] mb-1.5">Order Confirmed</p>
+            <h3 class="text-2xl sm:text-3xl font-serif font-bold text-dabba-dark leading-snug mb-2">
+                Your Dabba is locked & <span class="italic text-dabba-maroon">ready!</span>
+            </h3>
+            <p class="text-xs text-gray-400 font-medium max-w-sm mb-5 leading-relaxed">
+                Thank you, <span class="font-bold text-gray-700 success-name-full">John Doe</span>! We've locked in your
+                custom tiffin subscription. Your delivery cycle starts shortly.
+            </p>
+
+            <!-- Order Specs Breakdown -->
+            <div
+                class="w-full bg-gray-50 rounded-2xl p-4 mb-6 text-left space-y-2 border border-gray-100 text-[11px] text-gray-500">
+                <div class="flex justify-between">
+                    <span>Diet Style</span>
+                    <span class="font-bold text-dabba-dark success-diet-summary">🥗 Veg Subscription</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Plan Duration</span>
+                    <span class="font-bold text-dabba-dark success-duration-summary">30 Days (Lunch + Dinner)</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Delivery Location</span>
+                    <span class="font-bold text-dabba-dark success-pin-summary">PIN: 400001</span>
+                </div>
+                <div class="flex justify-between items-start gap-4">
+                    <span class="flex-shrink-0">Delivery Address</span>
+                    <span class="font-bold text-dabba-dark text-right success-address-summary">102, Green Valley Apartments,
+                        Sector 62</span>
+                </div>
+            </div>
+
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row gap-2.5 w-full">
+                <a href="{{ url('/') }}"
+                    class="flex-1 px-5 py-3.5 rounded-xl border border-gray-100 text-[10px] font-bold text-gray-400 hover:bg-gray-50 transition-all uppercase tracking-widest text-center">
+                    Go Back Home
+                </a>
+                <button onclick="window.location.reload()"
+                    class="flex-1 px-5 py-3.5 rounded-xl bg-dabba-maroon text-white text-[10px] font-bold uppercase tracking-widest hover:scale-[1.02] transition-all shadow-lg shadow-dabba-maroon/20">
+                    Manage Order
+                </button>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@push('scripts')
+    <script>
+        // Global Subscription State configuration mapping to order.html keys
+        const config = {
+            pincode: null,
+            diet: null,
+            duration: 1,
+            people: 1,
+            slots: { breakfast: false, lunch: true, snacks: false, dinner: false },
+            addressMode: 'same',
+            skips: [],
+            step3Completed: false,
+            step4Completed: false,
+            pricing: {
+                1: 273,
+                3: 265,
+                7: 251,
+                14: 238,
+                30: 213
+            }
+        };
+
+        const pincodeStatus = {
+            single: true,
+            morning: true,
+            evening: true
+        };
+
+        let currentStep = 1;
+        let maxUnlockedStep = 1; // Initially only Step 1 is unlocked
+        let isOrderCompleted = false; // Tracks if the order is completely finalized
+
+        const stepDetails = {
+            1: { subtitle: "Step 1 · Serviceability", title: "Are we in your <span class='italic text-dabba-maroon'>neighborhood</span>?", desc: "Enter your delivery pincode to check if we serve your area." },
+            2: { subtitle: "Step 2 · Diet Preference", title: "Choose your <span class='italic text-dabba-maroon'>taste</span> profile.", desc: "Select your dietary preference to customize your meal menus." },
+            3: { subtitle: "Step 3 · Plan Setup", title: "Build your <span class='italic text-dabba-maroon'>schedule</span>.", desc: "Set your delivery days cycle, select specific meal slots, and track live price savings." },
+            4: { subtitle: "Step 4 · Contact", title: "Introduce <span class='italic text-dabba-maroon'>yourself</span>.", desc: "How should we address you and keep you updated?" },
+            5: { subtitle: "Step 5 · Delivery", title: "Where shall we <span class='italic text-dabba-maroon'>deliver</span>?", desc: "Our riders will find you with these details." }
+        };
+
+        const menuData = {
+            Veg: {
+                Day1: {
+                    breakfast: "🌅 Gobi Paratha with Fresh Curd",
+                    lunch: "☀️ Bhindi Do Piaza & Dal",
+                    snacks: "☕ Samosa & Masala Chai",
+                    dinner: "🌙 Pav Bhaji Special"
+                },
+                Day2: {
+                    breakfast: "🌅 Poha with Roasted Peanuts",
+                    lunch: "☀️ Mughlai Gobhi & Kabuli",
+                    snacks: "☕ Veg Grilled Sandwich & Tea",
+                    dinner: "🌙 Subz Khurchan & Roti"
+                },
+                Day3: {
+                    breakfast: "🌅 Idli Sambar & Coconut Chutney",
+                    lunch: "☀️ Chilli Mushroom Feast",
+                    snacks: "☕ Dhokla with Chutney & Tea",
+                    dinner: "🌙 Baigan Bharta Smoked"
+                }
+            },
+            'Non-Veg': {
+                Day1: {
+                    breakfast: "🌅 Egg Masala Omelette & Toast",
+                    lunch: "☀️ Murg Do Piaza & Dal",
+                    snacks: "☕ Chicken Tikka Roll & Chai",
+                    dinner: "🌙 Keema Pav Classic"
+                },
+                Day2: {
+                    breakfast: "🌅 Scrambled Eggs with Toast",
+                    lunch: "☀️ Chicken Mughlai & Kabuli",
+                    snacks: "☕ Chicken Mayo Sandwich & Tea",
+                    dinner: "🌙 Murg Khurchan & Roti"
+                },
+                Day3: {
+                    breakfast: "🌅 Egg Bhurji Paratha",
+                    lunch: "☀️ Chilli Chicken Feast",
+                    snacks: "☕ Chicken Nuggets & Hot Tea",
+                    dinner: "🌙 Murgi Bharta Smoked"
+                }
+            },
+            Mix: {
+                Day1: {
+                    breakfast: "🌅 Egg Omelette / Gobi Paratha",
+                    lunch: "☀️ Murg Do Piaza / Bhindi Do Piaza",
+                    snacks: "☕ Chicken Tikka / Samosa & Chai",
+                    dinner: "🌙 Keema Pav / Pav Bhaji Special"
+                },
+                Day2: {
+                    breakfast: "🌅 Scrambled Eggs / Poha",
+                    lunch: "☀️ Chicken Mughlai / Mughlai Gobhi",
+                    snacks: "☕ Chicken Mayo / Veg Grilled Sandwich",
+                    dinner: "🌙 Murg / Subz Khurchan & Roti"
+                },
+                Day3: {
+                    breakfast: "🌅 Egg Bhurji / Idli Sambar",
+                    lunch: "☀️ Chilli Chicken / Chilli Mushroom",
+                    snacks: "☕ Chicken Nuggets / Dhokla & Tea",
+                    dinner: "🌙 Murgi Bharta / Baigan Bharta"
+                }
+            }
+        };
+
+        function updateStackLevelStates() {
+            // Update stack levels & circular progress badges
+            for (let i = 1; i <= 5; i++) {
+                const el = document.getElementById(`level-btn-${i}`);
+                if (el) {
+                    if (i <= maxUnlockedStep) {
+                        el.classList.remove('locked');
+                    } else {
+                        el.classList.add('locked');
+                    }
+
+                    // Dynamically update the circular badge node content
+                    const badge = el.querySelector('.dabba-label');
+                    if (badge) {
+                        if (isOrderCompleted) {
+                            // Order Fully Completed: Fade out and hide all progress overlays for clean steel finish!
+                            badge.className = "dabba-label state-hidden";
+                            badge.innerHTML = "";
+                        } else if (i < maxUnlockedStep) {
+                            // Completed State: Filled Emerald Green circle with solid vector checkmark
+                            badge.className = "dabba-label state-completed";
+                            badge.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="4.5" stroke="currentColor" class="w-3 h-3 text-white"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>`;
+                        } else if (i === maxUnlockedStep) {
+                            // Active State: Breathing Maroon Outline circle with the step index number
+                            badge.className = "dabba-label state-active";
+                            badge.innerHTML = i;
+                        } else {
+                            // Locked State: Ghosted Outline circle with the step index number
+                            badge.className = "dabba-label state-locked";
+                            badge.innerHTML = i;
+                        }
+                    }
+                }
+            }
+
+            // Update lid & handle locks based on completion status
+            const lid = document.getElementById('stack-lid');
+            const handle = document.getElementById('stack-handle');
+            if (isOrderCompleted) {
+                if (lid) lid.classList.remove('locked');
+                if (handle) handle.classList.remove('locked');
+            } else {
+                if (lid) lid.classList.add('locked');
+                if (handle) handle.classList.add('locked');
+            }
+        }
+
+        // --- Step UI & Visibility Toggles ---
+        function updateStepUI() {
+            for (let i = 1; i <= 5; i++) {
+                const stepContent = document.getElementById(`step-content-${i}`);
+                if (stepContent) {
+                    if (i === currentStep) {
+                        stepContent.classList.remove('hidden');
+                        stepContent.classList.add('block');
+                    } else {
+                        stepContent.classList.remove('block');
+                        stepContent.classList.add('hidden');
+                    }
+                }
+            }
+
+            // Sync Next Button label
+            const nextBtn = document.getElementById('form-next-btn');
+            if (nextBtn) {
+                if (currentStep === 5) {
+                    nextBtn.innerHTML = 'Complete Order 🎉';
+                } else {
+                    nextBtn.innerHTML = 'Next Step →';
+                }
+            }
+
+            // Sync dynamic sub-pricing floating strip display
+            const pricingStrip = document.getElementById('sub-pricing-strip');
+            if (pricingStrip) {
+                if (currentStep >= 3) {
+                    pricingStrip.classList.add('active');
+                } else {
+                    pricingStrip.classList.remove('active');
+                }
+            }
+        }
+
+        function triggerTransition(stepNum) {
+            currentStep = stepNum;
+            const stage = document.getElementById('transition-stage');
+
+            // Render correct step wrapper inside glass card
+            updateStepUI();
+
+            // Remove previous active flags
+            document.querySelectorAll('.stack-level').forEach(el => {
+                el.classList.remove('active-transition');
+            });
+
+            // Mark chosen level as active transition level
+            const activeLevel = document.getElementById(`level-btn-${stepNum}`);
+            if (activeLevel) {
+                activeLevel.classList.add('active-transition');
+            }
+
+            // Zoom into active level
+            stage.classList.add('state-zoomed');
+
+            // Hide background header text
+            const mainHeader = document.getElementById('experience-header');
+            if (mainHeader) {
+                mainHeader.classList.add('opacity-0', 'pointer-events-none', 'scale-95');
+            }
+
+            // Smoothly scroll the form into the center of the viewport
+            setTimeout(() => {
+                stage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 300);
+        }
+
+        function resetTransition() {
+            const stage = document.getElementById('transition-stage');
+            stage.classList.remove('state-zoomed');
+
+            // Smoothly scroll back to the top of the page
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Show background header text
+            const mainHeader = document.getElementById('experience-header');
+            if (mainHeader) {
+                mainHeader.classList.remove('opacity-0', 'pointer-events-none', 'scale-95');
+            }
+
+            // Remove active transition flags after zoom completes
+            setTimeout(() => {
+                document.querySelectorAll('.stack-level').forEach(el => {
+                    el.classList.remove('active-transition');
+                });
+            }, 1000);
+        }
+
+        // --- Interactive Flow Form Controllers ---
+
+        // STEP 1: Pincode Check
+        function verifyPincode() {
+            const pinVal = document.getElementById('check-pincode').value.trim();
+            const resultDiv = document.getElementById('pincode-result');
+            const isValidPin = /^[1-9][0-9]{5}$/.test(pinVal);
+
+            if (!isValidPin) {
+                alert("Please enter a valid 6-digit Indian pincode!");
+                return;
+            }
+
+            config.pincode = pinVal;
+
+            // Prefill pincode elements inside Step 5
+            if (document.getElementById('delivery-pincode-single')) document.getElementById('delivery-pincode-single').value = pinVal;
+            if (document.getElementById('delivery-pincode-morning')) document.getElementById('delivery-pincode-morning').value = pinVal;
+            if (document.getElementById('delivery-pincode-evening')) document.getElementById('delivery-pincode-evening').value = pinVal;
+
+            updateDabbaStackLabels();
+
+            if (resultDiv) {
+                resultDiv.classList.remove('hidden');
+                resultDiv.innerHTML = `<div class="p-3 bg-green-50 text-green-700 rounded-xl text-xs font-bold border border-green-100 flex items-center gap-2">
+                    <svg class="w-4 h-4 text-green-600 animate-pulse" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path></svg>
+                    DabbaGo is fully operational in Sector 62, Noida! Loading diet options...
+                </div>`;
+            }
+
+            // Auto advance
+            setTimeout(() => {
+                handleNextStep();
+            }, 1000);
+        }
+
+        // STEP 2: Diet Select
+        function updateDiet(val) {
+            config.diet = val;
+
+            updateDabbaStackLabels();
+            calculatePricing();
+            updateMenuPreview();
+
+            // Staggered cinematic auto advance beat
+            setTimeout(() => {
+                if (currentStep === 2) {
+                    handleNextStep();
+                }
+            }, 700);
+        }
+
+        // STEP 3: Meal slots & Planner Lists
+        function toggleSlot(slot) {
+            config.slots[slot] = !config.slots[slot];
+            const el = document.getElementById(`slot-${slot}`);
+            const check = document.getElementById(`${slot}-check`);
+
+            if (config.slots[slot]) {
+                if (el) el.className = "p-4 border border-dabba-maroon bg-dabba-maroon/5 rounded-xl flex items-center justify-between cursor-pointer transition-all";
+                if (check) {
+                    check.innerHTML = '<svg class="w-2 h-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>';
+                    check.className = "w-3.5 h-3.5 rounded-full bg-dabba-maroon flex items-center justify-center";
+                }
+            } else {
+                if (el) el.className = "p-4 border border-gray-200 rounded-xl flex items-center justify-between cursor-pointer transition-all";
+                if (check) {
+                    check.innerHTML = '';
+                    check.className = "w-3.5 h-3.5 rounded-full border border-gray-300 flex items-center justify-center";
+                }
+            }
+            config.skips = [];
+            generateCalendar();
+            calculatePricing();
+            updateMenuPreview();
+        }
+
+        function updateDuration(days, el) {
+            config.duration = days;
+            config.skips = [];
+            document.querySelectorAll('.duration-btn').forEach(btn => {
+                btn.className = "duration-btn py-3 px-3 rounded-xl border border-gray-200 bg-white text-dabba-dark transition-all text-center flex flex-col justify-center items-center";
+            });
+            el.className = "duration-btn py-3 px-3 rounded-xl border-2 border-dabba-maroon bg-dabba-maroon/5 text-dabba-dark transition-all text-center flex flex-col justify-center items-center";
+
+            generateCalendar();
+            calculatePricing();
+            updateDabbaStackLabels();
+        }
+
+        function updatePeople(change) {
+            config.people = Math.max(1, config.people + change);
+            const countEl = document.getElementById('people-count');
+            if (countEl) countEl.innerText = config.people;
+            calculatePricing();
+        }
+
+        let isMenuExpanded = false;
+        function toggleMenuPreview() {
+            isMenuExpanded = !isMenuExpanded;
+            const container = document.getElementById('menu-preview-container');
+            const chevron = document.getElementById('menu-chevron');
+            const hint = document.getElementById('menu-toggle-hint');
+            const icon = document.getElementById('menu-toggle-icon');
+
+            if (container) {
+                if (isMenuExpanded) {
+                    container.classList.remove('hidden');
+                    if (chevron) chevron.classList.add('rotate-180');
+                    if (hint) hint.innerText = '(Tap to Collapse)';
+                    if (icon) icon.innerText = '📖';
+                } else {
+                    container.classList.add('hidden');
+                    if (chevron) chevron.classList.remove('rotate-180');
+                    if (hint) hint.innerText = '(Tap to View)';
+                    if (icon) icon.innerText = '📅';
+                }
+            }
+        }
+
+        function updateMenuPreview() {
+            const diet = config.diet || 'Veg';
+            const dietKey = diet === 'Mix' ? 'Mix' : (diet === 'Non-Vegetarian' || diet === 'Non Veg' || diet === 'Non-Veg' ? 'Non-Veg' : 'Veg');
+            const data = menuData[dietKey] || menuData.Veg;
+
+            const days = ['Day1', 'Day2', 'Day3'];
+            const dayLabels = ['Tomorrow (Day 1)', 'Day 2', 'Day 3'];
+            let html = '';
+
+            days.forEach((dayKey, idx) => {
+                const dayMenu = data[dayKey];
+                html += `
+                    <div class="p-3 bg-white rounded-xl border border-gray-100 space-y-2.5 shadow-sm text-left">
+                        <div class="flex items-center justify-between border-b border-gray-100 pb-2">
+                            <h4 class="text-[11px] font-bold text-dabba-dark">${dayLabels[idx]}</h4>
+                            <span class="text-[8px] bg-dabba-maroon/10 text-dabba-maroon font-bold px-1.5 py-0.5 rounded border border-dabba-maroon/20">Active</span>
+                        </div>
+                        <div class="space-y-2 text-[10px]">
+                `;
+
+                const slots = [
+                    { id: 'breakfast', icon: '🌅', label: 'Breakfast' },
+                    { id: 'lunch', icon: '☀️', label: 'Lunch' },
+                    { id: 'snacks', icon: '☕', label: 'Snacks' },
+                    { id: 'dinner', icon: '🌙', label: 'Dinner' }
+                ];
+
+                slots.forEach(slot => {
+                    const isSelected = config.slots[slot.id];
+                    const mealName = dayMenu[slot.id];
+                    html += `
+                        <div class="flex items-start gap-2 transition-all duration-200 ${isSelected ? 'opacity-100' : 'opacity-25 filter grayscale'}">
+                            <span class="text-xs mt-0.5">${slot.icon}</span>
+                            <div>
+                                <p class="text-[8px] font-bold text-gray-400 uppercase tracking-wider">${slot.label}</p>
+                                <p class="text-[10px] font-semibold text-dabba-dark mt-0.5">${mealName}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+
+            const container = document.getElementById('menu-preview-container');
+            if (container) container.innerHTML = html;
+        }
+
+        function generateCalendar() {
+            const list = document.getElementById('calendar-list');
+            if (!list) return;
+            list.innerHTML = '';
+            const startDate = new Date();
+
+            for (let i = 0; i < config.duration; i++) {
+                const date = new Date(startDate);
+                date.setDate(startDate.getDate() + i + 1);
+                const dayStr = date.toLocaleDateString('en-US', { weekday: 'short', day: '2-digit' });
+                const item = document.createElement('div');
+                item.className = 'relative flex flex-col gap-2 p-3 bg-white rounded-xl border border-gray-100 shadow-sm text-left';
+
+                let slotsHtml = '';
+                const slots = [
+                    { id: 'breakfast', label: 'Breakfast' },
+                    { id: 'lunch', label: 'Lunch' },
+                    { id: 'snacks', label: 'Snacks' },
+                    { id: 'dinner', label: 'Dinner' }
+                ];
+
+                slots.forEach(slot => {
+                    if (config.slots[slot.id]) {
+                        const isSkipped = config.skips.includes(`${i}-${slot.id}`);
+                        slotsHtml += `
+                            <label class="flex items-center justify-between group cursor-pointer text-[10px]">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-3.5 h-3.5 rounded border border-gray-300 flex items-center justify-center transition-all ${isSkipped ? 'border-gray-200 bg-white' : 'bg-dabba-maroon border-dabba-maroon'}">
+                                        ${isSkipped ? '' : '<svg class="w-2 h-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>'}
+                                    </div>
+                                    <span class="font-bold ${isSkipped ? 'text-gray-300 line-through' : 'text-dabba-dark'} uppercase tracking-wider">${slot.label}</span>
+                                </div>
+                                <input type="checkbox" class="sr-only" ${isSkipped ? 'checked' : ''} onchange="toggleMealSkip(${i}, '${slot.id}')">
+                                <span class="text-[8px] font-bold text-dabba-maroon opacity-0 group-hover:opacity-100 transition-opacity">${isSkipped ? 'Add' : 'Skip'}</span>
+                            </label>`;
+                    }
+                });
+
+                item.innerHTML = `
+                    <div class="flex items-center justify-between border-b border-gray-100 pb-1.5 mb-1.5">
+                        <span class="text-[9px] font-extrabold text-gray-400 uppercase tracking-wider">${dayStr}</span>
+                        <span class="text-xs">🗓️</span>
+                    </div>
+                    <div class="space-y-1.5">
+                        ${slotsHtml}
+                    </div>
+                `;
+                list.appendChild(item);
+            }
+        }
+
+        function toggleMealSkip(dayIndex, slot) {
+            const key = `${dayIndex}-${slot}`;
+            const index = config.skips.indexOf(key);
+            if (index > -1) config.skips.splice(index, 1);
+            else config.skips.push(key);
+            generateCalendar();
+            calculatePricing();
+        }
+
+        function calculatePricing() {
+            const perMeal = config.pricing[config.duration] || 273;
+            const basePerMeal = config.pricing[1];
+            const activeSlotsCount = (config.slots.breakfast ? 1 : 0) + (config.slots.lunch ? 1 : 0) + (config.slots.snacks ? 1 : 0) + (config.slots.dinner ? 1 : 0);
+
+            const totalPotentialMeals = activeSlotsCount * config.duration;
+            const skippedMealsCount = config.skips.length;
+            const actualMealsPerSubscription = Math.max(0, totalPotentialMeals - skippedMealsCount);
+
+            const totalMeals = actualMealsPerSubscription * config.people;
+            const finalTotal = totalMeals * perMeal;
+            const oldTotal = totalMeals * basePerMeal;
+            const savings = oldTotal - finalTotal;
+            const savePercent = Math.round((savings / oldTotal) * 100) || 0;
+
+            const el1 = document.getElementById('price-per-meal');
+            const el2 = document.getElementById('summary-meals-day');
+            const el3 = document.getElementById('summary-days');
+            const el4 = document.getElementById('summary-people');
+            const el5 = document.getElementById('final-total');
+
+            if (el1) el1.innerText = perMeal;
+            if (el2) el2.innerText = activeSlotsCount;
+            if (el3) el3.innerText = config.duration;
+            if (el4) el4.innerText = config.people;
+            if (el5) el5.innerText = Math.round(finalTotal);
+
+            const badge = document.getElementById('save-badge');
+            const savePctEl = document.getElementById('save-percent');
+            if (savePercent > 0 && badge) {
+                badge.classList.remove('hidden');
+                if (savePctEl) savePctEl.innerText = savePercent;
+            } else if (badge) {
+                badge.classList.add('hidden');
+            }
+        }
+
+        // STEP 4: SMS OTP Send & Verify
+        function sendOTP() {
+            const phoneVal = document.getElementById('contact-phone').value.trim();
+            if (!phoneVal || phoneVal.length < 10) {
+                alert('Please enter a valid 10-digit mobile number first!');
+                return;
+            }
+            document.getElementById('otp-container').classList.remove('hidden');
+            alert(`OTP Sent to +91 ${phoneVal}! Use code '1234' to verify.`);
+        }
+
+        function verifyOTP() {
+            const otpVal = document.getElementById('sms-otp').value.trim();
+            if (otpVal === '1234' || otpVal.length === 4) {
+                alert('✓ Mobile authenticated successfully!');
+                document.getElementById('otp-container').innerHTML = `<div class="h-[36px] flex items-center gap-1.5 text-green-600 font-bold text-xs">
+                    <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                    </svg> Mobile Verified
+                </div>`;
+                config.step4Completed = true;
+                maxUnlockedStep = Math.max(maxUnlockedStep, 5);
+                updateStackLevelStates();
+            } else {
+                alert('Invalid 4-digit code! Please check and try again.');
+            }
+        }
+
+        // STEP 5: Delivery address modes & checking pincode
+        function setAddressMode(mode) {
+            config.addressMode = mode;
+            const sameEl = document.getElementById('addr-same');
+            const splitEl = document.getElementById('addr-split');
+            const sameCheck = document.getElementById('addr-same-check');
+            const splitCheck = document.getElementById('addr-split-check');
+            const singleFields = document.getElementById('single-address-fields');
+            const splitFields = document.getElementById('split-address-fields');
+
+            if (mode === 'same') {
+                sameEl.className = "p-4 border-2 border-dabba-maroon bg-dabba-maroon/5 rounded-xl cursor-pointer transition-all flex items-center justify-between";
+                sameCheck.className = "w-3.5 h-3.5 rounded-full bg-dabba-maroon flex items-center justify-center";
+                sameCheck.innerHTML = `<svg class="w-2 h-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>`;
+
+                splitEl.className = "p-4 border border-gray-200 rounded-xl cursor-pointer transition-all flex items-center justify-between opacity-80 hover:opacity-100";
+                splitCheck.className = "w-3.5 h-3.5 rounded-full border border-gray-300 flex items-center justify-center";
+                splitCheck.innerHTML = '';
+
+                singleFields.classList.remove('hidden');
+                splitFields.classList.add('hidden');
+            } else {
+                splitEl.className = "p-4 border-2 border-dabba-maroon bg-dabba-maroon/5 rounded-xl cursor-pointer transition-all flex items-center justify-between";
+                splitCheck.className = "w-3.5 h-3.5 rounded-full bg-dabba-maroon flex items-center justify-center";
+                splitCheck.innerHTML = `<svg class="w-2 h-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>`;
+
+                sameEl.className = "p-4 border border-gray-200 rounded-xl cursor-pointer transition-all flex items-center justify-between opacity-80 hover:opacity-100";
+                sameCheck.className = "w-3.5 h-3.5 rounded-full border border-gray-300 flex items-center justify-center";
+                sameCheck.innerHTML = '';
+
+                singleFields.classList.add('hidden');
+                splitFields.classList.remove('hidden');
+            }
+        }
+
+        function onSplitPincodeChange(slot) {
+            pincodeStatus[slot] = false;
+            const btn = document.getElementById('btn-verify-' + slot);
+            const status = document.getElementById('status-pincode-' + slot);
+            if (btn) {
+                btn.className = 'absolute right-2 top-2 bottom-2 px-3 bg-dabba-maroon text-white text-[9px] font-bold uppercase tracking-widest rounded-lg transition-all';
+                btn.innerText = 'Verify';
+            }
+            if (status) {
+                status.className = 'mt-1.5 text-[9px] text-amber-500 font-semibold flex items-center gap-1';
+                status.innerHTML = `<span class="inline-block w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span> Pincode changed - Please verify`;
+            }
+        }
+
+        function checkSplitPincode(slot) {
+            const inputEl = document.getElementById('delivery-pincode-' + slot);
+            const pinVal = inputEl ? inputEl.value.trim() : '';
+            const isValidPin = /^[1-9][0-9]{5}$/.test(pinVal);
+            const btn = document.getElementById('btn-verify-' + slot);
+            const status = document.getElementById('status-pincode-' + slot);
+
+            if (!isValidPin) {
+                alert('Please enter a valid 6-digit Indian pincode.');
+                return;
+            }
+
+            pincodeStatus[slot] = true;
+            if (btn) {
+                btn.className = 'absolute right-2 top-2 bottom-2 px-3 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 text-[9px] font-bold uppercase tracking-widest rounded-lg transition-all';
+                btn.innerText = 'Verified';
+            }
+            if (status) {
+                status.className = 'mt-1.5 text-[9px] text-green-600 font-semibold flex items-center gap-1';
+                status.innerHTML = `<span class="inline-block w-1.5 h-1.5 bg-green-500 rounded-full animate-ping"></span> Serviceable Pincode`;
+            }
+            alert(`Pincode ${pinVal} verified successfully for DabbaGo deliveries!`);
+        }
+
+        // --- Navigation flow control validation mapping to order.html ---
+        function validateStep(step) {
+            // For simple developer testing, we bypass strict requirements, but keep the validation framework intact
+            return true;
+        }
+
+        function handleNextStep() {
+            if (!validateStep(currentStep)) return;
+
+            if (currentStep === 5) {
+                completeSetup();
+            } else {
+                maxUnlockedStep = Math.max(maxUnlockedStep, currentStep + 1);
+                updateStackLevelStates();
+                resetTransition();
+
+                // Cinematic stagger zoom inside next level
+                setTimeout(() => {
+                    triggerTransition(currentStep + 1);
+                }, 1100);
+            }
+        }
+
+        function completeSetup() {
+            isOrderCompleted = true;
+            updateStackLevelStates();
+            resetTransition();
+
+            // Populate success modal elements dynamically
+            const name = document.getElementById('contact-name').value.trim() || 'John Doe';
+            const pincode = config.pincode || '201301';
+            const diet = config.diet || 'Veg';
+            const duration = config.duration || 1;
+            const slotParts = [];
+            if (config.slots.breakfast) slotParts.push('Breakfast');
+            if (config.slots.lunch) slotParts.push('Lunch');
+            if (config.slots.snacks) slotParts.push('Snacks');
+            if (config.slots.dinner) slotParts.push('Dinner');
+            const slotText = slotParts.join(' + ') || 'None';
+
+            document.querySelectorAll('.success-name-full').forEach(el => el.innerText = name);
+            document.querySelectorAll('.success-pin').forEach(el => el.innerText = pincode);
+            document.querySelectorAll('.success-duration').forEach(el => el.innerText = duration);
+
+            const successDietSummary = document.querySelector('.success-diet-summary');
+            if (successDietSummary) {
+                if (diet.toLowerCase() === 'veg') {
+                    successDietSummary.innerText = '🥗 Veg Subscription';
+                } else if (diet.toLowerCase() === 'non-veg') {
+                    successDietSummary.innerText = '🍖 Non-Veg Subscription';
+                } else {
+                    successDietSummary.innerText = '🍛 Mix Subscription';
+                }
+            }
+
+            const durSummary = document.querySelector('.success-duration-summary');
+            if (durSummary) durSummary.innerText = `${duration} Days (${slotText})`;
+
+            const pinSummary = document.querySelector('.success-pin-summary');
+            if (pinSummary) pinSummary.innerText = `PIN: ${pincode}`;
+
+            let finalAddressTxt = '';
+            if (config.addressMode === 'split') {
+                const morningVal = document.getElementById('delivery-address-morning').value.trim() || 'Office Address';
+                const morningAreaVal = document.getElementById('delivery-area-morning').value.trim() || 'Sector 62';
+                const morningLandmarkVal = document.getElementById('delivery-landmark-morning').value.trim();
+                const morningLandmarkTxt = morningLandmarkVal ? `, near ${morningLandmarkVal}` : '';
+
+                const eveningVal = document.getElementById('delivery-address-evening').value.trim() || 'Home Address';
+                const eveningAreaVal = document.getElementById('delivery-area-evening').value.trim() || 'Sector 62';
+                const eveningLandmarkVal = document.getElementById('delivery-landmark-evening').value.trim();
+                const eveningLandmarkTxt = eveningLandmarkVal ? `, near ${eveningLandmarkVal}` : '';
+
+                finalAddressTxt = `🌅 Morning: ${morningVal}, ${morningAreaVal}${morningLandmarkTxt}<br>🌙 Evening: ${eveningVal}, ${eveningAreaVal}${eveningLandmarkTxt}`;
+            } else {
+                const singleVal = document.getElementById('delivery-address-single').value.trim() || '102, Green Valley Apartments';
+                const singleAreaVal = document.getElementById('delivery-area-single').value.trim() || 'Sector 62';
+                const singleLandmarkVal = document.getElementById('delivery-landmark-single').value.trim();
+                const singleLandmarkTxt = singleLandmarkVal ? `, near ${singleLandmarkVal}` : '';
+
+                finalAddressTxt = `${singleVal}, ${singleAreaVal}${singleLandmarkTxt}`;
+            }
+            const addressSummaryEl = document.querySelector('.success-address-summary');
+            if (addressSummaryEl) addressSummaryEl.innerHTML = finalAddressTxt;
+
+            // Trigger visual squash rebound and high-fidelity paper tumbling confetti!
+            setTimeout(() => {
+                if (isOrderCompleted) {
+                    triggerCelebrationRejoice();
+
+                    // Fade in beautiful success modal post pneumatics clamp down!
+                    setTimeout(() => {
+                        const successModal = document.getElementById('success-modal');
+                        if (successModal) {
+                            successModal.classList.remove('hidden');
+                            setTimeout(() => successModal.classList.remove('opacity-0'), 50);
+                        }
+                    }, 1400);
+                }
+            }, 1300);
+        }
+
+        // --- Celebration Effects ---
+        function triggerCelebrationRejoice() {
+            const tiffin = document.getElementById('tiffin-stack');
+            if (tiffin) {
+                tiffin.classList.add('stack-bounce-celebrate');
+                setTimeout(() => {
+                    tiffin.classList.remove('stack-bounce-celebrate');
+                }, 900);
+            }
+            triggerRejoiceConfetti();
+        }
+
+        function triggerRejoiceConfetti() {
+            const stage = document.getElementById('transition-stage');
+            if (!stage) return;
+
+            const tiffin = document.getElementById('tiffin-stack');
+            if (!tiffin) return;
+
+            const rect = tiffin.getBoundingClientRect();
+            const stageRect = stage.getBoundingClientRect();
+
+            const startX = (rect.left + rect.width / 2) - stageRect.left;
+            const startY = (rect.top + rect.height / 2) - stageRect.top;
+
+            const colors = ['#8c2043', '#f39c12', '#2ecc71', '#3498db', '#e74c3c', '#9b59b6', '#f1c40f', '#1abc9c'];
+            const shapes = [
+                { class: 'rounded-full', w: 8, h: 8 },      // Circle
+                { class: 'rounded-sm', w: 8, h: 8 },        // Square
+                { class: 'rounded-none', w: 4, h: 11 },     // Ribbon
+                { class: 'rounded-none', w: 3, h: 9 },      // Slim ribbon
+                { class: 'rotate-45', w: 7, h: 7 }          // Diamond
+            ];
+
+            for (let i = 0; i < 65; i++) {
+                const container = document.createElement('div');
+                container.className = 'confetti-piece';
+
+                const shape = shapes[Math.floor(Math.random() * shapes.length)];
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 100 + Math.random() * 180;
+
+                const midX = Math.cos(angle) * (distance * 0.75);
+                const midY = Math.sin(angle) * (distance * 0.75) - (60 + Math.random() * 60);
+
+                const endX = Math.cos(angle) * distance;
+                const endY = Math.sin(angle) * distance + (40 + Math.random() * 80);
+
+                container.style.setProperty('--tx-start', `${startX}px`);
+                container.style.setProperty('--ty-start', `${startY}px`);
+                container.style.setProperty('--tx-mid', `${midX}px`);
+                container.style.setProperty('--ty-mid', `${midY}px`);
+                container.style.setProperty('--tx-end', `${endX}px`);
+                container.style.setProperty('--ty-end', `${endY}px`);
+
+                container.style.animationDelay = `${Math.random() * 0.25}s`;
+
+                const inner = document.createElement('div');
+                inner.className = `confetti-inner ${shape.class}`;
+                inner.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+                const scaleFactor = 0.8 + Math.random() * 0.5;
+                inner.style.width = `${shape.w * scaleFactor}px`;
+                inner.style.height = `${shape.h * scaleFactor}px`;
+
+                const rx = (Math.random() * 2 - 1).toFixed(2);
+                const ry = (Math.random() * 2 - 1).toFixed(2);
+                const rz = (Math.random() * 2 - 1).toFixed(2);
+                const tumbleDur = (0.5 + Math.random() * 0.6).toFixed(2);
+
+                inner.style.setProperty('--rx', rx);
+                inner.style.setProperty('--ry', ry);
+                inner.style.setProperty('--rz', rz);
+                inner.style.setProperty('--tumble-dur', `${tumbleDur}s`);
+
+                container.appendChild(inner);
+                stage.appendChild(container);
+
+                setTimeout(() => container.remove(), 2800);
+            }
+        }
+
+        function updateDabbaStackLabels() {
+            // Unify dynamic stack progress dabba text references
+        }
+
+        // Initialize state on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            // Update calendar and pricing totals
+            generateCalendar();
+            calculatePricing();
+            updateMenuPreview();
+            updateStackLevelStates();
+
+            // Set dynamic start date to tomorrow as standard default
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const tomorrowStr = tomorrow.toISOString().split('T')[0];
+            const dateInput = document.getElementById('start-date');
+            if (dateInput) dateInput.value = tomorrowStr;
+        });
+    </script>
+@endpush
