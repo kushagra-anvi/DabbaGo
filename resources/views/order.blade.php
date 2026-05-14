@@ -871,38 +871,43 @@
                                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
                                     <button
                                         class="duration-btn py-3 px-3 rounded-xl border-2 border-dabba-maroon bg-dabba-maroon/5 text-dabba-dark transition-all text-center flex flex-col justify-center items-center"
+                                        data-duration="1"
                                         onclick="updateDuration(1, this)">
                                         <span class="text-sm font-bold block">1 Day</span>
                                         <span
-                                            class="text-[9px] font-medium text-gray-400 leading-none mt-1">₹273/meal</span>
+                                            class="duration-price text-[9px] font-medium text-gray-400 leading-none mt-1">₹273/meal</span>
                                     </button>
                                     <button
                                         class="duration-btn py-3 px-3 rounded-xl border border-gray-200 bg-white text-dabba-dark transition-all text-center flex flex-col justify-center items-center"
+                                        data-duration="3"
                                         onclick="updateDuration(3, this)">
                                         <span class="text-sm font-bold block">3 Days</span>
                                         <span
-                                            class="text-[9px] font-medium text-gray-400 leading-none mt-1">₹265/meal</span>
+                                            class="duration-price text-[9px] font-medium text-gray-400 leading-none mt-1">₹265/meal</span>
                                     </button>
                                     <button
                                         class="duration-btn py-3 px-3 rounded-xl border border-gray-200 bg-white text-dabba-dark transition-all text-center flex flex-col justify-center items-center"
+                                        data-duration="7"
                                         onclick="updateDuration(7, this)">
                                         <span class="text-sm font-bold block">7 Days</span>
                                         <span
-                                            class="text-[9px] font-medium text-gray-400 leading-none mt-1">₹251/meal</span>
+                                            class="duration-price text-[9px] font-medium text-gray-400 leading-none mt-1">₹251/meal</span>
                                     </button>
                                     <button
                                         class="duration-btn py-3 px-3 rounded-xl border border-gray-200 bg-white text-dabba-dark transition-all text-center flex flex-col justify-center items-center"
+                                        data-duration="14"
                                         onclick="updateDuration(14, this)">
                                         <span class="text-sm font-bold block">14 Days</span>
                                         <span
-                                            class="text-[9px] font-medium text-gray-400 leading-none mt-1">₹238/meal</span>
+                                            class="duration-price text-[9px] font-medium text-gray-400 leading-none mt-1">₹238/meal</span>
                                     </button>
                                     <button
                                         class="duration-btn py-3 px-3 rounded-xl border border-gray-200 bg-white text-dabba-dark transition-all text-center flex flex-col justify-center items-center"
+                                        data-duration="30"
                                         onclick="updateDuration(30, this)">
                                         <span class="text-sm font-bold block">30 Days</span>
                                         <span
-                                            class="text-[9px] font-medium text-gray-400 leading-none mt-1">₹213/meal</span>
+                                            class="duration-price text-[9px] font-medium text-gray-400 leading-none mt-1">₹213/meal</span>
                                     </button>
                                 </div>
                             </div>
@@ -1399,7 +1404,8 @@
                 7: 251,
                 14: 238,
                 30: 213
-            }
+            },
+            matrix: null
         };
 
         const pincodeStatus = {
@@ -1409,8 +1415,9 @@
         };
 
         let currentStep = 1;
-        let maxUnlockedStep = 1; // Initially only Step 1 is unlocked
-        let isOrderCompleted = false; // Tracks if the order is completely finalized
+        let maxUnlockedStep = 1;
+        let isOrderCompleted = false;
+        let isTransitioning = false; // Flag to prevent race conditions during transitions unlocked
 
         const stepDetails = {
             1: { subtitle: "Step 1 · Serviceability", title: "Are we in your <span class='italic text-dabba-maroon'>neighborhood</span>?", desc: "Enter your delivery pincode to check if we serve your area." },
@@ -1567,6 +1574,7 @@
         }
 
         function triggerTransition(stepNum) {
+            isTransitioning = true;
             currentStep = stepNum;
             const stage = document.getElementById('transition-stage');
 
@@ -1595,8 +1603,11 @@
 
             // Smoothly scroll the form into the center of the viewport
             setTimeout(() => {
-                stage.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 300);
+                if (stepNum !== 3) {
+                    stage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                isTransitioning = false; // Release the lock once animation/scroll is settled
+            }, 500);
         }
 
         function resetTransition() {
@@ -1617,15 +1628,18 @@
                 document.querySelectorAll('.stack-level').forEach(el => {
                     el.classList.remove('active-transition');
                 });
+                isTransitioning = false; // Release the lock
             }, 1000);
         }
 
         // --- Interactive Flow Form Controllers ---
 
         // STEP 1: Pincode Check
-        function verifyPincode() {
+        async function verifyPincode() {
             const pinVal = document.getElementById('check-pincode').value.trim();
             const resultDiv = document.getElementById('pincode-result');
+            const checkBtn = document.querySelector('button[onclick="verifyPincode()"]');
+            
             const isValidPin = /^[1-9][0-9]{5}$/.test(pinVal);
 
             if (!isValidPin) {
@@ -1633,33 +1647,67 @@
                 return;
             }
 
-            config.pincode = pinVal;
-
-            // Prefill pincode elements inside Step 5
-            if (document.getElementById('delivery-pincode-single')) document.getElementById('delivery-pincode-single').value = pinVal;
-            if (document.getElementById('delivery-pincode-morning')) document.getElementById('delivery-pincode-morning').value = pinVal;
-            if (document.getElementById('delivery-pincode-evening')) document.getElementById('delivery-pincode-evening').value = pinVal;
-
-            updateDabbaStackLabels();
+            checkBtn.disabled = true;
+            checkBtn.innerText = 'Checking...';
 
             if (resultDiv) {
                 resultDiv.classList.remove('hidden');
-                resultDiv.innerHTML = `<div class="p-3 bg-green-50 text-green-700 rounded-xl text-xs font-bold border border-green-100 flex items-center gap-2">
-                    <svg class="w-4 h-4 text-green-600 animate-pulse" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path></svg>
-                    DabbaGo is fully operational in Sector 62, Noida! Loading diet options...
-                </div>`;
+                resultDiv.innerHTML = `<div class="p-3 bg-gray-50 text-gray-400 rounded-xl text-xs font-bold border border-gray-100 flex items-center gap-2">
+                        <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                        Checking DabbaGo availability...
+                    </div>`;
             }
 
-            // Auto advance
-            setTimeout(() => {
-                handleNextStep();
-            }, 1000);
+            try {
+                const response = await fetch(`/api/serviceability/check?pincode=${pinVal}`);
+                const data = await response.json();
+
+                if (response.ok && data.status === 'available') {
+                    config.pincode = pinVal;
+
+                    // Prefill pincode elements inside Step 5
+                    if (document.getElementById('delivery-pincode-single')) document.getElementById('delivery-pincode-single').value = pinVal;
+                    if (document.getElementById('delivery-pincode-morning')) document.getElementById('delivery-pincode-morning').value = pinVal;
+                    if (document.getElementById('delivery-pincode-evening')) document.getElementById('delivery-pincode-evening').value = pinVal;
+
+                    updateDabbaStackLabels();
+
+                    if (resultDiv) {
+                        resultDiv.innerHTML = `<div class="p-3 bg-green-50 text-green-700 rounded-xl text-xs font-bold border border-green-100 flex items-center gap-2">
+                                <svg class="w-4 h-4 text-green-600 animate-pulse" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path></svg>
+                                ${data.message} Loading diet options...
+                            </div>`;
+                    }
+
+                    // Auto advance
+                    setTimeout(() => {
+                        handleNextStep();
+                    }, 600);
+                } else {
+                    if (resultDiv) {
+                        resultDiv.innerHTML = `<div class="p-3 bg-red-50 text-red-700 rounded-xl text-xs font-bold border border-red-100 flex items-center gap-2">
+                                <svg class="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>
+                                ${data.message || 'Service unavailable.'}
+                            </div>`;
+                    }
+                }
+            } catch (error) {
+                if (resultDiv) {
+                    resultDiv.innerHTML = `<div class="p-3 bg-amber-50 text-amber-700 rounded-xl text-xs font-bold border border-amber-100">
+                        Connection error. Please try again.
+                    </div>`;
+                }
+            } finally {
+                checkBtn.disabled = false;
+                checkBtn.innerText = 'Check Pincode';
+            }
         }
 
         // STEP 2: Diet Select
         function updateDiet(val) {
             config.diet = val;
 
+            updateDurationLabels();
             updateDabbaStackLabels();
             calculatePricing();
             updateMenuPreview();
@@ -1669,7 +1717,7 @@
                 if (currentStep === 2) {
                     handleNextStep();
                 }
-            }, 700);
+            }, 400);
         }
 
         // STEP 3: Meal slots & Planner Lists
@@ -1692,6 +1740,7 @@
                 }
             }
             config.skips = [];
+            updateDurationLabels();
             generateCalendar();
             calculatePricing();
             updateMenuPreview();
@@ -1715,6 +1764,16 @@
             const countEl = document.getElementById('people-count');
             if (countEl) countEl.innerText = config.people;
             calculatePricing();
+        }
+
+        function updateDurationLabels() {
+            document.querySelectorAll('.duration-btn').forEach(btn => {
+                const duration = btn.getAttribute('data-duration');
+                const priceEl = btn.querySelector('.duration-price');
+                if (priceEl && config.pricing[duration]) {
+                    priceEl.innerText = `₹${Math.round(config.pricing[duration])}/meal`;
+                }
+            });
         }
 
         let isMenuExpanded = false;
@@ -1752,13 +1811,13 @@
             days.forEach((dayKey, idx) => {
                 const dayMenu = data[dayKey];
                 html += `
-                    <div class="p-3 bg-white rounded-xl border border-gray-100 space-y-2.5 shadow-sm text-left">
-                        <div class="flex items-center justify-between border-b border-gray-100 pb-2">
-                            <h4 class="text-[11px] font-bold text-dabba-dark">${dayLabels[idx]}</h4>
-                            <span class="text-[8px] bg-dabba-maroon/10 text-dabba-maroon font-bold px-1.5 py-0.5 rounded border border-dabba-maroon/20">Active</span>
-                        </div>
-                        <div class="space-y-2 text-[10px]">
-                `;
+                        <div class="p-3 bg-white rounded-xl border border-gray-100 space-y-2.5 shadow-sm text-left">
+                            <div class="flex items-center justify-between border-b border-gray-100 pb-2">
+                                <h4 class="text-[11px] font-bold text-dabba-dark">${dayLabels[idx]}</h4>
+                                <span class="text-[8px] bg-dabba-maroon/10 text-dabba-maroon font-bold px-1.5 py-0.5 rounded border border-dabba-maroon/20">Active</span>
+                            </div>
+                            <div class="space-y-2 text-[10px]">
+                    `;
 
                 const slots = [
                     { id: 'breakfast', icon: '🌅', label: 'Breakfast' },
@@ -1771,20 +1830,20 @@
                     const isSelected = config.slots[slot.id];
                     const mealName = dayMenu[slot.id];
                     html += `
-                        <div class="flex items-start gap-2 transition-all duration-200 ${isSelected ? 'opacity-100' : 'opacity-25 filter grayscale'}">
-                            <span class="text-xs mt-0.5">${slot.icon}</span>
-                            <div>
-                                <p class="text-[8px] font-bold text-gray-400 uppercase tracking-wider">${slot.label}</p>
-                                <p class="text-[10px] font-semibold text-dabba-dark mt-0.5">${mealName}</p>
+                            <div class="flex items-start gap-2 transition-all duration-200 ${isSelected ? 'opacity-100' : 'opacity-25 filter grayscale'}">
+                                <span class="text-xs mt-0.5">${slot.icon}</span>
+                                <div>
+                                    <p class="text-[8px] font-bold text-gray-400 uppercase tracking-wider">${slot.label}</p>
+                                    <p class="text-[10px] font-semibold text-dabba-dark mt-0.5">${mealName}</p>
+                                </div>
                             </div>
-                        </div>
-                    `;
+                        `;
                 });
 
                 html += `
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
             });
 
             const container = document.getElementById('menu-preview-container');
@@ -1816,28 +1875,28 @@
                     if (config.slots[slot.id]) {
                         const isSkipped = config.skips.includes(`${i}-${slot.id}`);
                         slotsHtml += `
-                            <label class="flex items-center justify-between group cursor-pointer text-[10px]">
-                                <div class="flex items-center gap-2">
-                                    <div class="w-3.5 h-3.5 rounded border border-gray-300 flex items-center justify-center transition-all ${isSkipped ? 'border-gray-200 bg-white' : 'bg-dabba-maroon border-dabba-maroon'}">
-                                        ${isSkipped ? '' : '<svg class="w-2 h-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>'}
+                                <label class="flex items-center justify-between group cursor-pointer text-[10px]">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-3.5 h-3.5 rounded border border-gray-300 flex items-center justify-center transition-all ${isSkipped ? 'border-gray-200 bg-white' : 'bg-dabba-maroon border-dabba-maroon'}">
+                                            ${isSkipped ? '' : '<svg class="w-2 h-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>'}
+                                        </div>
+                                        <span class="font-bold ${isSkipped ? 'text-gray-300 line-through' : 'text-dabba-dark'} uppercase tracking-wider">${slot.label}</span>
                                     </div>
-                                    <span class="font-bold ${isSkipped ? 'text-gray-300 line-through' : 'text-dabba-dark'} uppercase tracking-wider">${slot.label}</span>
-                                </div>
-                                <input type="checkbox" class="sr-only" ${isSkipped ? 'checked' : ''} onchange="toggleMealSkip(${i}, '${slot.id}')">
-                                <span class="text-[8px] font-bold text-dabba-maroon opacity-0 group-hover:opacity-100 transition-opacity">${isSkipped ? 'Add' : 'Skip'}</span>
-                            </label>`;
+                                    <input type="checkbox" class="sr-only" ${isSkipped ? 'checked' : ''} onchange="toggleMealSkip(${i}, '${slot.id}')">
+                                    <span class="text-[8px] font-bold text-dabba-maroon opacity-0 group-hover:opacity-100 transition-opacity">${isSkipped ? 'Add' : 'Skip'}</span>
+                                </label>`;
                     }
                 });
 
                 item.innerHTML = `
-                    <div class="flex items-center justify-between border-b border-gray-100 pb-1.5 mb-1.5">
-                        <span class="text-[9px] font-extrabold text-gray-400 uppercase tracking-wider">${dayStr}</span>
-                        <span class="text-xs">🗓️</span>
-                    </div>
-                    <div class="space-y-1.5">
-                        ${slotsHtml}
-                    </div>
-                `;
+                        <div class="flex items-center justify-between border-b border-gray-100 pb-1.5 mb-1.5">
+                            <span class="text-[9px] font-extrabold text-gray-400 uppercase tracking-wider">${dayStr}</span>
+                            <span class="text-xs">🗓️</span>
+                        </div>
+                        <div class="space-y-1.5">
+                            ${slotsHtml}
+                        </div>
+                    `;
                 list.appendChild(item);
             }
         }
@@ -1852,9 +1911,31 @@
         }
 
         function calculatePricing() {
-            const perMeal = config.pricing[config.duration] || 273;
-            const basePerMeal = config.pricing[1];
-            const activeSlotsCount = (config.slots.breakfast ? 1 : 0) + (config.slots.lunch ? 1 : 0) + (config.slots.snacks ? 1 : 0) + (config.slots.dinner ? 1 : 0);
+            const dietKey = config.diet ? config.diet.toLowerCase().replace('-', '_') : 'veg';
+            const slotKeys = [];
+            if (config.slots.breakfast) slotKeys.push('breakfast');
+            if (config.slots.lunch) slotKeys.push('lunch');
+            if (config.slots.snacks) slotKeys.push('snacks');
+            if (config.slots.dinner) slotKeys.push('dinner');
+            
+            // Default slot if none selected (for base price calculation)
+            const primarySlot = slotKeys[0] || 'lunch';
+
+            let perMeal = config.pricing[config.duration];
+            let basePerMeal = config.pricing[1];
+
+            // If matrix is available, try to find exact match
+            if (config.matrix && config.matrix[config.duration]) {
+                const searchKey = `${dietKey}_${primarySlot}`;
+                if (config.matrix[config.duration][searchKey]) {
+                    perMeal = config.matrix[config.duration][searchKey].price_per_meal;
+                }
+                if (config.matrix[1][searchKey]) {
+                    basePerMeal = config.matrix[1][searchKey].price_per_meal;
+                }
+            }
+
+            const activeSlotsCount = slotKeys.length;
 
             const totalPotentialMeals = activeSlotsCount * config.duration;
             const skippedMealsCount = config.skips.length;
@@ -1904,10 +1985,10 @@
             if (otpVal === '1234' || otpVal.length === 4) {
                 alert('✓ Mobile authenticated successfully!');
                 document.getElementById('otp-container').innerHTML = `<div class="h-[36px] flex items-center gap-1.5 text-green-600 font-bold text-xs">
-                    <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
-                    </svg> Mobile Verified
-                </div>`;
+                        <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                        </svg> Mobile Verified
+                    </div>`;
                 config.step4Completed = true;
                 maxUnlockedStep = Math.max(maxUnlockedStep, 5);
                 updateStackLevelStates();
@@ -1965,7 +2046,7 @@
             }
         }
 
-        function checkSplitPincode(slot) {
+        async function checkSplitPincode(slot) {
             const inputEl = document.getElementById('delivery-pincode-' + slot);
             const pinVal = inputEl ? inputEl.value.trim() : '';
             const isValidPin = /^[1-9][0-9]{5}$/.test(pinVal);
@@ -1977,16 +2058,47 @@
                 return;
             }
 
-            pincodeStatus[slot] = true;
             if (btn) {
-                btn.className = 'absolute right-2 top-2 bottom-2 px-3 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 text-[9px] font-bold uppercase tracking-widest rounded-lg transition-all';
-                btn.innerText = 'Verified';
+                btn.disabled = true;
+                btn.innerText = 'Checking...';
             }
-            if (status) {
-                status.className = 'mt-1.5 text-[9px] text-green-600 font-semibold flex items-center gap-1';
-                status.innerHTML = `<span class="inline-block w-1.5 h-1.5 bg-green-500 rounded-full animate-ping"></span> Serviceable Pincode`;
+
+            try {
+                const response = await fetch(`/api/serviceability/check?pincode=${pinVal}`);
+                const data = await response.json();
+
+                if (response.ok && data.status === 'available') {
+                    pincodeStatus[slot] = true;
+                    if (btn) {
+                        btn.className = 'absolute right-2 top-2 bottom-2 px-3 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 text-[9px] font-bold uppercase tracking-widest rounded-lg transition-all';
+                        btn.innerText = 'Verified';
+                        btn.disabled = false;
+                    }
+                    if (status) {
+                        status.className = 'mt-1.5 text-[9px] text-green-600 font-semibold flex items-center gap-1';
+                        status.innerHTML = `<span class="inline-block w-1.5 h-1.5 bg-green-500 rounded-full animate-ping"></span> Serviceable Pincode`;
+                    }
+                } else {
+                    pincodeStatus[slot] = false;
+                    if (btn) {
+                        btn.className = 'absolute right-2 top-2 bottom-2 px-3 bg-red-500/10 text-red-600 border border-red-500/20 text-[9px] font-bold uppercase tracking-widest rounded-lg transition-all';
+                        btn.innerText = 'Retry';
+                        btn.disabled = false;
+                    }
+                    if (status) {
+                        status.className = 'mt-1.5 text-[9px] text-red-600 font-semibold flex items-center gap-1';
+                        status.innerHTML = `<span class="inline-block w-1.5 h-1.5 bg-red-500 rounded-full"></span> Unserviceable Pincode`;
+                    }
+                    alert(data.message || 'Service unavailable for this pincode.');
+                }
+            } catch (error) {
+                console.error('Pincode check error:', error);
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerText = 'Verify';
+                }
+                alert('Connection error. Please try again.');
             }
-            alert(`Pincode ${pinVal} verified successfully for DabbaGo deliveries!`);
         }
 
         // --- Navigation flow control validation mapping to order.html ---
@@ -1996,99 +2108,110 @@
         }
 
         function handleNextStep() {
-            if (!validateStep(currentStep)) return;
+            if (isTransitioning || !validateStep(currentStep)) return;
+
+            const nextStep = currentStep + 1; // CAPTURE next step immediately!
 
             if (currentStep === 5) {
                 completeSetup();
             } else {
-                maxUnlockedStep = Math.max(maxUnlockedStep, currentStep + 1);
+                isTransitioning = true; // Lock transitions
+                maxUnlockedStep = Math.max(maxUnlockedStep, nextStep);
                 updateStackLevelStates();
                 resetTransition();
 
                 // Cinematic stagger zoom inside next level
                 setTimeout(() => {
-                    triggerTransition(currentStep + 1);
-                }, 1100);
+                    triggerTransition(nextStep); // Use the CAPTURED value
+                }, 700);
             }
         }
 
-        function completeSetup() {
-            isOrderCompleted = true;
-            updateStackLevelStates();
-            resetTransition();
+        async function completeSetup() {
+            const nextBtn = document.getElementById('form-next-btn');
+            const originalText = nextBtn.innerHTML;
+            nextBtn.disabled = true;
+            nextBtn.innerHTML = 'Creating Subscription...';
 
-            // Populate success modal elements dynamically
-            const name = document.getElementById('contact-name').value.trim() || 'John Doe';
-            const pincode = config.pincode || '201301';
-            const diet = config.diet || 'Veg';
-            const duration = config.duration || 1;
-            const slotParts = [];
-            if (config.slots.breakfast) slotParts.push('Breakfast');
-            if (config.slots.lunch) slotParts.push('Lunch');
-            if (config.slots.snacks) slotParts.push('Snacks');
-            if (config.slots.dinner) slotParts.push('Dinner');
-            const slotText = slotParts.join(' + ') || 'None';
+            const activeSlots = [];
+            if (config.slots.breakfast) activeSlots.push('breakfast');
+            if (config.slots.lunch) activeSlots.push('lunch');
+            if (config.slots.snacks) activeSlots.push('snacks');
+            if (config.slots.dinner) activeSlots.push('dinner');
 
-            document.querySelectorAll('.success-name-full').forEach(el => el.innerText = name);
-            document.querySelectorAll('.success-pin').forEach(el => el.innerText = pincode);
-            document.querySelectorAll('.success-duration').forEach(el => el.innerText = duration);
-
-            const successDietSummary = document.querySelector('.success-diet-summary');
-            if (successDietSummary) {
-                if (diet.toLowerCase() === 'veg') {
-                    successDietSummary.innerText = '🥗 Veg Subscription';
-                } else if (diet.toLowerCase() === 'non-veg') {
-                    successDietSummary.innerText = '🍖 Non-Veg Subscription';
-                } else {
-                    successDietSummary.innerText = '🍛 Mix Subscription';
+            const dietPref = (config.diet || 'Veg').toLowerCase().replace('-', '_');
+            
+            const payload = {
+                customer: {
+                    first_name: (document.getElementById('contact-name').value || 'John').split(' ')[0],
+                    last_name: (document.getElementById('contact-name').value || 'User').split(' ').slice(1).join(' ') || 'User',
+                    email: 'user@example.com', 
+                    phone: document.getElementById('contact-phone').value || '9876543210',
+                },
+                address: {
+                    street: config.addressMode === 'same' ? (document.getElementById('delivery-address-single')?.value || '102 Green Valley') : (document.getElementById('delivery-address-morning')?.value || '102 Green Valley'),
+                    landmark: config.addressMode === 'same' ? (document.getElementById('delivery-landmark-single')?.value || 'Near Hospital') : (document.getElementById('delivery-landmark-morning')?.value || 'Near Hospital'),
+                    city: 'Noida',
+                    state: 'Uttar Pradesh',
+                    pincode: config.pincode || '201301',
+                    address_type: 'home',
+                },
+                diet: {
+                    diet_preference: dietPref,
+                    allergies: [],
+                    dislikes: '',
+                },
+                subscription: {
+                    start_date: document.getElementById('start-date')?.value || '2024-05-15',
+                    duration_days: config.duration,
+                    active_slots: activeSlots,
+                    price_paise: Math.round(parseFloat(document.getElementById('final-total').innerText || '0') * 100),
+                    auto_renew: true,
                 }
-            }
+            };
 
-            const durSummary = document.querySelector('.success-duration-summary');
-            if (durSummary) durSummary.innerText = `${duration} Days (${slotText})`;
-
-            const pinSummary = document.querySelector('.success-pin-summary');
-            if (pinSummary) pinSummary.innerText = `PIN: ${pincode}`;
-
-            let finalAddressTxt = '';
-            if (config.addressMode === 'split') {
-                const morningVal = document.getElementById('delivery-address-morning').value.trim() || 'Office Address';
-                const morningAreaVal = document.getElementById('delivery-area-morning').value.trim() || 'Sector 62';
-                const morningLandmarkVal = document.getElementById('delivery-landmark-morning').value.trim();
-                const morningLandmarkTxt = morningLandmarkVal ? `, near ${morningLandmarkVal}` : '';
-
-                const eveningVal = document.getElementById('delivery-address-evening').value.trim() || 'Home Address';
-                const eveningAreaVal = document.getElementById('delivery-area-evening').value.trim() || 'Sector 62';
-                const eveningLandmarkVal = document.getElementById('delivery-landmark-evening').value.trim();
-                const eveningLandmarkTxt = eveningLandmarkVal ? `, near ${eveningLandmarkVal}` : '';
-
-                finalAddressTxt = `🌅 Morning: ${morningVal}, ${morningAreaVal}${morningLandmarkTxt}<br>🌙 Evening: ${eveningVal}, ${eveningAreaVal}${eveningLandmarkTxt}`;
-            } else {
-                const singleVal = document.getElementById('delivery-address-single').value.trim() || '102, Green Valley Apartments';
-                const singleAreaVal = document.getElementById('delivery-area-single').value.trim() || 'Sector 62';
-                const singleLandmarkVal = document.getElementById('delivery-landmark-single').value.trim();
-                const singleLandmarkTxt = singleLandmarkVal ? `, near ${singleLandmarkVal}` : '';
-
-                finalAddressTxt = `${singleVal}, ${singleAreaVal}${singleLandmarkTxt}`;
-            }
-            const addressSummaryEl = document.querySelector('.success-address-summary');
-            if (addressSummaryEl) addressSummaryEl.innerHTML = finalAddressTxt;
-
-            // Trigger visual squash rebound and high-fidelity paper tumbling confetti!
+            // BYPASS FOR DEVELOPMENT: Simulate successful creation
+            console.log('Development Bypass: Subscription Payload', payload);
+            
             setTimeout(() => {
-                if (isOrderCompleted) {
-                    triggerCelebrationRejoice();
+                isOrderCompleted = true;
+                updateStackLevelStates();
+                resetTransition();
 
-                    // Fade in beautiful success modal post pneumatics clamp down!
-                    setTimeout(() => {
-                        const successModal = document.getElementById('success-modal');
-                        if (successModal) {
-                            successModal.classList.remove('hidden');
-                            setTimeout(() => successModal.classList.remove('opacity-0'), 50);
-                        }
-                    }, 1400);
-                }
-            }, 1300);
+                // Populate success modal
+                const name = (document.getElementById('contact-name').value || 'Kushagra').trim();
+                const pincode = config.pincode || '201301';
+                const diet = config.diet || 'Veg';
+                const duration = config.duration || 1;
+                const slotText = activeSlots.join(' + ') || 'None';
+
+                document.querySelectorAll('.success-name-full').forEach(el => el.innerText = name);
+                document.querySelectorAll('.success-pin').forEach(el => el.innerText = pincode);
+                document.querySelectorAll('.success-duration').forEach(el => el.innerText = duration);
+
+                const successDietSummary = document.querySelector('.success-diet-summary');
+                if (successDietSummary) successDietSummary.innerText = `Subscription ID: DAB-DEMO-${Math.floor(Math.random()*9000)+1000}`;
+
+                const durSummary = document.querySelector('.success-duration-summary');
+                if (durSummary) durSummary.innerText = `${duration} Days (${slotText})`;
+
+                // Trigger celebration
+                setTimeout(() => {
+                    if (isOrderCompleted) {
+                        triggerCelebrationRejoice();
+                        setTimeout(() => {
+                            const successModal = document.getElementById('success-modal');
+                            if (successModal) {
+                                successModal.classList.remove('hidden');
+                                setTimeout(() => successModal.classList.remove('opacity-0'), 50);
+                            }
+                        }, 1400);
+                    }
+                }, 1300);
+
+                nextBtn.disabled = false;
+                nextBtn.innerHTML = originalText;
+            }, 1500);
         }
 
         // --- Celebration Effects ---
@@ -2178,7 +2301,7 @@
         }
 
         // Initialize state on page load
-        window.addEventListener('DOMContentLoaded', () => {
+        window.addEventListener('DOMContentLoaded', async () => {
             // Update calendar and pricing totals
             generateCalendar();
             calculatePricing();
@@ -2191,6 +2314,29 @@
             const tomorrowStr = tomorrow.toISOString().split('T')[0];
             const dateInput = document.getElementById('start-date');
             if (dateInput) dateInput.value = tomorrowStr;
+
+            // Fetch live pricing from Hub
+            try {
+                const response = await fetch('/api/pricing');
+                const result = await response.json();
+                if (response.ok && result.data) {
+                    config.matrix = result.data;
+                    
+                    // Update initial pricing fallback for labels
+                    Object.keys(config.matrix).forEach(duration => {
+                        const durationPricing = config.matrix[duration];
+                        const firstKey = Object.keys(durationPricing)[0];
+                        if (firstKey) {
+                            config.pricing[duration] = durationPricing[firstKey].price_per_meal;
+                        }
+                    });
+
+                    updateDurationLabels();
+                    calculatePricing();
+                }
+            } catch (error) {
+                console.error('Failed to fetch DabbaGo pricing:', error);
+            }
         });
     </script>
 @endpush

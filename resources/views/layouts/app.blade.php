@@ -77,7 +77,11 @@
             </div>
 
             <div class="flex items-center gap-4 lg:gap-6 flex-shrink-0">
-                <a href="{{ url('/login') }}" class="hidden sm:inline-block text-[15px] font-medium hover:text-dabba-maroon transition-colors">Login</a>
+                @if(session('user_phone'))
+                    <a href="{{ url('/dashboard') }}" class="hidden sm:inline-block text-[15px] font-medium hover:text-dabba-maroon transition-colors">Dashboard</a>
+                @else
+                    <a href="{{ url('/login') }}" class="hidden sm:inline-block text-[15px] font-medium hover:text-dabba-maroon transition-colors">Login</a>
+                @endif
                 <a href="{{ url('/order') }}" class="bg-dabba-maroon text-[#FFF9E5] py-2.5 px-7 rounded-full text-[15px] font-bold hover:scale-105 transition-transform duration-300 shadow-lg shadow-dabba-maroon/20">Start Dabba</a>
                 
                 <button @click="mobileMenuOpen = !mobileMenuOpen" class="lg:hidden w-10 h-10 flex flex-col justify-center gap-1.5 focus:outline-none z-50">
