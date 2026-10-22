@@ -769,21 +769,7 @@
                             <div class="mb-6 w-full">
                                 <p class="text-[11px] font-extrabold text-gray-400 uppercase tracking-widest mb-3">Meal
                                     Slots</p>
-                                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                                    <div id="slot-breakfast"
-                                        class="p-4 border border-gray-200 rounded-xl flex items-center justify-between cursor-pointer transition-all"
-                                        onclick="toggleSlot('breakfast')">
-                                        <div class="flex items-center gap-2.5">
-                                            <span class="text-xl">🌅</span>
-                                            <div>
-                                                <p class="text-xs font-bold text-dabba-dark">Breakfast</p>
-                                                <p class="text-[10px] text-gray-400 leading-none mt-1">8:00 AM</p>
-                                            </div>
-                                        </div>
-                                        <div id="breakfast-check"
-                                            class="w-3.5 h-3.5 rounded-full border border-gray-300 flex items-center justify-center">
-                                        </div>
-                                    </div>
+                                <div class="grid grid-cols-2 gap-4">
                                     <div id="slot-lunch"
                                         class="p-4 border border-dabba-maroon bg-dabba-maroon/5 rounded-xl flex items-center justify-between cursor-pointer transition-all"
                                         onclick="toggleSlot('lunch')">
@@ -803,20 +789,6 @@
                                             </svg>
                                         </div>
                                     </div>
-                                    <div id="slot-snacks"
-                                        class="p-4 border border-gray-200 rounded-xl flex items-center justify-between cursor-pointer transition-all"
-                                        onclick="toggleSlot('snacks')">
-                                        <div class="flex items-center gap-2.5">
-                                            <span class="text-xl">☕</span>
-                                            <div>
-                                                <p class="text-xs font-bold text-dabba-dark">Snacks</p>
-                                                <p class="text-[10px] text-gray-400 leading-none mt-1">4:30 PM</p>
-                                            </div>
-                                        </div>
-                                        <div id="snacks-check"
-                                            class="w-3.5 h-3.5 rounded-full border border-gray-300 flex items-center justify-center">
-                                        </div>
-                                    </div>
                                     <div id="slot-dinner"
                                         class="p-4 border border-gray-200 rounded-xl flex items-center justify-between cursor-pointer transition-all"
                                         onclick="toggleSlot('dinner')">
@@ -834,35 +806,6 @@
                                 </div>
                             </div>
 
-                            <!-- Upcoming 3-Day Menu Preview Section -->
-                            <div
-                                class="mb-5 bg-gray-50 p-4 rounded-xl border border-gray-100 transition-all duration-300 w-full">
-                                <div class="flex items-center justify-between cursor-pointer" onclick="toggleMenuPreview()">
-                                    <div class="flex items-center gap-3">
-                                        <span class="text-lg p-2 bg-white rounded-lg border border-gray-200"
-                                            id="menu-toggle-icon">📅</span>
-                                        <div>
-                                            <p
-                                                class="text-[10px] font-bold text-dabba-maroon uppercase tracking-widest mb-0.5">
-                                                Interactive Menu</p>
-                                            <h3
-                                                class="text-xs font-serif font-bold text-dabba-dark flex items-center gap-1.5">
-                                                Upcoming 3-Day Menu Preview
-                                                <span class="text-[10px] text-gray-400 font-sans font-normal opacity-70"
-                                                    id="menu-toggle-hint">(Tap to View)</span>
-                                            </h3>
-                                        </div>
-                                    </div>
-                                    <svg id="menu-chevron"
-                                        class="w-3.5 h-3.5 text-gray-400 transition-transform duration-300" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
-                                    </svg>
-                                </div>
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mt-3 hidden" id="menu-preview-container">
-                                    <!-- Rendered dynamically via JS -->
-                                </div>
-                            </div>
 
                             <!-- Duration Selection -->
                             <div class="mb-6 w-full">
@@ -1125,7 +1068,7 @@
                                                     <h3
                                                         class="text-[11px] font-bold tracking-widest text-dabba-dark uppercase">
                                                         Morning Delivery</h3>
-                                                    <p class="text-[10px] text-gray-400 font-medium">Breakfast & Lunch</p>
+                                                    <p class="text-[10px] text-gray-400 font-medium">Lunch</p>
                                                 </div>
                                             </div>
                                             <div>
@@ -1175,7 +1118,7 @@
                                                     <h3
                                                         class="text-[11px] font-bold tracking-widest text-dabba-dark uppercase">
                                                         Evening Delivery</h3>
-                                                    <p class="text-[10px] text-gray-400 font-medium">Snacks & Dinner</p>
+                                                    <p class="text-[10px] text-gray-400 font-medium">Dinner</p>
                                                 </div>
                                             </div>
                                             <div>
@@ -1427,68 +1370,6 @@
             5: { subtitle: "Step 5 · Delivery", title: "Where shall we <span class='italic text-dabba-maroon'>deliver</span>?", desc: "Our riders will find you with these details." }
         };
 
-        const menuData = {
-            Veg: {
-                Day1: {
-                    breakfast: "🌅 Gobi Paratha with Fresh Curd",
-                    lunch: "☀️ Bhindi Do Piaza & Dal",
-                    snacks: "☕ Samosa & Masala Chai",
-                    dinner: "🌙 Pav Bhaji Special"
-                },
-                Day2: {
-                    breakfast: "🌅 Poha with Roasted Peanuts",
-                    lunch: "☀️ Mughlai Gobhi & Kabuli",
-                    snacks: "☕ Veg Grilled Sandwich & Tea",
-                    dinner: "🌙 Subz Khurchan & Roti"
-                },
-                Day3: {
-                    breakfast: "🌅 Idli Sambar & Coconut Chutney",
-                    lunch: "☀️ Chilli Mushroom Feast",
-                    snacks: "☕ Dhokla with Chutney & Tea",
-                    dinner: "🌙 Baigan Bharta Smoked"
-                }
-            },
-            'Non-Veg': {
-                Day1: {
-                    breakfast: "🌅 Egg Masala Omelette & Toast",
-                    lunch: "☀️ Murg Do Piaza & Dal",
-                    snacks: "☕ Chicken Tikka Roll & Chai",
-                    dinner: "🌙 Keema Pav Classic"
-                },
-                Day2: {
-                    breakfast: "🌅 Scrambled Eggs with Toast",
-                    lunch: "☀️ Chicken Mughlai & Kabuli",
-                    snacks: "☕ Chicken Mayo Sandwich & Tea",
-                    dinner: "🌙 Murg Khurchan & Roti"
-                },
-                Day3: {
-                    breakfast: "🌅 Egg Bhurji Paratha",
-                    lunch: "☀️ Chilli Chicken Feast",
-                    snacks: "☕ Chicken Nuggets & Hot Tea",
-                    dinner: "🌙 Murgi Bharta Smoked"
-                }
-            },
-            Mix: {
-                Day1: {
-                    breakfast: "🌅 Egg Omelette / Gobi Paratha",
-                    lunch: "☀️ Murg Do Piaza / Bhindi Do Piaza",
-                    snacks: "☕ Chicken Tikka / Samosa & Chai",
-                    dinner: "🌙 Keema Pav / Pav Bhaji Special"
-                },
-                Day2: {
-                    breakfast: "🌅 Scrambled Eggs / Poha",
-                    lunch: "☀️ Chicken Mughlai / Mughlai Gobhi",
-                    snacks: "☕ Chicken Mayo / Veg Grilled Sandwich",
-                    dinner: "🌙 Murg / Subz Khurchan & Roti"
-                },
-                Day3: {
-                    breakfast: "🌅 Egg Bhurji / Idli Sambar",
-                    lunch: "☀️ Chilli Chicken / Chilli Mushroom",
-                    snacks: "☕ Chicken Nuggets / Dhokla & Tea",
-                    dinner: "🌙 Murgi Bharta / Baigan Bharta"
-                }
-            }
-        };
 
         function updateStackLevelStates() {
             // Update stack levels & circular progress badges
@@ -1710,7 +1591,6 @@
             updateDurationLabels();
             updateDabbaStackLabels();
             calculatePricing();
-            updateMenuPreview();
 
             // Staggered cinematic auto advance beat
             setTimeout(() => {
@@ -1743,7 +1623,6 @@
             updateDurationLabels();
             generateCalendar();
             calculatePricing();
-            updateMenuPreview();
         }
 
         function updateDuration(days, el) {
@@ -1776,79 +1655,7 @@
             });
         }
 
-        let isMenuExpanded = false;
-        function toggleMenuPreview() {
-            isMenuExpanded = !isMenuExpanded;
-            const container = document.getElementById('menu-preview-container');
-            const chevron = document.getElementById('menu-chevron');
-            const hint = document.getElementById('menu-toggle-hint');
-            const icon = document.getElementById('menu-toggle-icon');
 
-            if (container) {
-                if (isMenuExpanded) {
-                    container.classList.remove('hidden');
-                    if (chevron) chevron.classList.add('rotate-180');
-                    if (hint) hint.innerText = '(Tap to Collapse)';
-                    if (icon) icon.innerText = '📖';
-                } else {
-                    container.classList.add('hidden');
-                    if (chevron) chevron.classList.remove('rotate-180');
-                    if (hint) hint.innerText = '(Tap to View)';
-                    if (icon) icon.innerText = '📅';
-                }
-            }
-        }
-
-        function updateMenuPreview() {
-            const diet = config.diet || 'Veg';
-            const dietKey = diet === 'Mix' ? 'Mix' : (diet === 'Non-Vegetarian' || diet === 'Non Veg' || diet === 'Non-Veg' ? 'Non-Veg' : 'Veg');
-            const data = menuData[dietKey] || menuData.Veg;
-
-            const days = ['Day1', 'Day2', 'Day3'];
-            const dayLabels = ['Tomorrow (Day 1)', 'Day 2', 'Day 3'];
-            let html = '';
-
-            days.forEach((dayKey, idx) => {
-                const dayMenu = data[dayKey];
-                html += `
-                        <div class="p-3 bg-white rounded-xl border border-gray-100 space-y-2.5 shadow-sm text-left">
-                            <div class="flex items-center justify-between border-b border-gray-100 pb-2">
-                                <h4 class="text-[11px] font-bold text-dabba-dark">${dayLabels[idx]}</h4>
-                                <span class="text-[8px] bg-dabba-maroon/10 text-dabba-maroon font-bold px-1.5 py-0.5 rounded border border-dabba-maroon/20">Active</span>
-                            </div>
-                            <div class="space-y-2 text-[10px]">
-                    `;
-
-                const slots = [
-                    { id: 'breakfast', icon: '🌅', label: 'Breakfast' },
-                    { id: 'lunch', icon: '☀️', label: 'Lunch' },
-                    { id: 'snacks', icon: '☕', label: 'Snacks' },
-                    { id: 'dinner', icon: '🌙', label: 'Dinner' }
-                ];
-
-                slots.forEach(slot => {
-                    const isSelected = config.slots[slot.id];
-                    const mealName = dayMenu[slot.id];
-                    html += `
-                            <div class="flex items-start gap-2 transition-all duration-200 ${isSelected ? 'opacity-100' : 'opacity-25 filter grayscale'}">
-                                <span class="text-xs mt-0.5">${slot.icon}</span>
-                                <div>
-                                    <p class="text-[8px] font-bold text-gray-400 uppercase tracking-wider">${slot.label}</p>
-                                    <p class="text-[10px] font-semibold text-dabba-dark mt-0.5">${mealName}</p>
-                                </div>
-                            </div>
-                        `;
-                });
-
-                html += `
-                            </div>
-                        </div>
-                    `;
-            });
-
-            const container = document.getElementById('menu-preview-container');
-            if (container) container.innerHTML = html;
-        }
 
         function generateCalendar() {
             const list = document.getElementById('calendar-list');
@@ -2305,7 +2112,6 @@
             // Update calendar and pricing totals
             generateCalendar();
             calculatePricing();
-            updateMenuPreview();
             updateStackLevelStates();
 
             // Set dynamic start date to tomorrow as standard default
